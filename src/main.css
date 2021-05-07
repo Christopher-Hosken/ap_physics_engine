@@ -1,0 +1,23 @@
+#ROOTNODE {
+    -fx-background-color: rgba(47, 60, 97);
+    -fx-border-color: black;
+    -fx-border-width: 0;
+    -fx-border-radius: 35;
+}
+
+#HEADER {
+    -fx-background-color: rgba(0, 0, 0, 0.25);
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+#CLOSE:hover {
+    -fx-background-color: rgba(255, 41, 41, 0.6);
+}
