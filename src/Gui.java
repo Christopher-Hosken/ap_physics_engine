@@ -3,6 +3,8 @@ import javax.swing.SwingUtilities;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.FPSAnimator;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +27,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
+import engine.SceneCanvas;
 
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
@@ -47,10 +50,20 @@ public class Gui extends Application {
         rect.setArcWidth(25);
         root.setClip(rect);
 
-        final GLProfile profile = GLProfile.getDefault();
-        final GLCapabilities capabilities = new GLCapabilities(profile);
+        //#region opengl
+        GLProfile profile = GLProfile.get(GLProfile.GL2);
+        GLCapabilities caps = new GLCapabilities(profile);
+        caps.setDoubleBuffered(true);
+        caps.setHardwareAccelerated(true);
         
-        GLJPanel canvas = new GLJPanel(capabilities);
+        GLJPanel canvas = new GLJPanel(caps);
+        SceneCanvas sc = new SceneCanvas();
+        canvas.addGLEventListener(sc);
+        canvas.addMouseMotionListener(sc);
+        canvas.addMouseWheelListener(sc);
+        canvas.addKeyListener(sc);
+        Animator animator = new Animator(canvas);
+        animator.start();
 
         SwingNode swingNode = new SwingNode();
 
@@ -61,6 +74,8 @@ public class Gui extends Application {
                 swingNode.setContent(canvas);
             }
         });
+
+        //#endregion
 
 
         //#region header
@@ -278,6 +293,7 @@ public class Gui extends Application {
 
         close.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
+                animator.stop();
                 stage.close();
             }
         });
