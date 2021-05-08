@@ -1,12 +1,22 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('assets/fonts/Poppins/Poppins-Regular.ttf');
+}
+
 #ROOTNODE {
-    -fx-background-color: rgba(47, 60, 97);
+    -fx-background-color: black;
     -fx-border-color: black;
     -fx-border-width: 0;
-    -fx-border-radius: 35;
+    -fx-border-radius: 25;
 }
 
 #HEADER {
-    -fx-background-color: rgba(0, 0, 0, 0.25);
+    -fx-background-color: linear-gradient(to top, rgb(60, 55, 75), rgb(43, 43, 43));
+}
+
+.label {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 35;
 }
 
 .button {
