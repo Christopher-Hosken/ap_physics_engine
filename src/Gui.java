@@ -4,24 +4,32 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javafx.application.Application;
 import javafx.embed.swing.SwingNode;
+import javafx.event.ActionEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
 
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
+    private double xOffset, yOffset;
+    private boolean _darkTheme = true;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -90,7 +98,7 @@ public class Gui extends Application {
         vLine1.setStroke(lineColor);
         header.getChildren().add(vLine1);
 
-        Button toggleMenu = new Button();
+        ToggleButton toggleMenu = new ToggleButton();
         toggleMenu.getStyleClass().add("icon-button");
         toggleMenu.setId("TOGMENU");
         toggleMenu.setMaxHeight(70);
@@ -144,7 +152,7 @@ public class Gui extends Application {
         vLine3.setStroke(lineColor);
         header.getChildren().add(vLine3);
 
-        Button toggleWire = new Button();
+        ToggleButton toggleWire = new ToggleButton();
         toggleWire.getStyleClass().add("icon-button");
         toggleWire.setId("TOGWIRE");
         toggleWire.setMaxHeight(70);
@@ -152,7 +160,7 @@ public class Gui extends Application {
         toggleWire.setTranslateX(330);
         header.getChildren().add(toggleWire);
 
-        Button toggleVisibility = new Button();
+        ToggleButton toggleVisibility = new ToggleButton();
         toggleVisibility.getStyleClass().add("icon-button");
         toggleVisibility.setId("TOGVIS");
         toggleVisibility.setMaxHeight(70);
@@ -167,7 +175,7 @@ public class Gui extends Application {
         vLine4.setStroke(lineColor);
         header.getChildren().add(vLine4);
 
-        Button toggleTheme = new Button();
+        ToggleButton toggleTheme = new ToggleButton();
         toggleTheme.getStyleClass().add("icon-button");
         toggleTheme.setId("TOGTHEME");
         toggleTheme.setMaxHeight(70);
@@ -192,12 +200,17 @@ public class Gui extends Application {
         header.getChildren().add(bug);
 
         Button close = new Button();
+        close.setPickOnBounds(true);
+        Region closeIcon = new Region();
+        closeIcon.setId("CLOSEICON");
         close.getStyleClass().add("icon-button");
         close.setId("CLOSE");
         close.setMaxHeight(70);
         close.setMaxWidth(70);
         close.setTranslateX(810);
+        close.setGraphic(closeIcon);
         header.getChildren().add(close);
+        
         //#endregion
 
         //#region menu
@@ -206,23 +219,115 @@ public class Gui extends Application {
         menu.setMaxSize(365, 872);
         menu.setTranslateX(682);
         menu.setTranslateY(51);
-        root.getChildren().add(menu);
 
         //#endregion
 
+        //#region buttonActions
+        header.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = stage.getX() - event.getScreenX();
+                yOffset = stage.getY() - event.getScreenY();
+            }});
+
+        header.setOnMouseDragged(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                stage.setX(event.getScreenX() + xOffset);
+                stage.setY(event.getScreenY() + yOffset);
+            }
+        });
+
+        logo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("LOGO PRESSED");
+            }
+        });
+
+        toggleMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (root.getChildren().contains(menu)) {
+                    root.getChildren().remove(menu);
+                }
+
+                else {
+                    root.getChildren().add(menu);
+                }
+            }
+        });
+
+        info.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                try {
+                    java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/wiki"));
+                } catch (IOException | URISyntaxException e2) {
+                    e2.printStackTrace();
+                }
+            }
+        });
+
+        bug.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                try {
+                    java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/issues"));
+                } catch (IOException | URISyntaxException e2) {
+                    e2.printStackTrace();
+                }
+            }
+        });
+
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                stage.close();
+            }
+        });
+
+        addCube.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("CUBE ADDED");
+            }
+        });
+
+        addSphere.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("SPHERE ADDED");
+            }
+        });
+
+        addLight.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("LIGHT ADDED");
+            }
+        });
+
+        importModel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                System.out.println("MODEL IMPORTED");
+            }
+        });
+
+        //#endregion
         Scene scene = new Scene(root, 1728, 972);
         scene.setFill(Color.TRANSPARENT);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
-        stage.getScene().getStylesheets().setAll("main.css");
-        stage.show();
-    }
 
-    private static SVGPath createPath(String d, String fill, String hoverFill) {
-        SVGPath path = new SVGPath();
-        path.getStyleClass().add("svg");
-        path.setContent(d);
-        path.setStyle("-fill:" + fill + ";-hover-fill:"+hoverFill+';');
-        return path;
+
+        toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (_darkTheme) {
+                    stage.getScene().getStylesheets().setAll("light.css");
+                }
+
+                else {
+                    stage.getScene().getStylesheets().setAll("dark.css");
+                }
+
+                _darkTheme = !_darkTheme;
+            }
+        });
+
+        stage.getScene().getStylesheets().setAll("dark.css");
+        stage.show();
     }
 }
