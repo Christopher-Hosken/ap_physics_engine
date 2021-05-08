@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Poppins';
-    src: url('assets/fonts/Poppins/Poppins-Regular.ttf');
+    src: url('fonts/Poppins/Poppins-Regular.ttf');
 }
 
 #ROOTNODE {
@@ -11,7 +11,7 @@
 }
 
 #HEADER {
-    -fx-background-color: linear-gradient(to top, rgb(60, 55, 75), rgb(43, 43, 43));
+    -fx-background-color: linear-gradient(to top, rgb(255, 255, 255), rgb(220, 220, 220));
 }
 
 #MENU {
@@ -23,7 +23,7 @@
 .label {
     -fx-font-family: 'Poppins';
     -fx-font-size: 35;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .button {
@@ -184,12 +184,10 @@
     -fx-border-color: rgba(255, 255, 255, 0.05);
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 1), 25, 0, 0, 0);
 }
 
 #CLOSE:hover {
     -fx-background-color: linear-gradient(to top, rgba(105, 90, 90, 0.21), rgba(255, 255, 255, 0.27));
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 1), 25, 0, 0, 0);
 }
 
 #CLOSE:pressed {

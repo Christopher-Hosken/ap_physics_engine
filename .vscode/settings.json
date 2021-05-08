@@ -1,18 +1,18 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\src\\javafx\\lib\\javafx.base.jar",
-        "c:\\src\\javafx\\lib\\javafx.controls.jar",
-        "c:\\src\\javafx\\lib\\javafx.fxml.jar",
-        "c:\\src\\javafx\\lib\\javafx.graphics.jar",
-        "c:\\src\\javafx\\lib\\javafx.media.jar",
-        "c:\\src\\javafx\\lib\\javafx.swing.jar",
-        "c:\\src\\javafx\\lib\\javafx.web.jar",
-        "c:\\src\\javafx\\lib\\javafx-swt.jar",
-        "c:\\src\\jogl\\jar\\gluegen-rt.jar",
-        "c:\\src\\jogl\\jar\\gluegen-rt-natives-windows-amd64.jar",
-        "c:\\src\\jogl\\jar\\jogl-all.jar",
-        "c:\\src\\jogl\\jar\\jogl-all-natives-windows-amd64.jar"
+        "c:/src/javafx/lib/javafx.base.jar",
+        "c:/src/javafx/lib/javafx.controls.jar",
+        "c:/src/javafx/lib/javafx.fxml.jar",
+        "c:/src/javafx/lib/javafx.graphics.jar",
+        "c:/src/javafx/lib/javafx.media.jar",
+        "c:/src/javafx/lib/javafx.swing.jar",
+        "c:/src/javafx/lib/javafx.web.jar",
+        "c:/src/javafx/lib/javafx-swt.jar",
+        "c:/src/jogl/jar/gluegen-rt.jar",
+        "c:/src/jogl/jar/gluegen-rt-natives-windows-amd64.jar",
+        "c:/src/jogl/jar/jogl-all.jar",
+        "c:/src/jogl/jar/jogl-all-natives-windows-amd64.jar"
     ],
     "java.project.sourcePaths": [
         "src"

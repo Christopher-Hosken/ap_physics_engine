@@ -38,7 +38,7 @@ public class Gui extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("AP Physics Engine");
-        stage.getIcons().add(new Image("assets\\images\\icons\\atom.png"));
+        stage.getIcons().add(new Image("assets/images/icons/atom.png"));
 
         StackPane root = new StackPane();
         root.setId("ROOTNODE");
@@ -316,18 +316,18 @@ public class Gui extends Application {
         toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 if (_darkTheme) {
-                    stage.getScene().getStylesheets().setAll("light.css");
+                    stage.getScene().getStylesheets().setAll("assets/light.css");
                 }
 
                 else {
-                    stage.getScene().getStylesheets().setAll("dark.css");
+                    stage.getScene().getStylesheets().setAll("assets/dark.css");
                 }
 
                 _darkTheme = !_darkTheme;
             }
         });
 
-        stage.getScene().getStylesheets().setAll("dark.css");
+        stage.getScene().getStylesheets().setAll("assets/dark.css");
         stage.show();
     }
 }
