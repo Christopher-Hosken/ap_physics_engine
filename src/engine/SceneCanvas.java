@@ -108,15 +108,15 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         System.out.println("CLICKED");
 
         vec3 llc = new vec3(
-            1,
             -1,
+            -0.5f,
             0
         );
 
         vec3 target = new vec3(
             llc.x - (e.getX() / vw) * 2,
             llc.y + (e.getY() / vh) * 2,
-            1
+            1f
         ); 
 
         ray r = new ray(new vec3(), target);
@@ -125,7 +125,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         EmptyObj sel_tmp = null;
         float t = Float.MAX_VALUE;
         float t_tmp;
-
 
         for (EmptyObj obj : scene) {
             t_tmp = obj.intersect(r);
@@ -138,6 +137,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         if (sel_tmp != null) {
             sel = sel_tmp;
             System.out.println(sel.name());
+            System.out.println("Intersection at: " + r.at(t));
         }
     }
 
