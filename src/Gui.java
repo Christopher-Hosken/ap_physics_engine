@@ -61,6 +61,7 @@ public class Gui extends Application {
         canvas.addGLEventListener(sc);
         canvas.addMouseMotionListener(sc);
         canvas.addMouseWheelListener(sc);
+        canvas.addMouseListener(sc);
         canvas.addKeyListener(sc);
         Animator animator = new Animator(canvas);
         animator.start();
@@ -248,14 +249,16 @@ public class Gui extends Application {
         header.setOnMouseDragged(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
-                stage.setX(event.getScreenX() + xOffset);
-                stage.setY(event.getScreenY() + yOffset);
+                if (event.getButton().ordinal() == 1) {
+                    stage.setX(event.getScreenX() + xOffset);
+                    stage.setY(event.getScreenY() + yOffset);
+                }
             }
         });
 
         logo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                System.out.println("LOGO PRESSED");
+                sc.clean();
             }
         });
 
@@ -267,6 +270,18 @@ public class Gui extends Application {
 
                 else {
                     root.getChildren().add(menu);
+                }
+            }
+        });
+
+        toggleWire.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (sc.isWire) {
+                    sc.isWire = false;
+                }
+
+                else {
+                    sc.isWire = true;
                 }
             }
         });
@@ -300,13 +315,13 @@ public class Gui extends Application {
 
         addCube.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                System.out.println("CUBE ADDED");
+                sc.addCube();
             }
         });
 
         addSphere.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                System.out.println("SPHERE ADDED");
+                sc.addIcoSphere();
             }
         });
 
