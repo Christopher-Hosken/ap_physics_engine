@@ -10,7 +10,7 @@ public class EmptyObj {
     protected ArrayList<vec3> vertices;
     protected ArrayList<vec3> color; 
     protected int vertexCount;
-    protected boolean hasQuads;
+    protected boolean hasQuads, isActive;
 
     public EmptyObj(int id, ArrayList<vec3> data, boolean isQuads) {
         this.id = id;
@@ -28,6 +28,11 @@ public class EmptyObj {
         return id;
     }
 
+    public float getCID() {
+        vec3 rgb = getIDColor();
+        return (rgb.x + rgb.y * 256 + rgb.z);
+    }
+
     public vec3 getIDColor() {
         int r = (id & 0x000000FF) >>  0;
         int g = (id & 0x0000FF00) >>  8;
@@ -36,6 +41,30 @@ public class EmptyObj {
     }
 
     public GL2 addToGL(GL2 gl) {
+        if (isLine()) {gl.glBegin(GL2.GL_LINES);}
+        else if (hasQuads) {gl.glBegin(GL2.GL_QUADS);}
+        else {gl.glBegin(GL2.GL_TRIANGLES);}
+
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vec3 v = vertices.get(vdx);
+            if (!isLine()) {
+                gl.glColor3f(center.x - v.x, center.y - v.y, center.z - v.z);
+                gl.glVertex3f(v.x, v.y, v.z);
+            }
+
+            else {
+                gl.glColor3f(1f, 1f, 0f);
+                gl.glVertex3f(v.x, v.y, v.z);
+            }
+        }
+
+        gl.glEnd();
+
+        return gl;
+    }
+
+
+    public GL2 addToGLID(GL2 gl) {
         vec3 rgb = vec3.div(getIDColor(), 255f);
         if (isLine()) {gl.glBegin(GL2.GL_LINES);}
         else if (hasQuads) {gl.glBegin(GL2.GL_QUADS);}
@@ -57,6 +86,10 @@ public class EmptyObj {
         gl.glEnd();
 
         return gl;
+    }
+
+    public void setActive(boolean a) {
+        isActive = a;
     }
 
     public vec3 location() {

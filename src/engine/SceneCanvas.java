@@ -6,9 +6,11 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.common.nio.*;
+
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.nio.Buffer;
+import java.nio.CharBuffer;
 import java.nio.FloatBuffer;
 
 public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener, KeyListener, MouseListener {
@@ -17,11 +19,13 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     private float zNear= 0.001f, zFar = 1000f, fov = 45;
     private boolean isAltDown, isShiftDown, isCtrlDown;
     private float lastX, lastY;
+    private int clickX, clickY;
+    private boolean isClick;
     private float vw, vh;
     private float posX, posY, posZ = -5, angleX, angleY, angleZ;
     private ArrayList<EmptyObj> scene = new ArrayList<EmptyObj>();
     public boolean isWire;
-    private EmptyObj sel;
+    private EmptyObj sel = null;
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -42,11 +46,60 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         
 
         for (EmptyObj obj : scene) {
+            gl = obj.addToGLID(gl);
+        }
+
+        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        gl.glFlush();
+        gl.glFinish();
+
+        if (isClick) {
+            gl.glPixelStorei(GL2.GL_UNPACK_ALIGNMENT, 1);
+            CharBuffer data = CharBuffer.allocate(4);
+
+            gl.glReadPixels(clickX, clickY, 1, 1, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, data);
+            int id = data.get(0) + data.get(1);
+            for (EmptyObj obj : scene) {
+                if (obj.getCID() == id) {
+                    sel = obj;
+                    System.out.println(obj.name() + " was selected.");
+                    updateSelection();
+                }
+            }
+        }
+
+        if (isWire) {
+            gl.glLineWidth(2f);
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+        }
+
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glLoadIdentity();
+
+        gl.glTranslatef(posX, posY, posZ);
+        gl.glRotatef(angleY, 1, 0, 0);
+        gl.glRotatef(angleX, 0, 1, 0);
+        gl.glRotatef(angleZ, 0, 0, 1);
+
+        for (EmptyObj obj : scene) {
             gl = obj.addToGL(gl);
         }
 
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         gl.glFlush();
+        gl.glFinish();
+
+        isClick = false;
+    }
+
+    public EmptyObj getSelection() {
+        return sel;
+    }
+
+    public void updateSelection() {
+        for (EmptyObj obj : scene) {
+            obj.setActive(obj.getID() == sel.getID());
+        }
     }
 
     @Override
@@ -133,7 +186,11 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override 
     public void mouseClicked(MouseEvent e) {
-
+        if (e.getButton() == 1) {
+            isClick = true;
+            clickX = e.getX();
+            clickY = (int) vh - e.getY();
+        }
     }
 
     @Override 
@@ -174,7 +231,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         lastX = e.getX();
         lastY = e.getY();
 
-        System.out.println("(" + posX + ", " + posY + ", " + posZ + ")");
+        //System.out.println("(" + posX + ", " + posY + ", " + posZ + ")");
     }
 
     @Override
@@ -214,6 +271,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
+                sel = null;
             }
         }
 
