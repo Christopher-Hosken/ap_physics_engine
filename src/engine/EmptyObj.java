@@ -28,6 +28,10 @@ public class EmptyObj {
         return id;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public float getCID() {
         vec3 rgb = getIDColor();
         return (rgb.x + rgb.y * 256 + rgb.z);
@@ -41,6 +45,7 @@ public class EmptyObj {
     }
 
     public GL2 addToGL(GL2 gl) {
+
         if (isLine()) {gl.glBegin(GL2.GL_LINES);}
         else if (hasQuads) {gl.glBegin(GL2.GL_QUADS);}
         else {gl.glBegin(GL2.GL_TRIANGLES);}
@@ -48,18 +53,21 @@ public class EmptyObj {
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vertices.get(vdx);
             if (!isLine()) {
-                gl.glColor3f(center.x - v.x, center.y - v.y, center.z - v.z);
+                gl.glColor3f(0.5f, 0.5f, 0.5f);
+
+                if (isActive) {
+                    gl.glColor3f(0.75f, 0.75f, 0.75f);
+                }
+
                 gl.glVertex3f(v.x, v.y, v.z);
             }
 
             else {
-                gl.glColor3f(1f, 1f, 0f);
+                gl = shade(gl);
                 gl.glVertex3f(v.x, v.y, v.z);
             }
         }
-
         gl.glEnd();
-
         return gl;
     }
 
@@ -85,6 +93,33 @@ public class EmptyObj {
 
         gl.glEnd();
 
+        return gl;
+    }
+
+    public GL2 drawWire(GL2 gl) {
+        gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
+        gl.glPolygonOffset(5, 1);
+            
+        for (int vdx = 0; vdx < vertices.size() - 2; vdx += 2) {  
+            gl.glBegin(GL2.GL_LINES);
+            vec3 v0 = vertices.get(vdx);
+            vec3 v1 = vertices.get(vdx + 1);
+
+            gl.glColor3f(1f, 0f, 1f);
+            gl.glVertex3f(v0.x, v0.y, v0.z);
+            gl.glVertex3f(v1.x, v1.y, v1.z);
+            gl.glEnd();
+        }
+        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+
+        return gl;
+    }
+
+    public GL2 shade(GL2 gl, float[] col, float[] spec, float[] rough, float[] emission) {
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, col, 0);
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, spec, 0);
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, rough, 0);
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, emission, 0);
         return gl;
     }
 

@@ -31,22 +31,23 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     public void display(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
 
-        if (isWire) {
-            gl.glLineWidth(2f);
-            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-        }
-
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
+
+        gl.glDisable(GL2.GL_LIGHTING);
+        gl.glDisable(GL2.GL_LIGHT0);
+        gl.glDisable(GL2.GL_CULL_FACE);
 
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
         gl.glRotatef(angleX, 0, 1, 0);
         gl.glRotatef(angleZ, 0, 0, 1);
         
-
         for (EmptyObj obj : scene) {
             gl = obj.addToGLID(gl);
+            if (obj.isActive()) {
+                gl = obj.drawWire(gl);
+            }
         }
 
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
@@ -68,6 +69,8 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             }
         }
 
+
+
         if (isWire) {
             gl.glLineWidth(2f);
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
@@ -75,6 +78,10 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
+
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_CULL_FACE);
 
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
@@ -105,16 +112,16 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     @Override
     public void dispose(GLAutoDrawable drawable) {}
 
+    
     @Override 
     public void init(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
         gl.glClearColor(0f, 0f, 0f, 0f);
         gl.glShadeModel(GL2.GL_SMOOTH);
 
-        //gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, new float[] {0.5f, 0.5f, 0.5f}, 0);
-
-        //gl.glEnable(GL2.GL_LIGHTING);
-        //gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_CULL_FACE);
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
     }
