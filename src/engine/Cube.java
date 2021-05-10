@@ -3,53 +3,46 @@ import java.util.ArrayList;
 
 public class Cube extends EmptyObj {
     public Cube(int id, String name) {
-        super(id, new ArrayList<vec3>(), true);
-        this.name = name;
-        initCube();
-        vertexCount = vertices.size() * 3;
+        super(id, name, true);
     }
 
-    private void initCube() {
-        vec3[] verts = new vec3[] {
-            // Top Face
-            new vec3(1, 1, -1),
-            new vec3 (-1 ,1, -1),
-            new vec3 (-1, 1, 1),
-            new vec3 (1, 1, 1),
+    public void init() {
+        this.vertices = new ArrayList<vec3>();
 
-            // Bottom Face
-            new vec3 (1, -1, 1),
-            new vec3 (-1 ,-1, 1),
-            new vec3 (-1, -1, -1),
-            new vec3 (1, -1, -1),
+        // Top Face
+        vertices.add(new vec3(1, 1, -1));
+        vertices.add(new vec3 (-1 ,1, -1));
+        vertices.add(new vec3 (-1, 1, 1));
+        vertices.add(new vec3 (1, 1, 1));
 
-            // Front face
-            new vec3 (1, 1, 1),
-            new vec3 (-1 ,1, 1),
-            new vec3 (-1, -1, 1),
-            new vec3 (1, -1, 1),
+        // Bottom Face
+        vertices.add(new vec3 (1, -1, 1));
+        vertices.add(new vec3 (-1 ,-1, 1));
+        vertices.add(new vec3 (-1, -1, -1));
+        vertices.add(new vec3 (1, -1, -1));
 
-            // Back Face
-            new vec3 (1, -1, -1),
-            new vec3 (-1 ,-1, -1),
-            new vec3 (-1, 1, -1),
-            new vec3 (1, 1, -1),
+        // Front face
+        vertices.add(new vec3 (1, 1, 1));
+        vertices.add(new vec3 (-1 ,1, 1));
+        vertices.add(new vec3 (-1, -1, 1));
+        vertices.add(new vec3 (1, -1, 1));
 
-            // Left Face
-            new vec3 (-1, 1, 1),
-            new vec3 (-1 ,1, -1),
-            new vec3 (-1, -1, -1),
-            new vec3 (-1, -1, 1),
+        // Back Face
+        vertices.add(new vec3 (1, -1, -1));
+        vertices.add(new vec3 (-1 ,-1, -1));
+        vertices.add(new vec3 (-1, 1, -1));
+        vertices.add(new vec3 (1, 1, -1));
 
-            // Right Face
-            new vec3 (1, 1, -1),
-            new vec3 (1 ,1, 1),
-            new vec3 (1, -1, 1),
-            new vec3 (1, -1, -1)
-        };
+        // Left Face
+        vertices.add(new vec3 (-1, 1, 1));
+        vertices.add(new vec3 (-1 ,1, -1));
+        vertices.add(new vec3 (-1, -1, -1));
+        vertices.add(new vec3 (-1, -1, 1));
 
-        for (vec3 v : verts) {
-            vertices.add(v);
-        }
+        // Right Face
+        vertices.add(new vec3 (1, 1, -1));
+        vertices.add(new vec3 (1 ,1, 1));
+        vertices.add(new vec3 (1, -1, 1));
+        vertices.add(new vec3 (1, -1, -1));
     }
 }

@@ -1,19 +1,18 @@
 package engine;
-
 import java.util.ArrayList;
+
 
 public class IcoSphere extends EmptyObj {
 
     public IcoSphere(int id, String name) {
-        super(id, new ArrayList<vec3>(), false);
-        this.name = name;
-        initIcoSphere();
+        super(id, name, false);
     }
 
-    public void initIcoSphere() {
-        float X=0.525731112119133606f;
-        float Z=0.850650808352039932f;
-        float N=0f;
+    public void init() {
+        this.vertices = new ArrayList<vec3>();
+        float X = 0.525731112119133606f;
+        float Z = 0.850650808352039932f;
+        float N = 0f;
 
         vec3[] verts = new vec3[] {
             new vec3(-X, N, Z), new vec3(X, N, Z), new vec3(-X, N, -Z), new vec3(X, N, -Z),

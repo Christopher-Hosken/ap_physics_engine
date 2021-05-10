@@ -31,26 +31,22 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     public void display(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
 
+        //#region ID Drawing
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
-        gl.glDisable(GL2.GL_LIGHTING);
-        gl.glDisable(GL2.GL_LIGHT0);
-        gl.glDisable(GL2.GL_CULL_FACE);
 
+        //#region Viewport Transformations
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
         gl.glRotatef(angleX, 0, 1, 0);
         gl.glRotatef(angleZ, 0, 0, 1);
+        //#endregion
         
         for (EmptyObj obj : scene) {
-            gl = obj.addToGLID(gl);
-            if (obj.isActive()) {
-                gl = obj.drawWire(gl);
-            }
+            obj.drawID(gl);
         }
 
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         gl.glFlush();
         gl.glFinish();
 
@@ -59,29 +55,20 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             CharBuffer data = CharBuffer.allocate(4);
 
             gl.glReadPixels(clickX, clickY, 1, 1, GL2.GL_RGB, GL2.GL_UNSIGNED_BYTE, data);
-            int id = data.get(0) + data.get(1);
+            int cid = data.get(0) + data.get(1);
             for (EmptyObj obj : scene) {
-                if (obj.getCID() == id) {
+                if (obj.colorID() == cid) {
                     sel = obj;
-                    System.out.println(obj.name() + " was selected.");
                     updateSelection();
                 }
             }
         }
 
+        //#endregion
 
-
-        if (isWire) {
-            gl.glLineWidth(2f);
-            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-        }
-
+        //#region Viewport Drawing
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
-
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-        gl.glEnable(GL2.GL_CULL_FACE);
 
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
@@ -89,12 +76,15 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glRotatef(angleZ, 0, 0, 1);
 
         for (EmptyObj obj : scene) {
-            gl = obj.addToGL(gl);
+            obj.draw(gl, isWire);
+            if (obj.active()) {
+                obj.drawLines(gl);
+            }
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         }
 
-        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         gl.glFlush();
-        gl.glFinish();
+        //#endregion
 
         isClick = false;
     }
@@ -105,24 +95,27 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     public void updateSelection() {
         for (EmptyObj obj : scene) {
-            obj.setActive(obj.getID() == sel.getID());
+            obj.setActive(obj.id() == sel.id());
         }
     }
 
     @Override
     public void dispose(GLAutoDrawable drawable) {}
 
-    
+
     @Override 
     public void init(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
         gl.glClearColor(0f, 0f, 0f, 0f);
         gl.glShadeModel(GL2.GL_SMOOTH);
 
-        gl.glEnable(GL2.GL_LIGHTING);
-        gl.glEnable(GL2.GL_LIGHT0);
-        gl.glEnable(GL2.GL_CULL_FACE);
         gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glDepthMask(true);
+        gl.glDepthFunc(GL2.GL_LESS);
+        gl.glEnable(GL2.GL_CULL_FACE);
+        gl.glEnable(GL2.GL_MULTISAMPLE);
+        gl.glEnable(GL2.GL_LINE_SMOOTH);
+        gl.glEnable(GL2.GL_POLYGON_OFFSET_LINE);
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
     }
 
@@ -142,6 +135,28 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glLoadIdentity();
     }
 
+    public int makeID() {
+        int tmp_id;
+        while (true) {
+            boolean n = true;
+            tmp_id = (int) (Math.random() * Integer.MAX_VALUE);
+            for (EmptyObj o : scene) {
+                if (tmp_id == o.id()) {
+                    n = false;
+                    break;
+                }
+            }
+            if (n) {
+                break;
+            }
+        }
+        return tmp_id;
+    }
+
+    public void wipe() {
+        scene = new ArrayList<EmptyObj>();
+    }
+
     public void addCube() {
         int id = makeID();
         scene.add(new Cube(id, "Cube-" + scene.size()));
@@ -154,36 +169,12 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
     }
 
-    public int makeID() {
-        int tmp_id;
-        while (true) {
-            boolean n = true;
-            tmp_id = (int) (Math.random() * Integer.MAX_VALUE);
-            for (EmptyObj o : scene) {
-                if (tmp_id == o.getID()) {
-                    n = false;
-                    break;
-                }
-            }
-
-            if (n) {
-                break;
-            }
-        }
-        System.out.println(tmp_id);
-        return tmp_id;
-    }
-
     public void addLine(vec3 o, vec3 d) {
         int id = makeID();
         scene.add(new Line(id, "Line-" + scene.size(), o, d));
     }
 
-    public void clean() {
-        scene = new ArrayList<EmptyObj>();
-    }
-
-    //#region mousecontrols
+    //#region Controls
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -214,7 +205,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //System.out.println(e.getButton());
         if (e.getButton() == 1) {
             if (isShiftDown) {
                 posX += ((e.getX() - lastX) / 100.0);
@@ -237,13 +227,10 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         }
         lastX = e.getX();
         lastY = e.getY();
-
-        //System.out.println("(" + posX + ", " + posY + ", " + posZ + ")");
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        //System.out.println(posZ);
         posZ -= (e.getWheelRotation() / 10.0);
     }
 
@@ -269,7 +256,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //System.out.println(e.getKeyChar() + ":  " + e.getKeyCode());
         if (isAltDown) {
             if (e.getKeyCode() == 82) {
                 posX = 0;

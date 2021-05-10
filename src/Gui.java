@@ -258,7 +258,7 @@ public class Gui extends Application {
 
         logo.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
-                sc.clean();
+                sc.wipe();
             }
         });
 
