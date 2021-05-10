@@ -23,16 +23,23 @@ import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TabPane.TabDragPolicy;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
+import engine.EmptyObj;
 import engine.SceneCanvas;
 
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
     private double xOffset, yOffset;
     private boolean _darkTheme = true;
+    private EmptyObj selectedObj = null;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -235,6 +242,20 @@ public class Gui extends Application {
         menu.setMaxSize(365, 872);
         menu.setTranslateX(682);
         menu.setTranslateY(51);
+
+        TabPane settings = new TabPane();
+        settings.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+        settings.setTabDragPolicy(TabDragPolicy.FIXED);
+        settings.setSide(Side.LEFT);
+        Tab camTab = new Tab("Cam");
+        Tab worldTab = new Tab("World");
+        settings.getTabs().add(camTab);
+        settings.getTabs().add(worldTab);
+
+        Tab objTab = new Tab("Object");
+        settings.getTabs().add(objTab);
+
+        menu.getChildren().add(settings);
 
         //#endregion
 
