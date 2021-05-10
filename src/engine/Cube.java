@@ -2,8 +2,8 @@ package engine;
 import java.util.ArrayList;
 
 public class Cube extends EmptyObj {
-    public Cube(String name) {
-        super(new ArrayList<vec3>(), true);
+    public Cube(int id, String name) {
+        super(id, new ArrayList<vec3>(), true);
         this.name = name;
         initCube();
         vertexCount = vertices.size() * 3;
@@ -30,8 +30,8 @@ public class Cube extends EmptyObj {
             new vec3 (1, -1, 1),
 
             // Back Face
-            new vec3 (1, -1, 1),
-            new vec3 (-1 ,-1, 1),
+            new vec3 (1, -1, -1),
+            new vec3 (-1 ,-1, -1),
             new vec3 (-1, 1, -1),
             new vec3 (1, 1, -1),
 

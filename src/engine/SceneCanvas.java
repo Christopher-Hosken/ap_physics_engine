@@ -13,18 +13,19 @@ import java.nio.FloatBuffer;
 
 public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener, KeyListener, MouseListener {
     private GLU glu = new GLU();
+    private GL2 gl;
     private float zNear= 0.001f, zFar = 1000f, fov = 45;
     private boolean isAltDown, isShiftDown, isCtrlDown;
     private float lastX, lastY;
     private float vw, vh;
-    private float posX, posY, posZ = - 5, angleX, angleY, angleZ;
+    private float posX, posY, posZ = -5, angleX, angleY, angleZ;
     private ArrayList<EmptyObj> scene = new ArrayList<EmptyObj>();
     public boolean isWire;
     private EmptyObj sel;
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
+        gl = drawable.getGL().getGL2();
 
         if (isWire) {
             gl.glLineWidth(2f);
@@ -53,7 +54,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override 
     public void init(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
+        gl = drawable.getGL().getGL2();
         gl.glClearColor(0f, 0f, 0f, 0f);
         gl.glShadeModel(GL2.GL_SMOOTH);
 
@@ -67,7 +68,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL2 gl = drawable.getGL().getGL2();
+        gl = drawable.getGL().getGL2();
         vw = width;
         vh = height;
         
@@ -82,13 +83,40 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     }
 
     public void addCube() {
-        scene.add(new Cube("Cube-" + scene.size()));
-        //scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
+        int id = makeID();
+        scene.add(new Cube(id, "Cube-" + scene.size()));
+        scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
     }
 
     public void addIcoSphere() {
-        scene.add(new IcoSphere("Ico-" + scene.size()));
-        //scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
+        int id = makeID();
+        scene.add(new IcoSphere(id, "Ico-" + scene.size()));
+        scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
+    }
+
+    public int makeID() {
+        int tmp_id;
+        while (true) {
+            boolean n = true;
+            tmp_id = (int) (Math.random() * Integer.MAX_VALUE);
+            for (EmptyObj o : scene) {
+                if (tmp_id == o.getID()) {
+                    n = false;
+                    break;
+                }
+            }
+
+            if (n) {
+                break;
+            }
+        }
+        System.out.println(tmp_id);
+        return tmp_id;
+    }
+
+    public void addLine(vec3 o, vec3 d) {
+        int id = makeID();
+        scene.add(new Line(id, "Line-" + scene.size(), o, d));
     }
 
     public void clean() {
@@ -105,40 +133,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override 
     public void mouseClicked(MouseEvent e) {
-        System.out.println("CLICKED");
 
-        vec3 llc = new vec3(
-            -1,
-            -0.5f,
-            0
-        );
-
-        vec3 target = new vec3(
-            llc.x - (e.getX() / vw) * 2,
-            llc.y + (e.getY() / vh) * 2,
-            1f
-        ); 
-
-        ray r = new ray(new vec3(), target);
-        System.out.println(r);
-
-        EmptyObj sel_tmp = null;
-        float t = Float.MAX_VALUE;
-        float t_tmp;
-
-        for (EmptyObj obj : scene) {
-            t_tmp = obj.intersect(r);
-            if (t_tmp > 0.0000001 && t_tmp < t) {
-                t = t_tmp;
-                sel_tmp = obj;
-            }
-        }
-
-        if (sel_tmp != null) {
-            sel = sel_tmp;
-            System.out.println(sel.name());
-            System.out.println("Intersection at: " + r.at(t));
-        }
     }
 
     @Override 
@@ -215,7 +210,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             if (e.getKeyCode() == 82) {
                 posX = 0;
                 posY = 0;
-                posZ = 0;
+                posZ = -5;
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;

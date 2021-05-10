@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class IcoSphere extends EmptyObj {
 
-    public IcoSphere(String name) {
-        super(new ArrayList<vec3>(), false);
+    public IcoSphere(int id, String name) {
+        super(id, new ArrayList<vec3>(), false);
         this.name = name;
         initIcoSphere();
     }
