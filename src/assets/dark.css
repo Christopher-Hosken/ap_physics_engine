@@ -15,7 +15,7 @@
 }
 
 #MENU {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-background-color: linear-gradient(to top, rgb(60, 55, 75), rgb(43, 43, 43));
     -fx-border-radius: 15 0 0 15;
     -fx-background-radius: 15 0 0 15;
 }
@@ -26,6 +26,77 @@
     -fx-text-fill: white;
 }
 
+#SETTINGS {
+    -fx-background-color: rgba(100, 100, 100, 0.1);
+    -fx-focus-color: none;
+}
+
+#SETTINGS .tab {
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-color: linear-gradient(to right, rgb(60, 55, 75), rgb(43, 43, 43));
+    -fx-border-radius: 5, 5, 0, 0;
+    -fx-background-radius: 5, 5, 0, 0;
+}
+
+#SETTINGS .tab:selected {
+    -fx-background-color: linear-gradient(to right, rgb(140, 100, 250), rgb(135, 220, 255));
+    -fx-focus-color: linear-gradient(to right, rgb(140, 100, 250), rgb(135, 220, 255));
+}
+
+#SETTINGS .tab-header-area .tab-header-background {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab .tab-label {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 15;
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+#OBJTRANSFORM {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+}
+
+#OBJPHYSICS {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 10;    
+}
+
+#OBJNAME {
+    -fx-font-size: 25;
+    -fx-alignment: center;
+}
+
+.x-text {
+    -fx-border-style: hidden none solid none;
+    -fx-border-width: 2;
+    -fx-border-color: rgb(255, 100, 100);
+}
+
+.y-text {
+    -fx-border-style: hidden none solid none;
+    -fx-border-width: 2;
+    -fx-border-color: rgb(100, 255, 135);
+}
+
+.z-text {
+    -fx-border-style: hidden none solid none;
+    -fx-border-width: 2;
+    -fx-border-color: rgb(100, 120, 255);
+}
+
+.small-label {
+    -fx-font-family: 'Poppins';
+    -fx-font-size: 15;
+    -fx-text-fill: white; 
+}
+
 .button {
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
 }
@@ -33,7 +104,6 @@
 .icon-button {
     -fx-background-color: linear-gradient(to top, rgb(90, 60, 200), rgb(85, 170, 215));
     -fx-background-radius: 0;
-    
 }
 
 .icon-button:hover {

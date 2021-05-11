@@ -28,6 +28,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TabPane.TabDragPolicy;
@@ -37,15 +39,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import engine.EmptyObj;
 import engine.SceneCanvas;
+import engine.vec3;
 
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
     private double xOffset, yOffset;
     private boolean _darkTheme = true;
     private EmptyObj selectedObj = null;
-
-    public TabPane settings; 
-    public Tab objTab;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -90,7 +90,6 @@ public class Gui extends Application {
         });
 
         //#endregion
-
 
         //#region header
         StackPane header = new StackPane();
@@ -249,15 +248,161 @@ public class Gui extends Application {
         menu.setTranslateX(682);
         menu.setTranslateY(51);
 
-        settings = new TabPane();
+        TabPane settings = new TabPane();
+        settings.setId("SETTINGS");
         settings.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         settings.setTabDragPolicy(TabDragPolicy.FIXED);
+        settings.setTabMinWidth(100);
+
+        settings.setTabMinHeight(40);
         settings.setSide(Side.LEFT);
-        Tab camTab = new Tab("Camera");
+
         Tab worldTab = new Tab("World");
+
+        //#region World Tab
+
+        StackPane objTabRoot = new StackPane();
+
+        TextField objectName = new TextField();
+        objectName.setId("OBJNAME");
+        objectName.setText("Object Name");
+        objectName.setTranslateX(0);
+        objectName.setTranslateY(-375);
+        objTabRoot.getChildren().add(objectName);
+
+        Line vLine5 = new Line();
+        vLine5.setStartX(0);
+        vLine5.setEndX(285);
+        vLine5.setTranslateY(-350);
+        vLine5.setStroke(Color.WHITE);
+        objTabRoot.getChildren().add(vLine5);
+
+        StackPane objTransforms = new StackPane();
+        objTransforms.setId("OBJTRANSFORM");
+        objTransforms.setMaxSize(300, 250);
+        objTransforms.setTranslateY(-200);
+        objTabRoot.getChildren().add(objTransforms);
+
+        //#region Locations
+
+        Label locationLabel = new Label();
+        locationLabel.getStyleClass().add("small-label");
+        locationLabel.setText("Location");
+        locationLabel.setTranslateY(-90);
+        locationLabel.setTranslateX(-100);
+        objTransforms.getChildren().add(locationLabel);
+
+        TextField locationX = new TextField();
+        locationX.getStyleClass().add("x-text");
+        locationX.setMaxSize(60, 15);
+        locationX.setTranslateX(-30);
+        locationX.setTranslateY(-90);
+        objTransforms.getChildren().add(locationX);
+
+        TextField locationY = new TextField();
+        locationY.getStyleClass().add("y-text");
+        locationY.setMaxSize(60, 15);
+        locationY.setTranslateX(35);
+        locationY.setTranslateY(-90);
+        objTransforms.getChildren().add(locationY);
+
+        TextField locationZ = new TextField();
+        locationZ.getStyleClass().add("z-text");
+        locationZ.setMaxSize(60, 15);
+        locationZ.setTranslateX(100);
+        locationZ.setTranslateY(-90);
+        objTransforms.getChildren().add(locationZ);
+
+        //#endregion
+
+        //#region Rotations
+
+        Label rotationLabel = new Label();
+        rotationLabel.getStyleClass().add("small-label");
+        rotationLabel.setText("Rotation");
+        rotationLabel.setTranslateY(-60);
+        rotationLabel.setTranslateX(-100);
+        objTransforms.getChildren().add(rotationLabel);
+
+        TextField rotationX = new TextField();
+        rotationX.getStyleClass().add("x-text");
+        rotationX.setMaxSize(60, 15);
+        rotationX.setTranslateX(-30);
+        rotationX.setTranslateY(-60);
+        objTransforms.getChildren().add(rotationX);
+
+        TextField rotationY = new TextField();
+        rotationY.getStyleClass().add("y-text");
+        rotationY.setMaxSize(60, 15);
+        rotationY.setTranslateX(35);
+        rotationY.setTranslateY(-60);
+        objTransforms.getChildren().add(rotationY);
+
+        TextField rotationZ = new TextField();
+        rotationZ.getStyleClass().add("z-text");
+        rotationZ.setMaxSize(60, 15);
+        rotationZ.setTranslateX(100);
+        rotationZ.setTranslateY(-60);
+        objTransforms.getChildren().add(rotationZ);
+
+        //#endregion
+
+        //#region Scales
+
+        Label scaleLabel = new Label(); 
+        scaleLabel.getStyleClass().add("small-label");
+        scaleLabel.setText("Scale");
+        scaleLabel.setTranslateY(-30);
+        scaleLabel.setTranslateX(-100);
+        objTransforms.getChildren().add(scaleLabel);
+
+        TextField scaleX= new TextField();
+        scaleX.getStyleClass().add("x-text");
+        scaleX.setMaxSize(60, 15);
+        scaleX.setTranslateX(-30);
+        scaleX.setTranslateY(-30);
+        objTransforms.getChildren().add(scaleX);
+
+        TextField scaleY = new TextField();
+        scaleY.getStyleClass().add("y-text");
+        scaleY.setMaxSize(60, 15);
+        scaleY.setTranslateX(35);
+        scaleY.setTranslateY(-30);
+        objTransforms.getChildren().add(scaleY);
+
+        TextField scaleZ = new TextField();
+        scaleZ.getStyleClass().add("z-text");
+        scaleZ.setMaxSize(60, 15);
+        scaleZ.setTranslateX(100);
+        scaleZ.setTranslateY(-30);
+        objTransforms.getChildren().add(scaleZ);
+
+        //#endregion
+
+        
+        StackPane objPhys = new StackPane();
+        objPhys.setId("OBJPHYSICS");
+        objPhys.setMaxSize(300, 485);
+        objPhys.setTranslateY(180);
+        objTabRoot.getChildren().add(objPhys);
+
+
+        worldTab.setContent(objTabRoot);
+
+
         settings.getTabs().add(worldTab);
+        //#endregion
+        
+        Tab camTab = new Tab("Camera");
+
+        //#region Camera Tab
+
+
         settings.getTabs().add(camTab);
-        objTab = new Tab("Object");
+        //#endregion
+
+
+        Tab objTab = new Tab("Object");
 
         menu.getChildren().add(settings);
 
@@ -275,7 +420,25 @@ public class Gui extends Application {
                 }
 
                 else {
-                    settings.getTabs().add(objTab);
+                    if (!settings.getTabs().contains(objTab)) {
+                        settings.getTabs().add(objTab);
+                    }
+
+                    objectName.setText(selectedObj.name()); 
+                            vec3 loc = selectedObj.center();
+                            vec3 rot = selectedObj.rotation();
+                            vec3 scl = selectedObj.scale();
+                            locationX.setText(String.valueOf(loc.x));
+                            locationY.setText(String.valueOf(loc.y));
+                            locationZ.setText(String.valueOf(loc.z));
+
+                            rotationX.setText(String.valueOf(rot.x));
+                            rotationY.setText(String.valueOf(rot.y));
+                            rotationZ.setText(String.valueOf(rot.z));
+
+                            scaleX.setText(String.valueOf(scl.x));
+                            scaleY.setText(String.valueOf(scl.y));
+                            scaleZ.setText(String.valueOf(scl.z));
                 }
             }
         });

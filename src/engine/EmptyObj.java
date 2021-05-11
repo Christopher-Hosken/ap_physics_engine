@@ -6,13 +6,15 @@ import java.util.ArrayList;
 public class EmptyObj {
     protected String name;
     protected int id;
-    protected vec3 center;
+    protected vec3 center, rotation, scale;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
     protected boolean isLine, hasQuads, active;
 
     public EmptyObj(int id, String name) {
         center = new vec3();
+        rotation = new vec3();
+        scale = new vec3(1, 1, 1);
         this.name = name;
         this.id = id;
         init();
@@ -42,6 +44,14 @@ public class EmptyObj {
 
     public vec3 center() {
         return center;
+    }
+
+    public vec3 rotation() {
+        return rotation;
+    }
+
+    public vec3 scale() {
+        return scale;
     }
 
     public boolean active() {

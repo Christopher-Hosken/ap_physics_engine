@@ -158,6 +158,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     public void wipe() {
         scene = new ArrayList<EmptyObj>();
         sel = null;
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     }
 
     public void addCube() {
