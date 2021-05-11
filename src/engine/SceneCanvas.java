@@ -12,10 +12,12 @@ import java.awt.event.*;
 import java.nio.Buffer;
 import java.nio.CharBuffer;
 import java.nio.FloatBuffer;
+import gui.Gui;
 
 public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener, KeyListener, MouseListener {
     private GLU glu = new GLU();
     private GL2 gl;
+    private Gui appGui;
     private float zNear= 0.001f, zFar = 1000f, fov = 45;
     private boolean isAltDown, isShiftDown, isCtrlDown;
     private float lastX, lastY;
@@ -155,6 +157,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     public void wipe() {
         scene = new ArrayList<EmptyObj>();
+        sel = null;
     }
 
     public void addCube() {
@@ -264,7 +267,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
-                sel = null;
             }
         }
 

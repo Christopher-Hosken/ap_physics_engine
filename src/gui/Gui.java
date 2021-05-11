@@ -1,11 +1,14 @@
+package gui;
 import javax.swing.SwingUtilities;
 
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,6 +43,9 @@ public class Gui extends Application {
     private double xOffset, yOffset;
     private boolean _darkTheme = true;
     private EmptyObj selectedObj = null;
+
+    public TabPane settings; 
+    public Tab objTab;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -243,23 +249,37 @@ public class Gui extends Application {
         menu.setTranslateX(682);
         menu.setTranslateY(51);
 
-        TabPane settings = new TabPane();
+        settings = new TabPane();
         settings.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         settings.setTabDragPolicy(TabDragPolicy.FIXED);
         settings.setSide(Side.LEFT);
-        Tab camTab = new Tab("Cam");
+        Tab camTab = new Tab("Camera");
         Tab worldTab = new Tab("World");
-        settings.getTabs().add(camTab);
         settings.getTabs().add(worldTab);
-
-        Tab objTab = new Tab("Object");
-        settings.getTabs().add(objTab);
+        settings.getTabs().add(camTab);
+        objTab = new Tab("Object");
 
         menu.getChildren().add(settings);
 
         //#endregion
 
         //#region buttonActions
+
+        root.addEventFilter(MouseEvent.MOUSE_CLICKED,  new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                selectedObj = sc.getSelection();
+
+                if (selectedObj == null) {
+                    settings.getTabs().remove(objTab);
+                }
+
+                else {
+                    settings.getTabs().add(objTab);
+                }
+            }
+        });
+        
         header.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
