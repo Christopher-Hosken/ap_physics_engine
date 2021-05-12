@@ -6,40 +6,47 @@ import java.util.ArrayList;
 public class EmptyObj {
     protected String name;
     protected int id;
-    protected vec3 oCenter, oRotation, oScale;
-    protected vec3 cCenter, cRotation, cScale;
+    protected vec3 center, rotation, scale;
+    protected vec3 pCenter, pRotation, pScale;
     protected vec3 color;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
-    protected boolean isLine, hasQuads, active;
+    protected boolean isLine, hasQuads, active, changed;
 
     public EmptyObj(int id, String name) {
-        cCenter = oCenter = new vec3();
-        cRotation = oRotation = new vec3();
-        cScale = oScale = new vec3(1, 1, 1);
+        center = new vec3();
+        rotation = new vec3();
+        scale = new vec3(1, 1, 1);
         color = new vec3(0.5f, 0.5f, 0.5f);
         this.name = name;
         this.id = id;
         init();
         this.vertexCount = vertices.size();
+        pCenter = new vec3();
+        pRotation = new vec3();
+        pScale = new vec3(1, 1, 1);
     }
 
     public EmptyObj(int id, String name, boolean hasQuads) {
-        cCenter = oCenter = new vec3();
-        cRotation = oRotation = new vec3();
-        cScale = oScale = new vec3(1, 1, 1);
+        center = new vec3();
+        rotation = new vec3();
+        scale = new vec3(1, 1, 1);
         color = new vec3(0.5f, 0.5f, 0.5f);
         this.name = name;
         this.id = id;
         this.hasQuads = hasQuads;
         init();
         this.vertexCount = vertices.size();
+        pCenter = new vec3();
+        pRotation = new vec3();
+        pScale = new vec3(1, 1, 1);
     }
 
     public void init() {
         this.vertices = new ArrayList<vec3>();
     }
 
+    //#region Getters
     public String name() {
         return name;
     }
@@ -48,16 +55,16 @@ public class EmptyObj {
         return id;
     }
 
-    public vec3 oCenter() {
-        return oCenter;
+    public vec3 center() {
+        return center;
     }
 
-    public vec3 oRotation() {
-        return oRotation;
+    public vec3 rotation() {
+        return rotation;
     }
 
-    public vec3 oScale() {
-        return oScale;
+    public vec3 scale() {
+        return scale;
     }
 
     public vec3 color() {
@@ -72,9 +79,21 @@ public class EmptyObj {
         return isLine;
     }
 
+    public boolean changed() {
+        return changed;
+    }
+
     public float colorID() {
         vec3 rgb = idToColor();
         return (rgb.x + rgb.y * 256 + rgb.z);
+    }
+
+    //#endregion
+
+    //#region Setters
+
+    public void setChanged(boolean c) {
+        changed = c;
     }
 
     public void setActive(boolean active) {
@@ -82,29 +101,93 @@ public class EmptyObj {
     }
 
     public void translate(vec3 t) {
-        oCenter.add(t);
+        center.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.get(vdx).add(t);
         }
     }
 
+    public void rotate(vec3 r) {
+        rotation.add(r);
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vec3 v = vertices.get(vdx);
+            v.sub(center);
+            // X Rotation
+            v.y = v.y * (float) Math.cos(Math.toRadians(r.x)) - v.z *  (float) Math.sin(Math.toRadians(r.x));
+            v.z = v.z * (float) Math.cos(Math.toRadians(r.x)) + v.y * (float) Math.sin(Math.toRadians(r.x));
+
+            // Y Rotation
+            v.x = v.x * (float) Math.cos(Math.toRadians(r.y)) + v.z *  (float) Math.sin(Math.toRadians(r.y));
+            v.z = v.z * (float) Math.cos(Math.toRadians(r.y)) - v.x * (float) Math.sin(Math.toRadians(r.y));
+
+            // Z Rotation
+            v.x = v.x * (float) Math.cos(Math.toRadians(r.z)) - v.y *  (float) Math.sin(Math.toRadians(r.z));
+            v.y = v.y * (float) Math.cos(Math.toRadians(r.z)) + v.x * (float) Math.sin(Math.toRadians(r.z));
+            
+            v.add(center);
+
+            vertices.set(vdx, v);
+        }
+    }
+
+    public void setRotation(vec3 r) {
+        vec3 rrot = vec3.sub(r, rotation);
+        rotation = r;
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vec3 v = vertices.get(vdx);
+            v.sub(center);
+            // X Rotation
+            v.y = v.y * (float) Math.cos(Math.toRadians(rrot.x)) - v.z *  (float) Math.sin(Math.toRadians(rrot.x));
+            v.z = v.z * (float) Math.cos(Math.toRadians(rrot.x)) + v.y * (float) Math.sin(Math.toRadians(rrot.x));
+
+            // Y Rotation
+            v.x = v.x * (float) Math.cos(Math.toRadians(rrot.y)) + v.z *  (float) Math.sin(Math.toRadians(rrot.y));
+            v.z = v.z * (float) Math.cos(Math.toRadians(rrot.y)) - v.x * (float) Math.sin(Math.toRadians(rrot.y));
+
+            // Z Rotation
+            v.x = v.x * (float) Math.cos(Math.toRadians(rrot.z)) - v.y *  (float) Math.sin(Math.toRadians(rrot.z));
+            v.y = v.y * (float) Math.cos(Math.toRadians(rrot.z)) + v.x * (float) Math.sin(Math.toRadians(rrot.z));
+            
+            v.add(center);
+
+            vertices.set(vdx, v);
+        }
+    }
+
+    public void scale(vec3 s) {
+        scale.mult(s);
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vertices.set(vdx, vec3.add(vec3.mult(vec3.sub(vertices.get(vdx), center), s), center));
+        }
+    }
+
+    public void setScale(vec3 s) {
+        vec3 rscl = vec3.div(s, scale);
+        scale = s;
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vertices.set(vdx, vec3.add(vec3.mult(vec3.sub(vertices.get(vdx), center), rscl), center));
+        }
+    }
+
     // Not entirely sure if this works lol.
     public void setLocation(vec3 l) {
-        vec3 PL = vec3.sub(l, oCenter);
+        vec3 PL = vec3.sub(l, center);
         translate(PL);
     }
 
     public void physicsTranslate(vec3 t) {
-        cCenter.add(t);
+        pCenter.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.get(vdx).add(t);
         } 
     }
 
     public void setPhysicsLocation(vec3 l) {
-        vec3 PL = vec3.sub(l, cCenter);
+        vec3 PL = vec3.sub(l, pCenter);
         physicsTranslate(PL);
     }
+
+    //#endregion
 
     public vec3 idToColor() {
         int r = (id & 0x000000FF) >>  0;

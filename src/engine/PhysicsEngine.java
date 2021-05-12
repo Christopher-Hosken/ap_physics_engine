@@ -20,7 +20,7 @@ public class PhysicsEngine {
 
         for (EmptyObj obj : world) {
             if (frame == frameStart) {
-                obj.setPhysicsLocation(obj.oCenter());
+                obj.setPhysicsLocation(obj.center());
             }
 
             if (isSimulating) {

@@ -1,5 +1,6 @@
 package gui;
 import javax.swing.SwingUtilities;
+import javafx.beans.value.ObservableValue;
 
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.GLCapabilities;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.Region;
@@ -304,6 +306,26 @@ public class Gui extends Application {
         locationX.setTranslateY(-90);
         objTransforms.getChildren().add(locationX);
 
+        locationX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = Float.valueOf(locationX.getText());
+                float y = selectedObj.center().y;
+                float z = selectedObj.center().z;
+                selectedObj.setLocation(new vec3(x, y, z));
+            }
+        });
+
+        locationX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    locationX.setText(oldValue);
+                }
+            }
+        });
+
         TextField locationY = new TextField();
         locationY.getStyleClass().add("y-text");
         locationY.setMaxSize(60, 15);
@@ -311,12 +333,52 @@ public class Gui extends Application {
         locationY.setTranslateY(-90);
         objTransforms.getChildren().add(locationY);
 
+        locationY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = selectedObj.center().x;
+                float y = Float.valueOf(locationY.getText());
+                float z = selectedObj.center().z;
+                selectedObj.setLocation(new vec3(x, y, z));
+            }
+        });
+
+        locationY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    locationY.setText(oldValue);
+                }
+            }
+        });
+
         TextField locationZ = new TextField();
         locationZ.getStyleClass().add("z-text");
         locationZ.setMaxSize(60, 15);
         locationZ.setTranslateX(100);
         locationZ.setTranslateY(-90);
         objTransforms.getChildren().add(locationZ);
+
+        locationZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = selectedObj.center().x;
+                float y = selectedObj.center().y;
+                float z = Float.valueOf(locationZ.getText());
+                selectedObj.setLocation(new vec3(x, y, z));
+            }
+        });
+
+        locationZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    locationZ.setText(oldValue);
+                }
+            }
+        });
 
         //#endregion
 
@@ -336,6 +398,26 @@ public class Gui extends Application {
         rotationX.setTranslateY(-60);
         objTransforms.getChildren().add(rotationX);
 
+        rotationX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float z = selectedObj.scale().z;
+                float y = selectedObj.scale().y;
+                float x = Float.valueOf(rotationX.getText());
+                selectedObj.setRotation(new vec3(x, y, z));
+            }
+        });
+
+        rotationX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    rotationX.setText(oldValue);
+                }
+            }
+        });
+
         TextField rotationY = new TextField();
         rotationY.getStyleClass().add("y-text");
         rotationY.setMaxSize(60, 15);
@@ -343,12 +425,52 @@ public class Gui extends Application {
         rotationY.setTranslateY(-60);
         objTransforms.getChildren().add(rotationY);
 
+        rotationY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float z = selectedObj.scale().z;
+                float x = selectedObj.scale().x;
+                float y = Float.valueOf(rotationY.getText());
+                selectedObj.setRotation(new vec3(x, y, z));
+            }
+        });
+
+        rotationY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    rotationY.setText(oldValue);
+                }
+            }
+        });
+
         TextField rotationZ = new TextField();
         rotationZ.getStyleClass().add("z-text");
         rotationZ.setMaxSize(60, 15);
         rotationZ.setTranslateX(100);
         rotationZ.setTranslateY(-60);
         objTransforms.getChildren().add(rotationZ);
+
+        rotationZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = selectedObj.scale().x;
+                float y = selectedObj.scale().y;
+                float z = Float.valueOf(rotationZ.getText());
+                selectedObj.setRotation(new vec3(x, y, z));
+            }
+        });
+
+        rotationZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    rotationZ.setText(oldValue);
+                }
+            }
+        });
 
         //#endregion
 
@@ -368,6 +490,30 @@ public class Gui extends Application {
         scaleX.setTranslateY(-30);
         objTransforms.getChildren().add(scaleX);
 
+        scaleX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float z = selectedObj.scale().z;
+                float y = selectedObj.scale().y;
+                float x = Float.valueOf(scaleX.getText());
+                if (x <= 0.0f) {
+                    x = 0.0001f;
+                    scaleX.setText(String.valueOf(x));
+                }
+                selectedObj.setScale(new vec3(x, y, z));
+            }
+        });
+
+        scaleX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    scaleX.setText(oldValue);
+                }
+            }
+        });
+
         TextField scaleY = new TextField();
         scaleY.getStyleClass().add("y-text");
         scaleY.setMaxSize(60, 15);
@@ -375,12 +521,60 @@ public class Gui extends Application {
         scaleY.setTranslateY(-30);
         objTransforms.getChildren().add(scaleY);
 
+        scaleY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = selectedObj.scale().x;
+                float z = selectedObj.scale().z;
+                float y = Float.valueOf(scaleY.getText());
+                if (y <= 0.0f) {
+                    y = 0.0001f;
+                    scaleY.setText(String.valueOf(y));
+                }
+                selectedObj.setScale(new vec3(x, y, z));
+            }
+        });
+
+        scaleY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    scaleY.setText(oldValue);
+                }
+            }
+        });
+
         TextField scaleZ = new TextField();
         scaleZ.getStyleClass().add("z-text");
         scaleZ.setMaxSize(60, 15);
         scaleZ.setTranslateX(100);
         scaleZ.setTranslateY(-30);
         objTransforms.getChildren().add(scaleZ);
+
+        scaleZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                float x = selectedObj.scale().x;
+                float y = selectedObj.scale().y;
+                float z = Float.valueOf(scaleZ.getText());
+                if (z <= 0.0f) {
+                    z = 0.0001f;
+                    scaleZ.setText(String.valueOf(z));
+                }
+                selectedObj.setScale(new vec3(x, y, z));
+            }
+        });
+
+        scaleZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                    scaleZ.setText(oldValue);
+                }
+            }
+        });
 
         //#endregion
 
@@ -489,7 +683,9 @@ public class Gui extends Application {
 
         //#endregion
 
-        worldTab.setContent(objTabRoot);
+        Tab objTab = new Tab("Object");
+
+        objTab.setContent(objTabRoot);
 
 
         settings.getTabs().add(worldTab);
@@ -502,9 +698,6 @@ public class Gui extends Application {
 
         settings.getTabs().add(camTab);
         //#endregion
-
-
-        Tab objTab = new Tab("Object");
 
         menu.getChildren().add(settings);
 
@@ -528,24 +721,28 @@ public class Gui extends Application {
                         settings.getTabs().add(objTab);
                     }
 
-                    objectName.setText(selectedObj.name()); 
-                    vec3 loc = selectedObj.oCenter();
-                    vec3 rot = selectedObj.oRotation();
-                    vec3 scl = selectedObj.oScale();
-                    vec3 col = selectedObj.color();
-                    locationX.setText(String.valueOf(loc.x));
-                    locationY.setText(String.valueOf(loc.y));
-                    locationZ.setText(String.valueOf(loc.z));
-                
-                    rotationX.setText(String.valueOf(rot.x));
-                    rotationY.setText(String.valueOf(rot.y));
-                    rotationZ.setText(String.valueOf(rot.z));
-                
-                    scaleX.setText(String.valueOf(scl.x));
-                    scaleY.setText(String.valueOf(scl.y));
-                    scaleZ.setText(String.valueOf(scl.z));
-
-                    rgbPick.setValue(Color.rgb((int) (col.x * 255), (int) (col.y * 255), (int) (col.z * 255)));
+                    if (lastObj != selectedObj || selectedObj.changed()) {
+                        objectName.setText(selectedObj.name()); 
+                        vec3 loc = selectedObj.center();
+                        vec3 rot = selectedObj.rotation();
+                        vec3 scl = selectedObj.scale();
+                        vec3 col = selectedObj.color();
+                        locationX.setText(String.valueOf(loc.x));
+                        locationY.setText(String.valueOf(loc.y));
+                        locationZ.setText(String.valueOf(loc.z));
+                    
+                        rotationX.setText(String.valueOf(rot.x));
+                        rotationY.setText(String.valueOf(rot.y));
+                        rotationZ.setText(String.valueOf(rot.z));
+                    
+                        scaleX.setText(String.valueOf(scl.x));
+                        scaleY.setText(String.valueOf(scl.y));
+                        scaleZ.setText(String.valueOf(scl.z));
+    
+                        rgbPick.setValue(Color.rgb((int) (col.x * 255), (int) (col.y * 255), (int) (col.z * 255)));
+                        lastObj = selectedObj;
+                        selectedObj.setChanged(false);
+                    }
                 }
             }
         });

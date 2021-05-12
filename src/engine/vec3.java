@@ -144,6 +144,14 @@ public class vec3 {
         );
     }
 
+    public static vec3 div(vec3 v, vec3 u) {
+        return new vec3(
+            v.x / u.x,
+            v.y / u.y,
+            v.z / u.z
+        );
+    }
+
     //#endregion
 
     //#region Vector Operators

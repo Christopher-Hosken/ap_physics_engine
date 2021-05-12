@@ -271,7 +271,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     @Override
     public void keyPressed(KeyEvent e) {
         if (isAltDown) {
-            if (e.getKeyCode() == 71) {
+            if (e.getKeyCode() == 92) {
                 posX = 0;
                 posY = 0;
                 posZ = -5;
@@ -280,7 +280,28 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 angleZ = 0;
             }
 
+            else if (e.getKeyCode() == 71) {
+                if (sel != null) {
+                    sel.setLocation(new vec3(0, 0, 0));
+                    sel.setChanged(true);
+                }
+            }
+
             else if (e.getKeyCode() == 82) {
+                if (sel != null) {
+                    sel.setRotation(new vec3(0, 0, 0));
+                    sel.setChanged(true);
+                }
+            }
+
+            else if (e.getKeyCode() == 83) {
+                if (sel != null) {
+                    sel.setScale(new vec3(1, 1, 1));
+                    sel.setChanged(true);
+                }
+            }
+
+            else if (e.getKeyCode() == 70) {
                 frame_current = frameStart;
             }
         }
