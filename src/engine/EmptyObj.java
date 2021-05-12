@@ -6,15 +6,18 @@ import java.util.ArrayList;
 public class EmptyObj {
     protected String name;
     protected int id;
-    protected vec3 center, rotation, scale;
+    protected vec3 oCenter, oRotation, oScale;
+    protected vec3 cCenter, cRotation, cScale;
+    protected vec3 color;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
     protected boolean isLine, hasQuads, active;
 
     public EmptyObj(int id, String name) {
-        center = new vec3();
-        rotation = new vec3();
-        scale = new vec3(1, 1, 1);
+        cCenter = oCenter = new vec3();
+        cRotation = oRotation = new vec3();
+        cScale = oScale = new vec3(1, 1, 1);
+        color = new vec3(0.5f, 0.5f, 0.5f);
         this.name = name;
         this.id = id;
         init();
@@ -22,7 +25,10 @@ public class EmptyObj {
     }
 
     public EmptyObj(int id, String name, boolean hasQuads) {
-        center = new vec3();
+        cCenter = oCenter = new vec3();
+        cRotation = oRotation = new vec3();
+        cScale = oScale = new vec3(1, 1, 1);
+        color = new vec3(0.5f, 0.5f, 0.5f);
         this.name = name;
         this.id = id;
         this.hasQuads = hasQuads;
@@ -42,16 +48,20 @@ public class EmptyObj {
         return id;
     }
 
-    public vec3 center() {
-        return center;
+    public vec3 oCenter() {
+        return oCenter;
     }
 
-    public vec3 rotation() {
-        return rotation;
+    public vec3 oRotation() {
+        return oRotation;
     }
 
-    public vec3 scale() {
-        return scale;
+    public vec3 oScale() {
+        return oScale;
+    }
+
+    public vec3 color() {
+        return color;
     }
 
     public boolean active() {
@@ -72,7 +82,7 @@ public class EmptyObj {
     }
 
     public void translate(vec3 t) {
-        center.add(t);
+        oCenter.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.get(vdx).add(t);
         }
@@ -80,8 +90,20 @@ public class EmptyObj {
 
     // Not entirely sure if this works lol.
     public void setLocation(vec3 l) {
-        vec3 PL = vec3.sub(l, center);
+        vec3 PL = vec3.sub(l, oCenter);
         translate(PL);
+    }
+
+    public void physicsTranslate(vec3 t) {
+        cCenter.add(t);
+        for (int vdx = 0; vdx < vertices.size(); vdx++) {
+            vertices.get(vdx).add(t);
+        } 
+    }
+
+    public void setPhysicsLocation(vec3 l) {
+        vec3 PL = vec3.sub(l, cCenter);
+        physicsTranslate(PL);
     }
 
     public vec3 idToColor() {
@@ -111,14 +133,14 @@ public class EmptyObj {
 
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vertices.get(vdx);
-            vec3 rgb = vec3.sub(center, v).normalize();
+            //vec3 rgb = vec3.sub(center, v).normalize();
 
             if (active) {
-                gl.glColor3f(rgb.x - 0.25f, rgb.y - 0.25f, rgb.x - 0.25f);
+                gl.glColor3f(color.x + 0.25f, color.y + 0.25f, color.z + 0.25f);
             }
 
             else {
-                gl.glColor3f(rgb.x, rgb.y, rgb.z);
+                gl.glColor3f(color.x, color.y, color.z);
             }
 
             gl.glVertex3f(v.x, v.y, v.z);

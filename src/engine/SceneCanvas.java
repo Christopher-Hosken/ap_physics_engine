@@ -28,6 +28,10 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     private ArrayList<EmptyObj> scene = new ArrayList<EmptyObj>();
     public boolean isWire;
     private EmptyObj sel = null;
+    private int frameStart = 0, frameEnd = 250;
+    private int frame_current = frameStart;
+    private boolean isSimulating;
+    private PhysicsEngine engine;
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -37,14 +41,19 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
+        engine = new PhysicsEngine(scene, frameStart, frameEnd);
 
         //#region Viewport Transformations
+        
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
         gl.glRotatef(angleX, 0, 1, 0);
         gl.glRotatef(angleZ, 0, 0, 1);
         //#endregion
         
+        frame_current = engine.update(frame_current, isSimulating);
+        //System.out.println(frame_current);
+
         for (EmptyObj obj : scene) {
             obj.drawID(gl);
         }
@@ -245,6 +254,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void keyReleased(KeyEvent e) {
+        System.out.println(e.getKeyChar() + ": " + e.getKeyCode());
         if (e.getKeyCode() == 16) {
             isShiftDown = false;
         }
@@ -261,13 +271,17 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     @Override
     public void keyPressed(KeyEvent e) {
         if (isAltDown) {
-            if (e.getKeyCode() == 82) {
+            if (e.getKeyCode() == 71) {
                 posX = 0;
                 posY = 0;
                 posZ = -5;
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
+            }
+
+            else if (e.getKeyCode() == 82) {
+                frame_current = frameStart;
             }
         }
 
@@ -281,6 +295,10 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
         else if (e.getKeyCode() == 18) {
             isAltDown = true;
+        }
+
+        else if (e.getKeyCode() == 32) {
+            isSimulating = !isSimulating;
         }
     }
 

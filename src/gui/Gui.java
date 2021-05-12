@@ -25,7 +25,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -278,6 +280,8 @@ public class Gui extends Application {
         vLine5.setStroke(Color.WHITE);
         objTabRoot.getChildren().add(vLine5);
 
+        //#region Object Panel
+
         StackPane objTransforms = new StackPane();
         objTransforms.setId("OBJTRANSFORM");
         objTransforms.setMaxSize(300, 250);
@@ -380,13 +384,110 @@ public class Gui extends Application {
 
         //#endregion
 
+        //#region Color
+
+        //#endregion
+
+        Label colorLabel = new Label(); 
+        colorLabel.getStyleClass().add("small-label");
+        colorLabel.setText("Color");
+        colorLabel.setTranslateY(35);
+        colorLabel.setTranslateX(-100);
+        objTransforms.getChildren().add(colorLabel);
+
+        ColorPicker rgbPick = new ColorPicker();
+        rgbPick.setId("RGBPICK");
+        rgbPick.setMaxSize(200, 35);
+        rgbPick.setTranslateX(35);
+        rgbPick.setTranslateY(35);
+        objTransforms.getChildren().add(rgbPick);
+
+        Label specLabel = new Label(); 
+        specLabel.getStyleClass().add("small-label");
+        specLabel.setText("Specular");
+        specLabel.setTranslateY(85);
+        specLabel.setTranslateX(-100);
+        objTransforms.getChildren().add(specLabel);
+
+        Slider specularPick = new Slider();
+        specularPick.setMaxSize(200, 35);
+        specularPick.setTranslateX(35);
+        specularPick.setTranslateY(85);
+        objTransforms.getChildren().add(specularPick);
+
+        //#endregion
         
+        //#region Physics Panel
+
         StackPane objPhys = new StackPane();
         objPhys.setId("OBJPHYSICS");
         objPhys.setMaxSize(300, 485);
         objPhys.setTranslateY(180);
         objTabRoot.getChildren().add(objPhys);
 
+        //#region Velocity
+
+        Label velocityLabel = new Label(); 
+        velocityLabel.getStyleClass().add("small-label");
+        velocityLabel.setText("Velocity");
+        velocityLabel.setTranslateY(-200);
+        velocityLabel.setTranslateX(-100);
+        objPhys.getChildren().add(velocityLabel);
+
+        TextField velocityX = new TextField();
+        velocityX.getStyleClass().add("x-text");
+        velocityX.setMaxSize(60, 15);
+        velocityX.setTranslateX(-30);
+        velocityX.setTranslateY(-200);
+        objPhys.getChildren().add(velocityX);
+
+        TextField velocityY = new TextField();
+        velocityY.getStyleClass().add("y-text");
+        velocityY.setMaxSize(60, 15);
+        velocityY.setTranslateX(35);
+        velocityY.setTranslateY(-200);
+        objPhys.getChildren().add(velocityY);
+
+        TextField velocityZ = new TextField();
+        velocityZ.getStyleClass().add("z-text");
+        velocityZ.setMaxSize(60, 15);
+        velocityZ.setTranslateX(100);
+        velocityZ.setTranslateY(-200);
+        objPhys.getChildren().add(velocityZ);
+
+        //#endregion
+
+        //#region Angular Velocity
+
+        Label angularLabel = new Label(); 
+        angularLabel.getStyleClass().add("small-label");
+        angularLabel.setText("Angular");
+        angularLabel.setTranslateX(-100);
+        angularLabel.setTranslateY(-170);
+        objPhys.getChildren().add(angularLabel);
+
+        TextField angularX = new TextField();
+        angularX.getStyleClass().add("x-text");
+        angularX.setMaxSize(60, 15);
+        angularX.setTranslateX(-30);
+        angularX.setTranslateY(-170);
+        objPhys.getChildren().add(angularX);
+
+        TextField angularY = new TextField();
+        angularY.getStyleClass().add("y-text");
+        angularY.setMaxSize(60, 15);
+        angularY.setTranslateX(35);
+        angularY.setTranslateY(-170);
+        objPhys.getChildren().add(angularY);
+
+        TextField angularZ = new TextField();
+        angularZ.getStyleClass().add("z-text");
+        angularZ.setMaxSize(60, 15);
+        angularZ.setTranslateX(100);
+        angularZ.setTranslateY(-170);
+        objPhys.getChildren().add(angularZ);
+
+        //#endregion
 
         worldTab.setContent(objTabRoot);
 
@@ -428,20 +529,23 @@ public class Gui extends Application {
                     }
 
                     objectName.setText(selectedObj.name()); 
-                    vec3 loc = selectedObj.center();
-                    vec3 rot = selectedObj.rotation();
-                    vec3 scl = selectedObj.scale();
-                    //locationX.setText(String.valueOf(loc.x));
-                    //locationY.setText(String.valueOf(loc.y));
-                    //locationZ.setText(String.valueOf(loc.z));
+                    vec3 loc = selectedObj.oCenter();
+                    vec3 rot = selectedObj.oRotation();
+                    vec3 scl = selectedObj.oScale();
+                    vec3 col = selectedObj.color();
+                    locationX.setText(String.valueOf(loc.x));
+                    locationY.setText(String.valueOf(loc.y));
+                    locationZ.setText(String.valueOf(loc.z));
                 
-                    //rotationX.setText(String.valueOf(rot.x));
-                    //rotationY.setText(String.valueOf(rot.y));
-                    //rotationZ.setText(String.valueOf(rot.z));
+                    rotationX.setText(String.valueOf(rot.x));
+                    rotationY.setText(String.valueOf(rot.y));
+                    rotationZ.setText(String.valueOf(rot.z));
                 
-                    //scaleX.setText(String.valueOf(scl.x));
-                    //scaleY.setText(String.valueOf(scl.y));
-                    //scaleZ.setText(String.valueOf(scl.z));
+                    scaleX.setText(String.valueOf(scl.x));
+                    scaleY.setText(String.valueOf(scl.y));
+                    scaleZ.setText(String.valueOf(scl.z));
+
+                    rgbPick.setValue(Color.rgb((int) (col.x * 255), (int) (col.y * 255), (int) (col.z * 255)));
                 }
             }
         });
