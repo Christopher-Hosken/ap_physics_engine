@@ -46,6 +46,7 @@ public class Gui extends Application {
     private double xOffset, yOffset;
     private boolean _darkTheme = true;
     private EmptyObj selectedObj = null;
+    private EmptyObj lastObj = null;
 
     public static void main(String[] args) throws Exception {
         launch(args);
@@ -410,13 +411,15 @@ public class Gui extends Application {
 
         //#region buttonActions
 
-        root.addEventFilter(MouseEvent.MOUSE_CLICKED,  new EventHandler<MouseEvent>() {
+        root.addEventFilter(MouseEvent.MOUSE_MOVED,  new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 selectedObj = sc.getSelection();
 
                 if (selectedObj == null) {
-                    settings.getTabs().remove(objTab);
+                    if (settings.getTabs().contains(objTab)) {
+                        settings.getTabs().remove(objTab);                        
+                    }
                 }
 
                 else {
@@ -425,20 +428,20 @@ public class Gui extends Application {
                     }
 
                     objectName.setText(selectedObj.name()); 
-                            vec3 loc = selectedObj.center();
-                            vec3 rot = selectedObj.rotation();
-                            vec3 scl = selectedObj.scale();
-                            locationX.setText(String.valueOf(loc.x));
-                            locationY.setText(String.valueOf(loc.y));
-                            locationZ.setText(String.valueOf(loc.z));
-
-                            rotationX.setText(String.valueOf(rot.x));
-                            rotationY.setText(String.valueOf(rot.y));
-                            rotationZ.setText(String.valueOf(rot.z));
-
-                            scaleX.setText(String.valueOf(scl.x));
-                            scaleY.setText(String.valueOf(scl.y));
-                            scaleZ.setText(String.valueOf(scl.z));
+                    vec3 loc = selectedObj.center();
+                    vec3 rot = selectedObj.rotation();
+                    vec3 scl = selectedObj.scale();
+                    //locationX.setText(String.valueOf(loc.x));
+                    //locationY.setText(String.valueOf(loc.y));
+                    //locationZ.setText(String.valueOf(loc.z));
+                
+                    //rotationX.setText(String.valueOf(rot.x));
+                    //rotationY.setText(String.valueOf(rot.y));
+                    //rotationZ.setText(String.valueOf(rot.z));
+                
+                    //scaleX.setText(String.valueOf(scl.x));
+                    //scaleY.setText(String.valueOf(scl.y));
+                    //scaleZ.setText(String.valueOf(scl.z));
                 }
             }
         });
