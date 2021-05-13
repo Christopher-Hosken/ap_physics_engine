@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Gui",
+            "request": "launch",
+            "mainClass": "gui.Gui",
+            "projectName": "ap_physics_engine_890baedd"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -21,7 +28,7 @@
             "type": "java",
             "name": "Launch Gui",
             "request": "launch",
-            "vmArgs" : "--module-path c:/src/javafx/lib --add-modules javafx.controls",
+            "vmArgs": "--module-path c:/src/javafx/lib --add-modules javafx.controls",
             "mainClass": "Gui",
             "projectName": "ap_physics_engine_890baedd"
         }

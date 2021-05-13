@@ -1,4 +1,6 @@
 package gui;
+
+import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import javafx.beans.value.ObservableValue;
 
@@ -68,12 +70,12 @@ public class Gui extends Application {
         rect.setArcWidth(25);
         root.setClip(rect);
 
-        //#region opengl
+        // #region opengl
         GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities caps = new GLCapabilities(profile);
         caps.setDoubleBuffered(true);
         caps.setHardwareAccelerated(true);
-        
+
         GLJPanel canvas = new GLJPanel(caps);
         SceneCanvas sc = new SceneCanvas();
         canvas.addGLEventListener(sc);
@@ -94,9 +96,9 @@ public class Gui extends Application {
             }
         });
 
-        //#endregion
+        // #endregion
 
-        //#region header
+        // #region header
         StackPane header = new StackPane();
         header.setTranslateY(-436);
         header.setMaxHeight(100);
@@ -243,10 +245,10 @@ public class Gui extends Application {
         close.setTranslateX(810);
         close.setGraphic(closeIcon);
         header.getChildren().add(close);
-        
-        //#endregion
 
-        //#region menu
+        // #endregion
+
+        // #region menu
         StackPane menu = new StackPane();
         menu.setId("MENU");
         menu.setMaxSize(365, 872);
@@ -264,7 +266,7 @@ public class Gui extends Application {
 
         Tab worldTab = new Tab("World");
 
-        //#region World Tab
+        // #region World Tab
 
         StackPane objTabRoot = new StackPane();
 
@@ -275,6 +277,36 @@ public class Gui extends Application {
         objectName.setTranslateY(-375);
         objTabRoot.getChildren().add(objectName);
 
+        //#region ObjectName Events
+
+        objectName.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (!(objectName.getText().length() == 0)) {
+                    objectName.setText(objectName.getText());
+                    selectedObj.setName(objectName.getText());
+                }
+
+                objectName.setText(selectedObj.name());
+            }
+        });
+
+        objectName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (!(objectName.getText().length() == 0)) {
+                    objectName.setText(objectName.getText());
+                    selectedObj.setName(objectName.getText());
+                }
+
+                objectName.setText(selectedObj.name());
+            }
+        });
+
+        //#endregion
+
         Line vLine5 = new Line();
         vLine5.setStartX(0);
         vLine5.setEndX(285);
@@ -282,7 +314,7 @@ public class Gui extends Application {
         vLine5.setStroke(Color.WHITE);
         objTabRoot.getChildren().add(vLine5);
 
-        //#region Object Panel
+        // #region Object Panel
 
         StackPane objTransforms = new StackPane();
         objTransforms.setId("OBJTRANSFORM");
@@ -290,7 +322,7 @@ public class Gui extends Application {
         objTransforms.setTranslateY(-200);
         objTabRoot.getChildren().add(objTransforms);
 
-        //#region Locations
+        // #region Locations
 
         Label locationLabel = new Label();
         locationLabel.getStyleClass().add("small-label");
@@ -306,25 +338,58 @@ public class Gui extends Application {
         locationX.setTranslateY(-90);
         objTransforms.getChildren().add(locationX);
 
-        locationX.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = Float.valueOf(locationX.getText());
-                float y = selectedObj.center().y;
-                float z = selectedObj.center().z;
-                selectedObj.setLocation(new vec3(x, y, z));
-            }
-        });
+        // #region locationX Events
 
         locationX.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     locationX.setText(oldValue);
                 }
             }
         });
+
+        locationX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (locationX.getText().length() == 1 && locationX.getText().contains("-")) {
+                    locationX.setText(String.valueOf(-selectedObj.center().x));
+                }
+
+                if (!(locationX.getText().length() == 0)) {
+                    float x = Float.valueOf(locationX.getText());
+                    float y = selectedObj.center().y;
+                    float z = selectedObj.center().z;
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationX.setText(String.valueOf(selectedObj.center().x));
+            }
+        });
+
+        locationX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (locationX.getText().length() == 1 && locationX.getText().contains("-")) {
+                    locationX.setText(String.valueOf(-selectedObj.center().x));
+                }
+
+                if (!(locationX.getText().length() == 0)) {
+                    float x = Float.valueOf(locationX.getText());
+                    float y = selectedObj.center().y;
+                    float z = selectedObj.center().z;
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationX.setText(String.valueOf(selectedObj.center().x));
+            }
+        });
+
+        // #endregion
 
         TextField locationY = new TextField();
         locationY.getStyleClass().add("y-text");
@@ -333,25 +398,58 @@ public class Gui extends Application {
         locationY.setTranslateY(-90);
         objTransforms.getChildren().add(locationY);
 
-        locationY.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = selectedObj.center().x;
-                float y = Float.valueOf(locationY.getText());
-                float z = selectedObj.center().z;
-                selectedObj.setLocation(new vec3(x, y, z));
-            }
-        });
+        // #region locationY Events
 
         locationY.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     locationY.setText(oldValue);
                 }
             }
         });
+
+        locationY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (locationY.getText().length() == 1 && locationY.getText().contains("-")) {
+                    locationY.setText(String.valueOf(-selectedObj.center().y));
+                }
+
+                if (!(locationY.getText().length() == 0)) {
+                    float x = selectedObj.center().x;
+                    float y = Float.valueOf(locationY.getText());
+                    float z = selectedObj.center().z;
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationY.setText(String.valueOf(selectedObj.center().y));
+            }
+        });
+
+        locationY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (locationY.getText().length() == 1 && locationY.getText().contains("-")) {
+                    locationY.setText(String.valueOf(-selectedObj.center().y));
+                }
+
+                if (!(locationY.getText().length() == 0)) {
+                    float x = selectedObj.center().x;
+                    float y = Float.valueOf(locationY.getText());
+                    float z = selectedObj.center().z;
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationY.setText(String.valueOf(selectedObj.center().y));
+            }
+        });
+
+        // #endregion
 
         TextField locationZ = new TextField();
         locationZ.getStyleClass().add("z-text");
@@ -360,29 +458,62 @@ public class Gui extends Application {
         locationZ.setTranslateY(-90);
         objTransforms.getChildren().add(locationZ);
 
-        locationZ.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = selectedObj.center().x;
-                float y = selectedObj.center().y;
-                float z = Float.valueOf(locationZ.getText());
-                selectedObj.setLocation(new vec3(x, y, z));
-            }
-        });
+        // #region locationZ Events
 
         locationZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     locationZ.setText(oldValue);
                 }
             }
         });
 
-        //#endregion
+        locationZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
 
-        //#region Rotations
+                if (locationZ.getText().length() == 1 && locationZ.getText().contains("-")) {
+                    locationZ.setText(String.valueOf(-selectedObj.center().z));
+                }
+
+                if (!(locationZ.getText().length() == 0)) {
+                    float x = selectedObj.center().x;
+                    float y = selectedObj.center().y;
+                    float z = Float.valueOf(locationZ.getText());
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationZ.setText(String.valueOf(selectedObj.center().z));
+            }
+        });
+
+        locationZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (locationZ.getText().length() == 1 && locationZ.getText().contains("-")) {
+                    locationZ.setText(String.valueOf(-selectedObj.center().z));
+                }
+
+                if (!(locationZ.getText().length() == 0)) {
+                    float x = selectedObj.center().x;
+                    float y = selectedObj.center().y;
+                    float z = Float.valueOf(locationZ.getText());
+
+                    selectedObj.setLocation(new vec3(x, y, z));
+                }
+
+                locationZ.setText(String.valueOf(selectedObj.center().z));
+            }
+        });
+
+        // #endregion
+
+        // #endregion
+
+        // #region Rotations
 
         Label rotationLabel = new Label();
         rotationLabel.getStyleClass().add("small-label");
@@ -398,25 +529,58 @@ public class Gui extends Application {
         rotationX.setTranslateY(-60);
         objTransforms.getChildren().add(rotationX);
 
-        rotationX.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float z = selectedObj.scale().z;
-                float y = selectedObj.scale().y;
-                float x = Float.valueOf(rotationX.getText());
-                selectedObj.setRotation(new vec3(x, y, z));
-            }
-        });
+        // #region rotationX Events
 
         rotationX.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     rotationX.setText(oldValue);
                 }
             }
         });
+
+        rotationX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (rotationX.getText().length() == 1 && rotationX.getText().contains("-")) {
+                    rotationX.setText(String.valueOf(-selectedObj.rotation().x));
+                }
+
+                if (!(rotationX.getText().length() == 0)) {
+                    float x = Float.valueOf(rotationX.getText());
+                    float y = selectedObj.rotation().y;
+                    float z = selectedObj.rotation().z;
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationX.setText(String.valueOf(selectedObj.rotation().x));
+            }
+        });
+
+        rotationX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (rotationX.getText().length() == 1 && rotationX.getText().contains("-")) {
+                    rotationX.setText(String.valueOf(-selectedObj.rotation().x));
+                }
+
+                if (!(rotationX.getText().length() == 0)) {
+                    float x = Float.valueOf(rotationX.getText());
+                    float y = selectedObj.rotation().y;
+                    float z = selectedObj.rotation().z;
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationX.setText(String.valueOf(selectedObj.rotation().x));
+            }
+        });
+
+        // #endregion
 
         TextField rotationY = new TextField();
         rotationY.getStyleClass().add("y-text");
@@ -425,25 +589,58 @@ public class Gui extends Application {
         rotationY.setTranslateY(-60);
         objTransforms.getChildren().add(rotationY);
 
-        rotationY.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float z = selectedObj.scale().z;
-                float x = selectedObj.scale().x;
-                float y = Float.valueOf(rotationY.getText());
-                selectedObj.setRotation(new vec3(x, y, z));
-            }
-        });
+        // #region rotationY Events
 
         rotationY.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     rotationY.setText(oldValue);
                 }
             }
         });
+
+        rotationY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (rotationY.getText().length() == 1 && rotationY.getText().contains("-")) {
+                    rotationY.setText(String.valueOf(-selectedObj.rotation().y));
+                }
+
+                if (!(rotationY.getText().length() == 0)) {
+                    float x = selectedObj.rotation().x;
+                    float y = Float.valueOf(rotationY.getText());
+                    float z = selectedObj.rotation().z;
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationY.setText(String.valueOf(selectedObj.rotation().y));
+            }
+        });
+
+        rotationY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (rotationY.getText().length() == 1 && rotationY.getText().contains("-")) {
+                    rotationY.setText(String.valueOf(-selectedObj.rotation().y));
+                }
+
+                if (!(rotationY.getText().length() == 0)) {
+                    float x = selectedObj.rotation().x;
+                    float y = Float.valueOf(rotationY.getText());
+                    float z = selectedObj.rotation().z;
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationY.setText(String.valueOf(selectedObj.rotation().y));
+            }
+        });
+
+        // #endregion
 
         TextField rotationZ = new TextField();
         rotationZ.getStyleClass().add("z-text");
@@ -452,67 +649,126 @@ public class Gui extends Application {
         rotationZ.setTranslateY(-60);
         objTransforms.getChildren().add(rotationZ);
 
-        rotationZ.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = selectedObj.scale().x;
-                float y = selectedObj.scale().y;
-                float z = Float.valueOf(rotationZ.getText());
-                selectedObj.setRotation(new vec3(x, y, z));
-            }
-        });
+        // #region rotationZ Events
 
         rotationZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
                     rotationZ.setText(oldValue);
                 }
             }
         });
 
-        //#endregion
+        rotationZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
 
-        //#region Scales
+                if (rotationZ.getText().length() == 1 && rotationZ.getText().contains("-")) {
+                    rotationZ.setText(String.valueOf(-selectedObj.rotation().z));
+                }
 
-        Label scaleLabel = new Label(); 
+                if (!(rotationZ.getText().length() == 0)) {
+                    float x = selectedObj.rotation().x;
+                    float y = selectedObj.rotation().y;
+                    float z = Float.valueOf(rotationZ.getText());
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationZ.setText(String.valueOf(selectedObj.rotation().z));
+            }
+        });
+
+        rotationZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (rotationZ.getText().length() == 1 && rotationZ.getText().contains("-")) {
+                    rotationZ.setText(String.valueOf(-selectedObj.rotation().z));
+                }
+
+                if (!(rotationZ.getText().length() == 0)) {
+                    float x = selectedObj.rotation().x;
+                    float y = selectedObj.rotation().y;
+                    float z = Float.valueOf(rotationZ.getText());
+
+                    selectedObj.setRotation(new vec3(x, y, z));
+                }
+
+                rotationZ.setText(String.valueOf(selectedObj.rotation().z));
+            }
+        });
+
+        // #endregion
+
+        // #endregion
+
+        // #region Scales
+
+        Label scaleLabel = new Label();
         scaleLabel.getStyleClass().add("small-label");
         scaleLabel.setText("Scale");
         scaleLabel.setTranslateY(-30);
         scaleLabel.setTranslateX(-100);
         objTransforms.getChildren().add(scaleLabel);
 
-        TextField scaleX= new TextField();
+        TextField scaleX = new TextField();
         scaleX.getStyleClass().add("x-text");
         scaleX.setMaxSize(60, 15);
         scaleX.setTranslateX(-30);
         scaleX.setTranslateY(-30);
         objTransforms.getChildren().add(scaleX);
 
-        scaleX.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float z = selectedObj.scale().z;
-                float y = selectedObj.scale().y;
-                float x = Float.valueOf(scaleX.getText());
-                if (x <= 0.0f) {
-                    x = 0.0001f;
-                    scaleX.setText(String.valueOf(x));
-                }
-                selectedObj.setScale(new vec3(x, y, z));
-            }
-        });
+        // #region scaleX Events
 
         scaleX.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
                     scaleX.setText(oldValue);
                 }
             }
         });
+
+        scaleX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (!(scaleX.getText().length() == 0)) {
+                    float x = Float.valueOf(scaleX.getText());
+                    float y = selectedObj.scale().y;
+                    float z = selectedObj.scale().z;
+
+                    if (x <= 0.0f) {
+                        x = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
+
+                scaleX.setText(String.valueOf(selectedObj.scale().x));
+            }
+        });
+
+        scaleX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(scaleX.getText().length() == 0)) {
+                    float x = Float.valueOf(scaleX.getText());
+                    float y = selectedObj.scale().y;
+                    float z = selectedObj.scale().z;
+
+                    if (x <= 0.0f) {
+                        x = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
+
+                scaleX.setText(String.valueOf(selectedObj.scale().x));
+            }
+        });
+
+        // #endregion
 
         TextField scaleY = new TextField();
         scaleY.getStyleClass().add("y-text");
@@ -521,29 +777,55 @@ public class Gui extends Application {
         scaleY.setTranslateY(-30);
         objTransforms.getChildren().add(scaleY);
 
-        scaleY.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = selectedObj.scale().x;
-                float z = selectedObj.scale().z;
-                float y = Float.valueOf(scaleY.getText());
-                if (y <= 0.0f) {
-                    y = 0.0001f;
-                    scaleY.setText(String.valueOf(y));
-                }
-                selectedObj.setScale(new vec3(x, y, z));
-            }
-        });
+        // #region scaleY Events
 
         scaleY.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
                     scaleY.setText(oldValue);
                 }
             }
         });
+
+        scaleY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (!(scaleY.getText().length() == 0)) {
+                    float x = selectedObj.scale().x;
+                    float y = Float.valueOf(scaleY.getText());
+                    float z = selectedObj.scale().z;
+
+                    if (y <= 0.0f) {
+                        y = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
+
+                scaleY.setText(String.valueOf(selectedObj.scale().y));
+            }
+        });
+
+        scaleY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(scaleX.getText().length() == 0)) {
+                    float x = selectedObj.scale().x;
+                    float y = Float.valueOf(scaleY.getText());
+                    float z = selectedObj.scale().z;
+
+                    if (y <= 0.0f) {
+                        y = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
+
+                scaleY.setText(String.valueOf(selectedObj.scale().y));
+            }
+        });
+
+        // #endregion
 
         TextField scaleZ = new TextField();
         scaleZ.getStyleClass().add("z-text");
@@ -552,37 +834,63 @@ public class Gui extends Application {
         scaleZ.setTranslateY(-30);
         objTransforms.getChildren().add(scaleZ);
 
-        scaleZ.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                float x = selectedObj.scale().x;
-                float y = selectedObj.scale().y;
-                float z = Float.valueOf(scaleZ.getText());
-                if (z <= 0.0f) {
-                    z = 0.0001f;
-                    scaleZ.setText(String.valueOf(z));
-                }
-                selectedObj.setScale(new vec3(x, y, z));
-            }
-        });
+        // #region scaleZ Events
 
         scaleZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, 
-                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d*)?")) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
                     scaleZ.setText(oldValue);
                 }
             }
         });
 
-        //#endregion
+        scaleZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
 
-        //#region Color
+                if (!(scaleZ.getText().length() == 0)) {
+                    float x = selectedObj.scale().x;
+                    float y = selectedObj.scale().y;
+                    float z = Float.valueOf(scaleZ.getText());
 
-        //#endregion
+                    if (z <= 0.0f) {
+                        z = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
 
-        Label colorLabel = new Label(); 
+                scaleZ.setText(String.valueOf(selectedObj.scale().z));
+            }
+        });
+
+        scaleZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(scaleZ.getText().length() == 0)) {
+                    float x = selectedObj.scale().x;
+                    float y = selectedObj.scale().y;
+                    float z = Float.valueOf(scaleZ.getText());
+
+                    if (z <= 0.0f) {
+                        z = 0.001f;
+                    }
+                    selectedObj.setScale(new vec3(x, y, z));
+                }
+
+                scaleZ.setText(String.valueOf(selectedObj.scale().z));
+            }
+        });
+
+        // #endregion
+
+        // #endregion
+
+        // #region Color
+
+        // #endregion
+
+        Label colorLabel = new Label();
         colorLabel.getStyleClass().add("small-label");
         colorLabel.setText("Color");
         colorLabel.setTranslateY(35);
@@ -596,7 +904,7 @@ public class Gui extends Application {
         rgbPick.setTranslateY(35);
         objTransforms.getChildren().add(rgbPick);
 
-        Label specLabel = new Label(); 
+        Label specLabel = new Label();
         specLabel.getStyleClass().add("small-label");
         specLabel.setText("Specular");
         specLabel.setTranslateY(85);
@@ -604,14 +912,14 @@ public class Gui extends Application {
         objTransforms.getChildren().add(specLabel);
 
         Slider specularPick = new Slider();
-        specularPick.setMaxSize(200, 35);
+        specularPick.setMaxSize(180, 35);
         specularPick.setTranslateX(35);
         specularPick.setTranslateY(85);
         objTransforms.getChildren().add(specularPick);
 
-        //#endregion
-        
-        //#region Physics Panel
+        // #endregion
+
+        // #region Physics Panel
 
         StackPane objPhys = new StackPane();
         objPhys.setId("OBJPHYSICS");
@@ -619,9 +927,9 @@ public class Gui extends Application {
         objPhys.setTranslateY(180);
         objTabRoot.getChildren().add(objPhys);
 
-        //#region Velocity
+        // #region Velocity
 
-        Label velocityLabel = new Label(); 
+        Label velocityLabel = new Label();
         velocityLabel.getStyleClass().add("small-label");
         velocityLabel.setText("Velocity");
         velocityLabel.setTranslateY(-200);
@@ -649,11 +957,11 @@ public class Gui extends Application {
         velocityZ.setTranslateY(-200);
         objPhys.getChildren().add(velocityZ);
 
-        //#endregion
+        // #endregion
 
-        //#region Angular Velocity
+        // #region Angular Velocity
 
-        Label angularLabel = new Label(); 
+        Label angularLabel = new Label();
         angularLabel.getStyleClass().add("small-label");
         angularLabel.setText("Angular");
         angularLabel.setTranslateX(-100);
@@ -681,38 +989,36 @@ public class Gui extends Application {
         angularZ.setTranslateY(-170);
         objPhys.getChildren().add(angularZ);
 
-        //#endregion
+        // #endregion
 
         Tab objTab = new Tab("Object");
 
         objTab.setContent(objTabRoot);
 
-
         settings.getTabs().add(worldTab);
-        //#endregion
-        
+        // #endregion
+
         Tab camTab = new Tab("Camera");
 
-        //#region Camera Tab
-
+        // #region Camera Tab
 
         settings.getTabs().add(camTab);
-        //#endregion
+        // #endregion
 
         menu.getChildren().add(settings);
 
-        //#endregion
+        // #endregion
 
-        //#region buttonActions
+        // #region buttonActions
 
-        root.addEventFilter(MouseEvent.MOUSE_MOVED,  new EventHandler<MouseEvent>() {
+        root.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 selectedObj = sc.getSelection();
 
                 if (selectedObj == null) {
                     if (settings.getTabs().contains(objTab)) {
-                        settings.getTabs().remove(objTab);                        
+                        settings.getTabs().remove(objTab);
                     }
                 }
 
@@ -722,7 +1028,7 @@ public class Gui extends Application {
                     }
 
                     if (lastObj != selectedObj || selectedObj.changed()) {
-                        objectName.setText(selectedObj.name()); 
+                        objectName.setText(selectedObj.name());
                         vec3 loc = selectedObj.center();
                         vec3 rot = selectedObj.rotation();
                         vec3 scl = selectedObj.scale();
@@ -730,15 +1036,15 @@ public class Gui extends Application {
                         locationX.setText(String.valueOf(loc.x));
                         locationY.setText(String.valueOf(loc.y));
                         locationZ.setText(String.valueOf(loc.z));
-                    
+
                         rotationX.setText(String.valueOf(rot.x));
                         rotationY.setText(String.valueOf(rot.y));
                         rotationZ.setText(String.valueOf(rot.z));
-                    
+
                         scaleX.setText(String.valueOf(scl.x));
                         scaleY.setText(String.valueOf(scl.y));
                         scaleZ.setText(String.valueOf(scl.z));
-    
+
                         rgbPick.setValue(Color.rgb((int) (col.x * 255), (int) (col.y * 255), (int) (col.z * 255)));
                         lastObj = selectedObj;
                         selectedObj.setChanged(false);
@@ -746,15 +1052,16 @@ public class Gui extends Application {
                 }
             }
         });
-        
+
         header.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 xOffset = stage.getX() - event.getScreenX();
                 yOffset = stage.getY() - event.getScreenY();
-            }});
+            }
+        });
 
-        header.setOnMouseDragged(new EventHandler<MouseEvent>(){
+        header.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton().ordinal() == 1) {
@@ -765,13 +1072,15 @@ public class Gui extends Application {
         });
 
         logo.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 sc.wipe();
             }
         });
 
         toggleMenu.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 if (root.getChildren().contains(menu)) {
                     root.getChildren().remove(menu);
                 }
@@ -783,7 +1092,8 @@ public class Gui extends Application {
         });
 
         toggleWire.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 if (sc.isWire) {
                     sc.isWire = false;
                 }
@@ -795,9 +1105,11 @@ public class Gui extends Application {
         });
 
         info.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 try {
-                    java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/wiki"));
+                    java.awt.Desktop.getDesktop()
+                            .browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/wiki"));
                 } catch (IOException | URISyntaxException e2) {
                     e2.printStackTrace();
                 }
@@ -805,9 +1117,11 @@ public class Gui extends Application {
         });
 
         bug.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 try {
-                    java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/issues"));
+                    java.awt.Desktop.getDesktop()
+                            .browse(new URI("https://github.com/Christopher-Hosken/ap_physics_engine/issues"));
                 } catch (IOException | URISyntaxException e2) {
                     e2.printStackTrace();
                 }
@@ -815,45 +1129,50 @@ public class Gui extends Application {
         });
 
         close.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 animator.stop();
                 stage.close();
             }
         });
 
         addCube.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 sc.addCube();
             }
         });
 
         addSphere.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 sc.addIcoSphere();
             }
         });
 
         addLight.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 System.out.println("LIGHT ADDED");
             }
         });
 
         importModel.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 System.out.println("MODEL IMPORTED");
             }
         });
 
-        //#endregion
+        // #endregion
         Scene scene = new Scene(root, 1728, 972);
         scene.setFill(Color.TRANSPARENT);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
 
-
         toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 if (_darkTheme) {
                     stage.getScene().getStylesheets().setAll("assets/light.css");
                 }

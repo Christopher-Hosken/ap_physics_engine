@@ -96,6 +96,10 @@ public class EmptyObj {
         changed = c;
     }
 
+    public void setName(String n) {
+        name = n;
+    }
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -109,48 +113,63 @@ public class EmptyObj {
 
     public void rotate(vec3 r) {
         rotation.add(r);
+
+        float sinX = (float) Math.sin(Math.toRadians(r.x));
+        float cosX = (float) Math.cos(Math.toRadians(r.x));
+
+        float sinY = (float) Math.sin(Math.toRadians(r.y));
+        float cosY = (float) Math.cos(Math.toRadians(r.y));
+
+        float sinZ = (float) Math.sin(Math.toRadians(r.z));
+        float cosZ = (float) Math.cos(Math.toRadians(r.z));
+
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vec3 v = vertices.get(vdx);
-            v.sub(center);
+            vec3 v = vec3.sub(vertices.get(vdx), center);
             // X Rotation
-            v.y = v.y * (float) Math.cos(Math.toRadians(r.x)) - v.z *  (float) Math.sin(Math.toRadians(r.x));
-            v.z = v.z * (float) Math.cos(Math.toRadians(r.x)) + v.y * (float) Math.sin(Math.toRadians(r.x));
+            v.y = (v.y * cosX) - (v.z * sinX);
+            v.z = (v.z * cosX) + (v.y * sinX);
 
             // Y Rotation
-            v.x = v.x * (float) Math.cos(Math.toRadians(r.y)) + v.z *  (float) Math.sin(Math.toRadians(r.y));
-            v.z = v.z * (float) Math.cos(Math.toRadians(r.y)) - v.x * (float) Math.sin(Math.toRadians(r.y));
+            v.x = (v.x * cosY) + (v.z * sinY);
+            v.z = (v.z * cosY) - (v.x * sinY);
 
             // Z Rotation
-            v.x = v.x * (float) Math.cos(Math.toRadians(r.z)) - v.y *  (float) Math.sin(Math.toRadians(r.z));
-            v.y = v.y * (float) Math.cos(Math.toRadians(r.z)) + v.x * (float) Math.sin(Math.toRadians(r.z));
-            
-            v.add(center);
+            v.x = (v.x * cosZ) - (v.y * sinZ);
+            v.y = (v.y * cosZ) + (v.x * sinZ);
 
-            vertices.set(vdx, v);
+            vertices.set(vdx, vec3.add(v, center));
         }
     }
 
     public void setRotation(vec3 r) {
         vec3 rrot = vec3.sub(r, rotation);
         rotation = r;
+
+        float sinX = (float) Math.sin(Math.toRadians(rrot.x));
+        float cosX = (float) Math.cos(Math.toRadians(rrot.x));
+
+        float sinY = (float) Math.sin(Math.toRadians(rrot.y));
+        float cosY = (float) Math.cos(Math.toRadians(rrot.y));
+
+        float sinZ = (float) Math.sin(Math.toRadians(rrot.z));
+        float cosZ = (float) Math.cos(Math.toRadians(rrot.z));
+
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vec3 v = vertices.get(vdx);
-            v.sub(center);
+            vec3 v = vec3.sub(vertices.get(vdx), center);
+            
             // X Rotation
-            v.y = v.y * (float) Math.cos(Math.toRadians(rrot.x)) - v.z *  (float) Math.sin(Math.toRadians(rrot.x));
-            v.z = v.z * (float) Math.cos(Math.toRadians(rrot.x)) + v.y * (float) Math.sin(Math.toRadians(rrot.x));
+            v.y = (v.y * cosX) - (v.z * sinX);
+            v.z = (v.z * cosX) + (v.y * sinX);
 
             // Y Rotation
-            v.x = v.x * (float) Math.cos(Math.toRadians(rrot.y)) + v.z *  (float) Math.sin(Math.toRadians(rrot.y));
-            v.z = v.z * (float) Math.cos(Math.toRadians(rrot.y)) - v.x * (float) Math.sin(Math.toRadians(rrot.y));
+            v.x = (v.x * cosY) + (v.z * sinY);
+            v.z = (v.z * cosY) - (v.x * sinY);
 
             // Z Rotation
-            v.x = v.x * (float) Math.cos(Math.toRadians(rrot.z)) - v.y *  (float) Math.sin(Math.toRadians(rrot.z));
-            v.y = v.y * (float) Math.cos(Math.toRadians(rrot.z)) + v.x * (float) Math.sin(Math.toRadians(rrot.z));
-            
-            v.add(center);
+            v.x = (v.x * cosZ) - (v.y * sinZ);
+            v.y = (v.y * cosZ) + (v.x * sinZ);
 
-            vertices.set(vdx, v);
+            vertices.set(vdx, vec3.add(v, center));
         }
     }
 
