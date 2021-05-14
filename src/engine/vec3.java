@@ -192,6 +192,50 @@ public class vec3 {
         );
     }
 
+    public static vec3 clamp(vec3 v, float min, float max) {
+        if (v.x < min) v.x=min;
+        if (v.y < min) v.y=min;
+        if (v.z < min) v.z=min;
+
+        if (v.x > max) v.x=max;
+        if (v.y > max) v.y=max;
+        if (v.z > max) v.z=max;
+
+        return v;
+    } 
+
+    public static float[] clamp(float[] arr, float min, float max) {
+        for (int fdx = 0; fdx < arr.length; fdx++) {
+            if (arr[fdx] < min) arr[fdx] = min;
+            if (arr[fdx] > max) arr[fdx] = max;
+        }
+
+        return arr;
+    }
+
+    public static float clamp(float f, float min, float max) {
+        if (f < min) f = min;
+        if (f > max) f = max;
+
+        return f;
+    }
+
+    public static vec3 sin(vec3 v) {
+        v.x = (float) Math.sin(v.x);
+        v.y = (float) Math.sin(v.y);
+        v.z = (float) Math.sin(v.z);
+
+        return v;
+    }
+
+    public static vec3 cos(vec3 v) {
+        v.x = (float) Math.cos(v.x);
+        v.y = (float) Math.cos(v.y);
+        v.z = (float) Math.cos(v.z);
+
+        return v;
+    }
+
     //#endregion
 
     //#region Random

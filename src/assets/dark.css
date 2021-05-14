@@ -58,17 +58,17 @@
     -fx-text-fill: white;
 }
 
-#OBJTRANSFORM {
+.first-panel {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-radius: 15;
 }
 
-#OBJPHYSICS {
+.second-panel {
     -fx-background-color: rgba(255, 255, 255, 0.05);
     -fx-background-radius: 10;    
 }
 
-#OBJNAME {
+.panel-title {
     -fx-font-size: 25;
     -fx-alignment: center;
 }

@@ -20,11 +20,12 @@ public class PhysicsEngine {
 
         for (EmptyObj obj : world) {
             if (frame == frameStart) {
-                obj.setPhysicsLocation(obj.center());
+                obj.setLocation(obj.pCenter(), obj.center());
             }
 
             if (isSimulating) {
-                obj.physicsTranslate(new vec3(0, g, 0));
+                vec3 force = new vec3(0, g, 0);
+                obj.applyForce(force);
             }
         }
 

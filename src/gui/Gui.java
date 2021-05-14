@@ -1,51 +1,35 @@
 package gui;
 
-import javax.swing.Action;
-import javax.swing.SwingUtilities;
-import javafx.beans.value.ObservableValue;
-
-import com.jogamp.newt.event.MouseListener;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLJPanel;
-import com.jogamp.opengl.util.Animator;
-import com.jogamp.opengl.util.FPSAnimator;
+import engine.SceneCanvas;
+import engine.EmptyObj;
+import engine.vec3;
 
 import java.awt.Toolkit;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
+import javax.swing.*;
 import javafx.embed.swing.SwingNode;
-import javafx.event.ActionEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.beans.value.*;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.TabPane.TabDragPolicy;
+import javafx.scene.control.*;
+import javafx.scene.control.TabPane.*;
+import javafx.scene.layout.*;
+import javafx.scene.shape.*;
+import javafx.event.ActionEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
-import engine.EmptyObj;
-import engine.SceneCanvas;
-import engine.vec3;
+
+import com.jogamp.newt.event.MouseListener; 
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.util.*;
 
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
@@ -60,6 +44,7 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //#region Root
         stage.setTitle("AP Physics Engine");
         stage.getIcons().add(new Image("assets/images/icons/atom.png"));
 
@@ -70,7 +55,9 @@ public class Gui extends Application {
         rect.setArcWidth(25);
         root.setClip(rect);
 
-        // #region opengl
+        //#endregion
+
+        // #region Opengl
         GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities caps = new GLCapabilities(profile);
         caps.setDoubleBuffered(true);
@@ -98,7 +85,7 @@ public class Gui extends Application {
 
         // #endregion
 
-        // #region header
+        // #region Header
         StackPane header = new StackPane();
         header.setTranslateY(-436);
         header.setMaxHeight(100);
@@ -248,7 +235,7 @@ public class Gui extends Application {
 
         // #endregion
 
-        // #region menu
+        // #region Menu
         StackPane menu = new StackPane();
         menu.setId("MENU");
         menu.setMaxSize(365, 872);
@@ -264,14 +251,55 @@ public class Gui extends Application {
         settings.setTabMinHeight(40);
         settings.setSide(Side.LEFT);
 
+        // #region World Tab
+
         Tab worldTab = new Tab("World");
 
-        // #region World Tab
+        StackPane worldTabRoot = new StackPane();
+        worldTab.setContent(worldTabRoot);
+
+        Label worldTitle = new Label();
+        worldTitle.setText("World");
+        worldTitle.getStyleClass().add("panel-title");
+        worldTitle.setText("World");
+        worldTitle.setTranslateX(0);
+        worldTitle.setTranslateY(-375);
+        worldTabRoot.getChildren().add(worldTitle);
+
+        Line vLine5 = new Line();
+        vLine5.setStartX(0);
+        vLine5.setEndX(285);
+        vLine5.setTranslateY(-350);
+        vLine5.setStroke(Color.WHITE);
+        worldTabRoot.getChildren().add(vLine5);
+
+        //#region Camera Settings
+        StackPane cameraPane = new StackPane();
+        cameraPane.getStyleClass().add("first-panel");
+        cameraPane.setMaxSize(300, 250);
+        cameraPane.setTranslateY(-200);
+        worldTabRoot.getChildren().add(cameraPane);
+
+        //#endregion World Settings
+        StackPane worldPane = new StackPane();
+        worldPane.setId("OBJPHYSICS");
+        worldPane.getStyleClass().add("second-panel");
+        worldPane.setMaxSize(300, 485);
+        worldPane.setTranslateY(180);
+        worldTabRoot.getChildren().add(worldPane);
+
+        //#region
+
+        //#endregion
+
+        //#endregion
+
+        //#region Object Tab
 
         StackPane objTabRoot = new StackPane();
 
         TextField objectName = new TextField();
-        objectName.setId("OBJNAME");
+        objectName.getStyleClass().add("panel-title");
         objectName.setText("Object Name");
         objectName.setTranslateX(0);
         objectName.setTranslateY(-375);
@@ -307,17 +335,17 @@ public class Gui extends Application {
 
         //#endregion
 
-        Line vLine5 = new Line();
-        vLine5.setStartX(0);
-        vLine5.setEndX(285);
-        vLine5.setTranslateY(-350);
-        vLine5.setStroke(Color.WHITE);
-        objTabRoot.getChildren().add(vLine5);
+        Line vLine6 = new Line();
+        vLine6.setStartX(0);
+        vLine6.setEndX(285);
+        vLine6.setTranslateY(-350);
+        vLine6.setStroke(Color.WHITE);
+        objTabRoot.getChildren().add(vLine6);
 
         // #region Object Panel
 
         StackPane objTransforms = new StackPane();
-        objTransforms.setId("OBJTRANSFORM");
+        objTransforms.getStyleClass().add("first-panel");
         objTransforms.setMaxSize(300, 250);
         objTransforms.setTranslateY(-200);
         objTabRoot.getChildren().add(objTransforms);
@@ -362,7 +390,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationX.setText(String.valueOf(selectedObj.center().x));
@@ -382,7 +410,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationX.setText(String.valueOf(selectedObj.center().x));
@@ -422,7 +450,7 @@ public class Gui extends Application {
                     float y = Float.valueOf(locationY.getText());
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationY.setText(String.valueOf(selectedObj.center().y));
@@ -442,7 +470,7 @@ public class Gui extends Application {
                     float y = Float.valueOf(locationY.getText());
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationY.setText(String.valueOf(selectedObj.center().y));
@@ -482,7 +510,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = Float.valueOf(locationZ.getText());
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationZ.setText(String.valueOf(selectedObj.center().z));
@@ -502,7 +530,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = Float.valueOf(locationZ.getText());
 
-                    selectedObj.setLocation(new vec3(x, y, z));
+                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
                 }
 
                 locationZ.setText(String.valueOf(selectedObj.center().z));
@@ -922,7 +950,7 @@ public class Gui extends Application {
         // #region Physics Panel
 
         StackPane objPhys = new StackPane();
-        objPhys.setId("OBJPHYSICS");
+        objPhys.getStyleClass().add("second-panel");
         objPhys.setMaxSize(300, 485);
         objPhys.setTranslateY(180);
         objTabRoot.getChildren().add(objPhys);
@@ -998,18 +1026,13 @@ public class Gui extends Application {
         settings.getTabs().add(worldTab);
         // #endregion
 
-        Tab camTab = new Tab("Camera");
-
-        // #region Camera Tab
-
-        settings.getTabs().add(camTab);
-        // #endregion
-
         menu.getChildren().add(settings);
 
         // #endregion
 
-        // #region buttonActions
+        //#endregion
+
+        //#region Button Actions
 
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
@@ -1032,7 +1055,7 @@ public class Gui extends Application {
                         vec3 loc = selectedObj.center();
                         vec3 rot = selectedObj.rotation();
                         vec3 scl = selectedObj.scale();
-                        vec3 col = selectedObj.color();
+                        float[] col = selectedObj.color();
                         locationX.setText(String.valueOf(loc.x));
                         locationY.setText(String.valueOf(loc.y));
                         locationZ.setText(String.valueOf(loc.z));
@@ -1045,7 +1068,7 @@ public class Gui extends Application {
                         scaleY.setText(String.valueOf(scl.y));
                         scaleZ.setText(String.valueOf(scl.z));
 
-                        rgbPick.setValue(Color.rgb((int) (col.x * 255), (int) (col.y * 255), (int) (col.z * 255)));
+                        rgbPick.setValue(Color.rgb((int) (col[0] * 255), (int) (col[0] * 255), (int) (col[0] * 255)));
                         lastObj = selectedObj;
                         selectedObj.setChanged(false);
                     }
@@ -1074,7 +1097,7 @@ public class Gui extends Application {
         logo.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                sc.wipe();
+                sc.clear();
             }
         });
 
@@ -1094,12 +1117,12 @@ public class Gui extends Application {
         toggleWire.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                if (sc.isWire) {
-                    sc.isWire = false;
+                if (sc.isWire()) {
+                    sc.setIsWire(false);
                 }
 
                 else {
-                    sc.isWire = true;
+                    sc.setIsWire(true);
                 }
             }
         });
@@ -1164,12 +1187,6 @@ public class Gui extends Application {
             }
         });
 
-        // #endregion
-        Scene scene = new Scene(root, 1728, 972);
-        scene.setFill(Color.TRANSPARENT);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setScene(scene);
-
         toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -1184,8 +1201,15 @@ public class Gui extends Application {
                 _darkTheme = !_darkTheme;
             }
         });
+    //#endregion
+
+        Scene scene = new Scene(root, 1728, 972);
+        scene.setFill(Color.TRANSPARENT);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setScene(scene);
 
         stage.getScene().getStylesheets().setAll("assets/dark.css");
         stage.show();
     }
+
 }

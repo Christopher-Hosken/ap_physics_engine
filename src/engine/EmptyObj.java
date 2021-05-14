@@ -6,40 +6,23 @@ import java.util.ArrayList;
 public class EmptyObj {
     protected String name;
     protected int id;
-    protected vec3 center, rotation, scale;
-    protected vec3 pCenter, pRotation, pScale;
-    protected vec3 color;
+    protected float mass;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
+    protected vec3 center, rotation, scale, pCenter, pRotation, pScale, velocity, angularVelocity;
+    protected float[] color, specular, shinyness;
     protected boolean isLine, hasQuads, active, changed;
 
-    public EmptyObj(int id, String name) {
-        center = new vec3();
-        rotation = new vec3();
-        scale = new vec3(1, 1, 1);
-        color = new vec3(0.5f, 0.5f, 0.5f);
+    public EmptyObj(String name, int id, boolean hasQuads) {
         this.name = name;
         this.id = id;
+        mass = 1;
         init();
         this.vertexCount = vertices.size();
-        pCenter = new vec3();
-        pRotation = new vec3();
-        pScale = new vec3(1, 1, 1);
-    }
-
-    public EmptyObj(int id, String name, boolean hasQuads) {
-        center = new vec3();
-        rotation = new vec3();
-        scale = new vec3(1, 1, 1);
-        color = new vec3(0.5f, 0.5f, 0.5f);
-        this.name = name;
-        this.id = id;
+        center=rotation=pCenter=pRotation=velocity=angularVelocity=new vec3();
+        scale=pScale=new vec3(1, 1, 1);
+        color = new float[] {0.5f, 0.5f, 0.5f};
         this.hasQuads = hasQuads;
-        init();
-        this.vertexCount = vertices.size();
-        pCenter = new vec3();
-        pRotation = new vec3();
-        pScale = new vec3(1, 1, 1);
     }
 
     public void init() {
@@ -55,6 +38,10 @@ public class EmptyObj {
         return id;
     }
 
+    public float mass() {
+        return mass;
+    }
+
     public vec3 center() {
         return center;
     }
@@ -67,8 +54,36 @@ public class EmptyObj {
         return scale;
     }
 
-    public vec3 color() {
+    public vec3 pCenter() {
+        return pCenter;
+    }
+
+    public vec3 pRotation() {
+        return pRotation;
+    }
+
+    public vec3 pScale() {
+        return pScale;
+    }
+
+    public vec3 velocity() {
+        return velocity;
+    }
+
+    public vec3 angularVelocity() {
+        return angularVelocity;
+    }
+
+    public float[] color() {
         return color;
+    }
+
+    public float[] specular() {
+        return specular;
+    }
+
+    public float[] shinyness() {
+        return shinyness;
     }
 
     public boolean active() {
@@ -104,11 +119,16 @@ public class EmptyObj {
         this.active = active;
     }
 
-    public void translate(vec3 t) {
-        center.add(t);
+    public void translate(vec3 c, vec3 t) {
+        c.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.get(vdx).add(t);
         }
+    }
+
+    public void setLocation(vec3 c, vec3 l) {
+        vec3 PL = vec3.sub(l, c);
+        translate(c, PL);
     }
 
     public void rotate(vec3 r) {
@@ -188,24 +208,19 @@ public class EmptyObj {
         }
     }
 
-    // Not entirely sure if this works lol.
-    public void setLocation(vec3 l) {
-        vec3 PL = vec3.sub(l, center);
-        translate(PL);
+    public void applyForce(vec3 force) {
+        // F = ma
+        // a = F / m
+        vec3 a = vec3.div(force, mass);
+        velocity.add(a);
+        translate(pCenter, velocity);
     }
 
-    public void physicsTranslate(vec3 t) {
-        pCenter.add(t);
-        for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vertices.get(vdx).add(t);
-        } 
+    public void applyTorque(vec3 force, float distance, vec3 theta) {
+        // t = r*F*sin()
+        vec3 torque = vec3.mult(force, vec3.mult(distance, vec3.sin(theta)));
     }
-
-    public void setPhysicsLocation(vec3 l) {
-        vec3 PL = vec3.sub(l, pCenter);
-        physicsTranslate(PL);
-    }
-
+    
     //#endregion
 
     public vec3 idToColor() {
@@ -221,7 +236,6 @@ public class EmptyObj {
         }
 
         if (drawWire) {
-            gl.glLineWidth(2f);
             gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE); 
         }
 
@@ -235,19 +249,23 @@ public class EmptyObj {
 
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vertices.get(vdx);
-            //vec3 rgb = vec3.sub(center, v).normalize();
 
             if (active) {
-                gl.glColor3f(color.x + 0.25f, color.y + 0.25f, color.z + 0.25f);
+                gl.glColor3f(vec3.clamp(color[0] + 0.25f, 0f, 1f), vec3.clamp(color[1] + 0.25f, 0f, 1f), vec3.clamp(color[1] + 0.25f, 0f, 1f));
             }
 
             else {
-                gl.glColor3f(color.x, color.y, color.z);
+                gl.glColor3f(vec3.clamp(color[0], 0f, 1f), vec3.clamp(color[1], 0f, 1f), vec3.clamp(color[2], 0f, 1f));
             }
 
             gl.glVertex3f(v.x, v.y, v.z);
         }
         gl.glEnd();
+        gl.glBegin(GL2.GL_POINTS);
+        gl.glColor3f(1, 1, 0);
+        gl.glVertex3f(pCenter.x, pCenter.y, pCenter.z);
+        gl.glEnd();
+
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL); 
     }
 

@@ -2,8 +2,8 @@ package engine;
 import java.util.ArrayList;
 
 public class Cube extends EmptyObj {
-    public Cube(int id, String name) {
-        super(id, name, true);
+    public Cube(String name, int id) {
+        super(name, id, true);
     }
 
     public void init() {

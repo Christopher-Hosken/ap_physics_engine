@@ -1,37 +1,48 @@
 package engine;
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.gl2.GLUT;
-import com.jogamp.common.nio.*;
 
 import java.util.ArrayList;
 import java.awt.event.*;
-import java.nio.Buffer;
 import java.nio.CharBuffer;
-import java.nio.FloatBuffer;
-import gui.Gui;
 
 public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener, KeyListener, MouseListener {
-    private GLU glu = new GLU();
     private GL2 gl;
-    private Gui appGui;
-    private float zNear= 0.001f, zFar = 1000f, fov = 45;
-    private boolean isAltDown, isShiftDown, isCtrlDown;
-    private float lastX, lastY;
-    private int clickX, clickY;
-    private boolean isClick;
-    private float vw, vh;
-    private float posX, posY, posZ = -5, angleX, angleY, angleZ;
     private ArrayList<EmptyObj> scene = new ArrayList<EmptyObj>();
-    public boolean isWire;
-    private EmptyObj sel = null;
-    private int frameStart = 0, frameEnd = 250;
-    private int frame_current = frameStart;
-    private boolean isSimulating;
     private PhysicsEngine engine;
+    private float zNear= 0.001f, zFar = 10000f, fov = 45;
+    private int frameStart = 0, frameEnd = 250;
+
+    private int clickX, clickY, lastX, lastY, height;
+    private float startZ, posX, posY, posZ, angleX, angleY, angleZ;
+    private EmptyObj sel = null;
+    private int frame_current = frameStart;
+    private boolean isClick, isWire, isSimulating;
+
+    @Override 
+    public void init(GLAutoDrawable drawable) {
+        gl = drawable.getGL().getGL2();
+        gl.glClearColor(0f, 0f, 0f, 0f);
+        gl.glShadeModel(GL2.GL_SMOOTH);
+
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glDepthMask(true);
+        gl.glDepthFunc(GL2.GL_LESS);
+        gl.glEnable(GL2.GL_CULL_FACE);
+        gl.glEnable(GL2.GL_MULTISAMPLE);
+        gl.glEnable(GL2.GL_LINE_SMOOTH);
+        gl.glEnable(GL2.GL_POLYGON_OFFSET_LINE);
+        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+        gl.glLineWidth(2f);
+        gl.glPointSize(10);
+    }
+
+    @Override
+    public void dispose(GLAutoDrawable drawable) {
+        clear();
+    }
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -44,7 +55,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         engine = new PhysicsEngine(scene, frameStart, frameEnd);
 
         //#region Viewport Transformations
-        
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
         gl.glRotatef(angleX, 0, 1, 0);
@@ -52,7 +62,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         //#endregion
         
         frame_current = engine.update(frame_current, isSimulating);
-        //System.out.println(frame_current);
 
         for (EmptyObj obj : scene) {
             obj.drawID(gl);
@@ -81,10 +90,12 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
 
+        //#region Viewport Transformations
         gl.glTranslatef(posX, posY, posZ);
         gl.glRotatef(angleY, 1, 0, 0);
         gl.glRotatef(angleX, 0, 1, 0);
         gl.glRotatef(angleZ, 0, 0, 1);
+        //#endregion
 
         for (EmptyObj obj : scene) {
             obj.draw(gl, isWire);
@@ -100,41 +111,11 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         isClick = false;
     }
 
-    public EmptyObj getSelection() {
-        return sel;
-    }
-
-    public void updateSelection() {
-        for (EmptyObj obj : scene) {
-            obj.setActive(obj.id() == sel.id());
-        }
-    }
-
-    @Override
-    public void dispose(GLAutoDrawable drawable) {}
-
-
-    @Override 
-    public void init(GLAutoDrawable drawable) {
-        gl = drawable.getGL().getGL2();
-        gl.glClearColor(0f, 0f, 0f, 0f);
-        gl.glShadeModel(GL2.GL_SMOOTH);
-
-        gl.glEnable(GL2.GL_DEPTH_TEST);
-        gl.glDepthMask(true);
-        gl.glDepthFunc(GL2.GL_LESS);
-        gl.glEnable(GL2.GL_CULL_FACE);
-        gl.glEnable(GL2.GL_MULTISAMPLE);
-        gl.glEnable(GL2.GL_LINE_SMOOTH);
-        gl.glEnable(GL2.GL_POLYGON_OFFSET_LINE);
-        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
-    }
-
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        GLU glu = new GLU();
         gl = drawable.getGL().getGL2();
-        vw = width;
-        vh = height;
+        this.height = height;
         
         final float h = (float) width / (float) height;
         gl.glViewport(0, 0, width, height);
@@ -144,6 +125,38 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         glu.gluPerspective(fov, h, zNear, zFar);
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
+    }
+
+    public void clear() {
+        scene = new ArrayList<EmptyObj>();
+        sel = null;
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+    }
+
+    public float getStartZ() {
+        return startZ;
+    }
+
+    public void setStartZ(float z) {
+        startZ = z;
+    }
+
+    public boolean isWire() {
+        return isWire;
+    }
+
+    public void setIsWire(boolean w) {
+        isWire = w;
+    }
+
+    public EmptyObj getSelection() {
+        return sel;
+    }
+
+    public void updateSelection() {
+        for (EmptyObj obj : scene) {
+            obj.setActive(obj.id() == sel.id());
+        }
     }
 
     public int makeID() {
@@ -164,27 +177,21 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         return tmp_id;
     }
 
-    public void wipe() {
-        scene = new ArrayList<EmptyObj>();
-        sel = null;
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-    }
-
     public void addCube() {
         int id = makeID();
-        scene.add(new Cube(id, "Cube-" + scene.size()));
-        scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
+        scene.add(new Cube("Cube-" + scene.size(), id));
+        //scene.get(scene.size() - 1).translate(scene.get(scene.size() - 1).center(), vec3.random(-10.0f, 10.0f));
     }
 
     public void addIcoSphere() {
         int id = makeID();
-        scene.add(new IcoSphere(id, "Ico-" + scene.size()));
-        scene.get(scene.size() - 1).translate(vec3.random(-10.0f, 10.0f));
+        scene.add(new IcoSphere("Ico-" + scene.size(), id));
+        //scene.get(scene.size() - 1).translate(scene.get(scene.size() - 1).center(), vec3.random(-10.0f, 10.0f));
     }
 
     public void addLine(vec3 o, vec3 d) {
         int id = makeID();
-        scene.add(new Line(id, "Line-" + scene.size(), o, d));
+        scene.add(new Line("Line-" + scene.size(), id, o, d));
     }
 
     //#region Controls
@@ -200,7 +207,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         if (e.getButton() == 1) {
             isClick = true;
             clickX = e.getX();
-            clickY = (int) vh - e.getY();
+            clickY = height - e.getY();
         }
     }
 
@@ -219,7 +226,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     @Override
     public void mouseDragged(MouseEvent e) {
         if (e.getButton() == 1) {
-            if (isShiftDown) {
+            if (e.isShiftDown()) {
                 posX += ((e.getX() - lastX) / 100.0);
                 posY -= ((e.getY() - lastY) / 100.0);
             }
@@ -254,23 +261,11 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println(e.getKeyChar() + ": " + e.getKeyCode());
-        if (e.getKeyCode() == 16) {
-            isShiftDown = false;
-        }
-
-        else if (e.getKeyCode() == 17) {
-            isCtrlDown = false;
-        }
-
-        else if (e.getKeyCode() == 18) {
-            isAltDown = false;
-        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (isAltDown) {
+        if (e.isAltDown()) {
             if (e.getKeyCode() == 92) { // \
                 posX = 0;
                 posY = 0;
@@ -282,7 +277,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
             else if (e.getKeyCode() == 71) { // G
                 if (sel != null) {
-                    sel.setLocation(new vec3(0, 0, 0));
+                    sel.setLocation(sel.center(), new vec3(0, 0, 0));
                     sel.setChanged(true);
                 }
             }
@@ -300,31 +295,30 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                     sel.setChanged(true);
                 }
             }
+        }
 
-            else if (e.getKeyCode() == 70) { // F
+        else if (e.isControlDown()) {
+            if (e.getKeyCode() == 32) { // Spacebar
                 frame_current = frameStart;
             }
-
-            else if (e.getKeyCode() == 88) { // X
-                scene.remove(sel);
-                sel = null;
-            }
         }
 
-        if (e.getKeyCode() == 16) {
-            isShiftDown = true;
+        else if (e.getKeyCode() == 36) { // Home
+            posX = 0;
+            posY = 0;
+            posZ = -5;
+            angleX = 0;
+            angleY = 0;
+            angleZ = 0;
         }
 
-        else if (e.getKeyCode() == 17) {
-            isCtrlDown = true;
-        }
-
-        else if (e.getKeyCode() == 18) {
-            isAltDown = true;
-        }
-
-        else if (e.getKeyCode() == 32) {
+        else if (e.getKeyCode() == 32) { // Spacebar
             isSimulating = !isSimulating;
+        }
+
+        else if (e.getKeyCode() == 88 || e.getKeyCode() == 127) { // X
+            scene.remove(sel);
+            sel = null;
         }
     }
 
