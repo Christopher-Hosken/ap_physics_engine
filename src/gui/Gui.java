@@ -1141,6 +1141,55 @@ public class Gui extends Application {
         velocityX.setTranslateX(-30);
         velocityX.setTranslateY(-200);
         objPhys.getChildren().add(velocityX);
+        
+        velocityX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    velocityX.setText(oldValue);
+                }
+            }
+        });
+
+        velocityX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (velocityX.getText().length() == 1 && locationX.getText().contains("-")) {
+                    velocityX.setText(String.valueOf(-selectedObj.velocity().x));
+                }
+
+                if (!(velocityX.getText().length() == 0)) {
+                    float x = Float.valueOf(velocityX.getText());
+                    float y = selectedObj.velocity().y;
+                    float z = selectedObj.velocity().z;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityX.setText(String.valueOf(selectedObj.velocity().x));
+            }
+        });
+
+        velocityX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (velocityX.getText().length() == 1 && velocityX.getText().contains("-")) {
+                    velocityX.setText(String.valueOf(-selectedObj.velocity().x));
+                }
+
+                if (!(velocityX.getText().length() == 0)) {
+                    float x = Float.valueOf(velocityX.getText());
+                    float y = selectedObj.velocity().y;
+                    float z = selectedObj.velocity().z;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityX.setText(String.valueOf(selectedObj.velocity().x));
+            }
+        });
 
         TextField velocityY = new TextField();
         velocityY.getStyleClass().add("y-text");
@@ -1148,6 +1197,57 @@ public class Gui extends Application {
         velocityY.setTranslateX(35);
         velocityY.setTranslateY(-200);
         objPhys.getChildren().add(velocityY);
+        
+        velocityY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    velocityY.setText(oldValue);
+                }
+            }
+        });
+
+        velocityY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (velocityY.getText().length() == 1 && locationY.getText().contains("-")) {
+                    velocityY.setText(String.valueOf(-selectedObj.velocity().y));
+                }
+
+                if (!(velocityY.getText().length() == 0)) {
+                    float y = Float.valueOf(velocityY.getText());
+                    float x = selectedObj.velocity().x;
+                    float z = selectedObj.velocity().z;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityY.setText(String.valueOf(selectedObj.velocity().y));
+            }
+        });
+        
+        
+
+        velocityY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (velocityY.getText().length() == 1 && velocityY.getText().contains("-")) {
+                    velocityY.setText(String.valueOf(-selectedObj.velocity().y));
+                }
+
+                if (!(velocityY.getText().length() == 0)) {
+                    float y = Float.valueOf(velocityY.getText());
+                    float x = selectedObj.velocity().x;
+                    float z = selectedObj.velocity().z;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityY.setText(String.valueOf(selectedObj.velocity().y));
+            }
+        });
 
         TextField velocityZ = new TextField();
         velocityZ.getStyleClass().add("z-text");
@@ -1155,6 +1255,57 @@ public class Gui extends Application {
         velocityZ.setTranslateX(100);
         velocityZ.setTranslateY(-200);
         objPhys.getChildren().add(velocityZ);
+        
+        velocityZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    velocityZ.setText(oldValue);
+                }
+            }
+        });
+
+        velocityZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (velocityZ.getText().length() == 1 && locationZ.getText().contains("-")) {
+                    velocityZ.setText(String.valueOf(-selectedObj.center().z));
+                }
+
+                if (!(velocityY.getText().length() == 0)) {
+                    float z = Float.valueOf(velocityY.getText());
+                    float x = selectedObj.velocity().x;
+                    float z = selectedObj.velocity().z;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityZ.setText(String.valueOf(selectedObj.velocity().z));
+            }
+        });
+        
+        
+
+        velocityZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (velocityZ.getText().length() == 1 && velocityY.getText().contains("-")) {
+                    velocityZ.setText(String.valueOf(-selectedObj.velocity().z));
+                }
+
+                if (!(velocityY.getText().length() == 0)) {
+                    float z = Float.valueOf(velocityZ.getText());
+                    float x = selectedObj.velocity().x;
+                    float y = selectedObj.velocity().y;
+
+                    selectedObj.setVelocity(new vec3(x, y, z));
+                }
+
+                velocityZ.setText(String.valueOf(selectedObj.velocity().z));
+            }
+        });
 
         // #endregion
 
@@ -1173,6 +1324,55 @@ public class Gui extends Application {
         angularX.setTranslateX(-30);
         angularX.setTranslateY(-170);
         objPhys.getChildren().add(angularX);
+        
+        angularX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    angularX.setText(oldValue);
+                }
+            }
+        });
+
+        angularX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (angularX.getText().length() == 1 && angularX.getText().contains("-")) {
+                    angularX.setText(String.valueOf(-selectedObj.angularVelocity().x));
+                }
+
+                if (!(angularX.getText().length() == 0)) {
+                    float x = Float.valueOf(angularX.getText());
+                    float y = selectedObj.angularVelocity().y;
+                    float z = selectedObj.angularVelocity().z;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularX.setText(String.valueOf(selectedObj.angularVelocity().x));
+            }
+        });
+
+        angularX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (angularX.getText().length() == 1 && angularX.getText().contains("-")) {
+                    angularX.setText(String.valueOf(-selectedObj.angularVelocity().x));
+                }
+
+                if (!(velocityX.getText().length() == 0)) {
+                    float x = Float.valueOf(angularX.getText());
+                    float y = selectedObj.angularVelocity().y;
+                    float z = selectedObj.angularVelocity().z;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularX.setText(String.valueOf(selectedObj.angularVelocity().x));
+            }
+        });
 
         TextField angularY = new TextField();
         angularY.getStyleClass().add("y-text");
@@ -1180,6 +1380,55 @@ public class Gui extends Application {
         angularY.setTranslateX(35);
         angularY.setTranslateY(-170);
         objPhys.getChildren().add(angularY);
+        
+        angularY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    angularY.setText(oldValue);
+                }
+            }
+        });
+
+        angularY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (angularY.getText().length() == 1 && angularY.getText().contains("-")) {
+                    angularY.setText(String.valueOf(-selectedObj.angularVelocity().y));
+                }
+
+                if (!(angularY.getText().length() == 0)) {
+                    float y = Float.valueOf(angularY.getText());
+                    float x = selectedObj.angularVelocity().x;
+                    float z = selectedObj.angularVelocity().z;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularY.setText(String.valueOf(selectedObj.angularVelocity().y));
+            }
+        });
+
+        angularY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (angularY.getText().length() == 1 && angularY.getText().contains("-")) {
+                    angularY.setText(String.valueOf(-selectedObj.angularVelocity().y));
+                }
+
+                if (!(velocityX.getText().length() == 0)) {
+                    float y = Float.valueOf(angularY.getText());
+                    float x = selectedObj.angularVelocity().x;
+                    float z = selectedObj.angularVelocity().z;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularY.setText(String.valueOf(selectedObj.angularVelocity().y));
+            }
+        });
 
         TextField angularZ = new TextField();
         angularZ.getStyleClass().add("z-text");
@@ -1187,6 +1436,55 @@ public class Gui extends Application {
         angularZ.setTranslateX(100);
         angularZ.setTranslateY(-170);
         objPhys.getChildren().add(angularZ);
+        
+        angularZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    angularZ.setText(oldValue);
+                }
+            }
+        });
+
+        angularZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (angularZ.getText().length() == 1 && angularZ.getText().contains("-")) {
+                    angularZ.setText(String.valueOf(-selectedObj.angularVelocity().z));
+                }
+
+                if (!(angularZ.getText().length() == 0)) {
+                    float z = Float.valueOf(angularZ.getText());
+                    float y = selectedObj.angularVelocity().y;
+                    float x = selectedObj.angularVelocity().x;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularZ.setText(String.valueOf(selectedObj.angularVelocity().z));
+            }
+        });
+
+        angularZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (angularZ.getText().length() == 1 && angularZ.getText().contains("-")) {
+                    angularZ.setText(String.valueOf(-selectedObj.angularVelocity().z));
+                }
+
+                if (!(velocityZ.getText().length() == 0)) {
+                    float z = Float.valueOf(angularZ.getText());
+                    float x = selectedObj.angularVelocity().x;
+                    float y = selectedObj.angularVelocity().y;
+
+                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                }
+
+                angularZ.setText(String.valueOf(selectedObj.angularVelocity().z));
+            }
+        });
 
         // #endregion
 

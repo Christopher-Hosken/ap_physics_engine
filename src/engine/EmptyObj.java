@@ -130,6 +130,14 @@ public class EmptyObj {
         vec3 PL = vec3.sub(l, c);
         translate(c, PL);
     }
+    
+    public void setVelocity(vec3 v) {
+        velocity = v;
+    }
+    
+    public void setAngularVelocity(vec3 v) {
+        angularVelocity = v;
+    }
 
     public void rotate(vec3 r) {
         rotation.add(r);
