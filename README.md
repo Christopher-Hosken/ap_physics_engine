@@ -10,13 +10,6 @@ Requirements: <br>
 [JavaFX 11](https://gluonhq.com/products/javafx/) <br>
 
 [Jogl](https://jogamp.org/deployment/jogamp-current/archive/)
-
-<<<<<<< HEAD
 ## Installing Dependencies
 
 Good luck with this lol.
-=======
-## Fixing Dependencies
-
-Oh boy good luck with this.
->>>>>>> parent of d1b0d1c (update gui)

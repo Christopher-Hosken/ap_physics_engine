@@ -9,9 +9,9 @@ public class EmptyObj {
     protected float mass;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
-    protected vec3 center, rotation, scale, pCenter, pRotation, pScale, velocity, angularVelocity;
+    protected vec3 center, rotation, scale, pCenter, pRotation, pScale, velocity, pVelocity, angularVelocity, pAngularVelocity;
     protected float[] color, specular, shinyness;
-    protected boolean isLine, hasQuads, active, changed;
+    protected boolean isLine, hasQuads, active, changed, isStatic;
 
     public EmptyObj(String name, int id, boolean hasQuads) {
         this.name = name;
@@ -19,7 +19,7 @@ public class EmptyObj {
         mass = 1;
         init();
         this.vertexCount = vertices.size();
-        center=rotation=pCenter=pRotation=velocity=angularVelocity=new vec3();
+        center=rotation=pCenter=pRotation=velocity=angularVelocity=pVelocity=pAngularVelocity=new vec3();
         scale=pScale=new vec3(1, 1, 1);
         color = new float[] {0.5f, 0.5f, 0.5f};
         this.hasQuads = hasQuads;
@@ -70,8 +70,16 @@ public class EmptyObj {
         return velocity;
     }
 
+    public vec3 pVelocity() {
+        return pVelocity;
+    }
+
     public vec3 angularVelocity() {
         return angularVelocity;
+    }
+
+    public vec3 pAngularVelocity() {
+        return pAngularVelocity;
     }
 
     public float[] color() {
@@ -98,6 +106,10 @@ public class EmptyObj {
         return changed;
     }
 
+    public boolean isStatic() {
+        return isStatic;
+    }
+
     public float colorID() {
         vec3 rgb = idToColor();
         return (rgb.x + rgb.y * 256 + rgb.z);
@@ -119,6 +131,10 @@ public class EmptyObj {
         this.active = active;
     }
 
+    public void setStatic(boolean s) {
+        isStatic = s;
+    }
+
     public void translate(vec3 c, vec3 t) {
         c.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
@@ -131,12 +147,12 @@ public class EmptyObj {
         translate(c, PL);
     }
     
-    public void setVelocity(vec3 v) {
-        velocity = v;
+    public void setVelocity(vec3 v, vec3 u) {
+        v = u;
     }
     
-    public void setAngularVelocity(vec3 v) {
-        angularVelocity = v;
+    public void setAngularVelocity(vec3 av, vec3 u) {
+        av = u;
     }
 
     public void rotate(vec3 r) {
@@ -184,44 +200,67 @@ public class EmptyObj {
 
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vec3.sub(vertices.get(vdx), center);
+            float x, y, z;
+            x = v.x;
+            y = v.y;
+            z = v.z;
             
             // X Rotation
-            v.y = (v.y * cosX) - (v.z * sinX);
-            v.z = (v.z * cosX) + (v.y * sinX);
+            y = (v.y * cosX) - (v.z * sinX);
+            z = (v.z * cosX) + (v.y * sinX);
+
+            v.y = y;
+            v.z = z;
 
             // Y Rotation
-            v.x = (v.x * cosY) + (v.z * sinY);
-            v.z = (v.z * cosY) - (v.x * sinY);
+            x = (v.x * cosY) + (v.z * sinY);
+            z = (v.z * cosY) - (v.x * sinY);
+
+            v.x = x;
+            v.z = z;
 
             // Z Rotation
-            v.x = (v.x * cosZ) - (v.y * sinZ);
-            v.y = (v.y * cosZ) + (v.x * sinZ);
+            x = (v.x * cosZ) - (v.y * sinZ);
+            y = (v.y * cosZ) + (v.x * sinZ);
+
+            v.x = x;
+            v.y = y;
+            v.z = z;
 
             vertices.set(vdx, vec3.add(v, center));
         }
     }
 
     public void scale(vec3 s) {
+        vec3 r = rotation;
+        setRotation(new vec3(0, 0, 0));
         scale.mult(s);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.set(vdx, vec3.add(vec3.mult(vec3.sub(vertices.get(vdx), center), s), center));
         }
+        setRotation(r);
     }
 
     public void setScale(vec3 s) {
+        vec3 l = center;
+        setLocation(center, new vec3(0, 0, 0));
+        vec3 r = rotation;
+        setRotation(new vec3(0, 0, 0));
         vec3 rscl = vec3.div(s, scale);
         scale = s;
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.set(vdx, vec3.add(vec3.mult(vec3.sub(vertices.get(vdx), center), rscl), center));
         }
+        setRotation(r);
+        setLocation(center, l);
     }
 
     public void applyForce(vec3 force) {
         // F = ma
         // a = F / m
         vec3 a = vec3.div(force, mass);
-        velocity.add(a);
-        translate(pCenter, velocity);
+        pVelocity.add(a);
+        translate(pCenter, vec3.mult(pVelocity, 1f));
     }
 
     public void applyTorque(vec3 force, float distance, vec3 theta) {

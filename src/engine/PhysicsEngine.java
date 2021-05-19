@@ -3,9 +3,9 @@ package engine;
 import java.util.ArrayList;
 
 public class PhysicsEngine {
-    private ArrayList<EmptyObj> world;
-    private int frameStart, frameEnd;
-    private float g = -0.98f;
+    protected int frameStart, frameEnd;
+    protected float g = -9.8f;
+    protected ArrayList<EmptyObj> world;
 
     public PhysicsEngine(ArrayList<EmptyObj> world, int frameStart, int frameEnd) {
         this.world = world;
@@ -14,25 +14,29 @@ public class PhysicsEngine {
     }
 
     public int update(int frame, boolean isSimulating) {
-        if (frame > frameEnd || frame < frameStart) {
+        if (frame < frameStart || frame > frameEnd) {
             frame = frameStart;
         }
 
-        for (EmptyObj obj : world) {
-            if (frame == frameStart) {
+        if (frame == frameStart) {
+            for (EmptyObj obj : world) {
                 obj.setLocation(obj.pCenter(), obj.center());
-            }
-
-            if (isSimulating) {
-                vec3 force = new vec3(0, g, 0);
-                obj.applyForce(force);
+                obj.setVelocity(obj.pVelocity(), obj.velocity());
+                obj.setAngularVelocity(obj.pAngularVelocity(), obj.angularVelocity());
             }
         }
 
         if (isSimulating) {
-            frame ++;
+            for (EmptyObj obj : world) {
+                if (!obj.isStatic()) {
+                    obj.applyForce(new vec3(0f, -0.1f, 0f));
+                }
+            }
+
+            frame++;
         }
 
         return frame;
+        
     }
 }

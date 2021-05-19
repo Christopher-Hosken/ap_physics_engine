@@ -1164,7 +1164,7 @@ public class Gui extends Application {
                     float y = selectedObj.velocity().y;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityX.setText(String.valueOf(selectedObj.velocity().x));
@@ -1184,7 +1184,7 @@ public class Gui extends Application {
                     float y = selectedObj.velocity().y;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityX.setText(String.valueOf(selectedObj.velocity().x));
@@ -1220,14 +1220,12 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityY.setText(String.valueOf(selectedObj.velocity().y));
             }
         });
-        
-        
 
         velocityY.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1242,7 +1240,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityY.setText(String.valueOf(selectedObj.velocity().y));
@@ -1274,18 +1272,16 @@ public class Gui extends Application {
                 }
 
                 if (!(velocityY.getText().length() == 0)) {
-                    float z = Float.valueOf(velocityY.getText());
+                    float y = Float.valueOf(velocityY.getText());
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityZ.setText(String.valueOf(selectedObj.velocity().z));
             }
         });
-        
-        
 
         velocityZ.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1300,7 +1296,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float y = selectedObj.velocity().y;
 
-                    selectedObj.setVelocity(new vec3(x, y, z));
+                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
                 }
 
                 velocityZ.setText(String.valueOf(selectedObj.velocity().z));
@@ -1347,7 +1343,7 @@ public class Gui extends Application {
                     float y = selectedObj.angularVelocity().y;
                     float z = selectedObj.angularVelocity().z;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularX.setText(String.valueOf(selectedObj.angularVelocity().x));
@@ -1367,7 +1363,7 @@ public class Gui extends Application {
                     float y = selectedObj.angularVelocity().y;
                     float z = selectedObj.angularVelocity().z;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularX.setText(String.valueOf(selectedObj.angularVelocity().x));
@@ -1403,7 +1399,7 @@ public class Gui extends Application {
                     float x = selectedObj.angularVelocity().x;
                     float z = selectedObj.angularVelocity().z;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularY.setText(String.valueOf(selectedObj.angularVelocity().y));
@@ -1423,7 +1419,7 @@ public class Gui extends Application {
                     float x = selectedObj.angularVelocity().x;
                     float z = selectedObj.angularVelocity().z;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularY.setText(String.valueOf(selectedObj.angularVelocity().y));
@@ -1459,7 +1455,7 @@ public class Gui extends Application {
                     float y = selectedObj.angularVelocity().y;
                     float x = selectedObj.angularVelocity().x;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularZ.setText(String.valueOf(selectedObj.angularVelocity().z));
@@ -1479,13 +1475,36 @@ public class Gui extends Application {
                     float x = selectedObj.angularVelocity().x;
                     float y = selectedObj.angularVelocity().y;
 
-                    selectedObj.setAngularVelocity(new vec3(x, y, z));
+                    selectedObj.setAngularVelocity(selectedObj.angularVelocity(), new vec3(x, y, z));
                 }
 
                 angularZ.setText(String.valueOf(selectedObj.angularVelocity().z));
             }
         });
 
+        ToggleButton staticControl = new ToggleButton();
+        staticControl.setText("Static");
+        staticControl.getStyleClass().add("push-button");
+        staticControl.setMaxSize(50, 50);
+        staticControl.setTranslateX(-90);
+        staticControl.setTranslateY(100);
+        objPhys.getChildren().add(staticControl);
+
+        staticControl.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (selectedObj != null) {
+                    if (staticControl.isSelected()) {
+                        selectedObj.setStatic(true);
+                    }
+
+                    else {
+                        selectedObj.setStatic(false);
+                    }
+                }
+            }
+        });
+        
         // #endregion
 
         Tab objTab = new Tab("Object");
