@@ -26,7 +26,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 
-import com.jogamp.newt.event.MouseListener; 
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.util.*;
@@ -151,21 +150,21 @@ public class Gui extends Application {
         addCube.setTranslateX(-40);
         header.getChildren().add(addCube);
 
-        Button importModel = new Button();
-        importModel.getStyleClass().add("icon-button");
-        importModel.setId("IMPORTMOD");
-        importModel.setMaxHeight(70);
-        importModel.setMaxWidth(70);
-        importModel.setTranslateX(90);
-        header.getChildren().add(importModel);
+        Button openFile = new Button();
+        openFile.getStyleClass().add("icon-button");
+        openFile.setId("OPEN");
+        openFile.setMaxHeight(70);
+        openFile.setMaxWidth(70);
+        openFile.setTranslateX(90);
+        header.getChildren().add(openFile);
 
-        Button addLight = new Button();
-        addLight.getStyleClass().add("icon-button");
-        addLight.setId("ADDLIGHT");
-        addLight.setMaxHeight(70);
-        addLight.setMaxWidth(70);
-        addLight.setTranslateX(210);
-        header.getChildren().add(addLight);
+        Button saveFile = new Button();
+        saveFile.getStyleClass().add("icon-button");
+        saveFile.setId("SAVE");
+        saveFile.setMaxHeight(70);
+        saveFile.setMaxWidth(70);
+        saveFile.setTranslateX(210);
+        header.getChildren().add(saveFile);
 
         Line vLine3 = new Line();
         vLine3.setStartY(0);
@@ -280,7 +279,93 @@ public class Gui extends Application {
         cameraPane.setTranslateY(-200);
         worldTabRoot.getChildren().add(cameraPane);
 
-        //#endregion World Settings
+        Label cameraPaneLabel = new Label();
+        cameraPaneLabel.setTranslateX(0);
+        cameraPaneLabel.setTranslateY(-100);
+        cameraPaneLabel.setText("Camera");
+        cameraPane.getChildren().add(cameraPaneLabel);
+        
+        Label focalLabel = new Label();
+        focalLabel.setText("Focal Length");
+        focalLabel.getStyleClass().add("small-label");
+        focalLabel.setTranslateX(-90);
+        focalLabel.setTranslateY(-60);
+        cameraPane.getChildren().add(focalLabel);
+
+        TextField focalField = new TextField();
+        focalField.getStyleClass().add("s-text");
+        focalField.setMaxSize(80, 15);
+        focalField.setTranslateX(10);
+        focalField.setTranslateY(-60);
+        cameraPane.getChildren().add(focalField);
+
+        ToggleButton focalDegrees = new ToggleButton();
+        focalDegrees.setText("deg");
+        focalDegrees.getStyleClass().add("push-button");
+        focalDegrees.setMaxSize(40, 15);
+        focalDegrees.setTranslateX(80);
+        focalDegrees.setTranslateY(-60);
+        cameraPane.getChildren().add(focalDegrees);
+
+        ToggleButton focalMils = new ToggleButton();
+        focalMils.setText("mm");
+        focalMils.getStyleClass().add("push-button");
+        focalMils.setMaxSize(40, 15);
+        focalMils.setTranslateX(120);
+        focalMils.setTranslateY(-60);
+        cameraPane.getChildren().add(focalMils);
+
+        Label zfieldLabel = new Label();
+        zfieldLabel.setText("Starting Z");
+        zfieldLabel.getStyleClass().add("small-label");
+        zfieldLabel.setTranslateX(-95);
+        zfieldLabel.setTranslateY(-10);
+        cameraPane.getChildren().add(zfieldLabel);
+
+        TextField zField = new TextField();
+        zField.getStyleClass().add("s-text");
+        zField.setMaxSize(80, 15);
+        zField.setTranslateX(10);
+        zField.setTranslateY(-10);
+        cameraPane.getChildren().add(zField);
+
+        Label clipLabel = new Label();
+        clipLabel.setText("Clipping");
+        clipLabel.getStyleClass().add("small-label");
+        clipLabel.setTranslateX(-95);
+        clipLabel.setTranslateY(40);
+        cameraPane.getChildren().add(clipLabel);
+
+        TextField clipNear = new TextField();
+        clipNear.getStyleClass().add("s-text");
+        clipNear.setMaxSize(80, 15);
+        clipNear.setTranslateX(-5);
+        clipNear.setTranslateY(40);
+        cameraPane.getChildren().add(clipNear);
+
+        TextField clipFar = new TextField();
+        clipFar.getStyleClass().add("s-text");
+        clipFar.setMaxSize(80, 15);
+        clipFar.setTranslateX(90);
+        clipFar.setTranslateY(40);
+        cameraPane.getChildren().add(clipFar);
+
+        Label backColorLabel = new Label();
+        backColorLabel.setText("Background");
+        backColorLabel.getStyleClass().add("small-label");
+        backColorLabel.setTranslateX(-90);
+        backColorLabel.setTranslateY(90);
+        cameraPane.getChildren().add(backColorLabel);
+
+        ColorPicker backColor = new ColorPicker();
+        backColor.setMaxSize(150, 30);
+        backColor.setTranslateX(50);
+        backColor.setTranslateY(90);
+        cameraPane.getChildren().add(backColor);
+
+        //#endregion
+
+        //#region World Settings
         StackPane worldPane = new StackPane();
         worldPane.setId("OBJPHYSICS");
         worldPane.getStyleClass().add("second-panel");
@@ -288,12 +373,98 @@ public class Gui extends Application {
         worldPane.setTranslateY(180);
         worldTabRoot.getChildren().add(worldPane);
 
+        Label worldPaneLabel = new Label();
+        worldPaneLabel.setText("World");
+        worldPaneLabel.setTranslateX(0);
+        worldPaneLabel.setTranslateY(-210);
+        worldPane.getChildren().add(worldPaneLabel);
+
+        Label frameRangeLabel = new Label();
+        frameRangeLabel.setTranslateX(-90);
+        frameRangeLabel.setTranslateY(-160);
+        frameRangeLabel.setText("Frame Range");
+        frameRangeLabel.getStyleClass().add("small-label");
+        worldPane.getChildren().add(frameRangeLabel);
+
+        TextField frameStart = new TextField();
+        frameStart.getStyleClass().add("s-text");
+        frameStart.setMaxSize(80, 15);
+        frameStart.setTranslateX(100);
+        frameStart.setTranslateY(-160);
+        worldPane.getChildren().add(frameStart);
+
+        TextField frameEnd = new TextField();
+        frameEnd.getStyleClass().add("s-text");
+        frameEnd.setMaxSize(80, 15);
+        frameEnd.setTranslateX(40);
+        frameEnd.setTranslateY(-160);
+        worldPane.getChildren().add(frameEnd);
+
+        Label fpsLabel = new Label();
+        fpsLabel.setText("Framerate");
+        fpsLabel.getStyleClass().add("small-label");
+        fpsLabel.setTranslateX(-105);
+        fpsLabel.setTranslateY(-120);
+        worldPane.getChildren().add(fpsLabel);
+
+        TextField fps = new TextField();
+        fps.getStyleClass().add("s-text");
+        fps.setMaxSize(80, 15);
+        fps.setTranslateX(40);
+        fps.setTranslateY(-120);
+        worldPane.getChildren().add(fps);
+
+        Label timeScaleLabel = new Label();
+        timeScaleLabel.setText("Time scale");
+        timeScaleLabel.getStyleClass().add("small-label");
+        timeScaleLabel.setTranslateX(-110);
+        timeScaleLabel.setTranslateY(-80);
+        worldPane.getChildren().add(timeScaleLabel);
+
+        TextField timeScale = new TextField();
+        timeScale.getStyleClass().add("s-text");
+        timeScale.setMaxSize(80, 15);
+        timeScale.setTranslateX(40);
+        timeScale.setTranslateY(-80);
+        worldPane.getChildren().add(timeScale);
+
+        Label gravityLabel = new Label();
+        gravityLabel.setText("Gravity");
+        gravityLabel.getStyleClass().add("small-label");
+        gravityLabel.setTranslateX(-110);
+        gravityLabel.setTranslateY(-40);
+        worldPane.getChildren().add(gravityLabel);
+
+        TextField gravity = new TextField();
+        gravity.getStyleClass().add("s-text");
+        gravity.setMaxSize(80, 15);
+        gravity.setTranslateX(40);
+        gravity.setTranslateY(-40);
+        worldPane.getChildren().add(gravity);
+
+        ToggleButton airToggleButton = new ToggleButton();
+        airToggleButton.setText("Air Resistance");
+        airToggleButton.getStyleClass().add("push-button");
+        airToggleButton.setMaxSize(100, 15);
+        airToggleButton.setTranslateX(-90);
+        airToggleButton.setTranslateY(0);
+        worldPane.getChildren().add(airToggleButton);
+
+        TextField airResistance = new TextField();
+        airResistance.getStyleClass().add("s-text");
+        airResistance.setMaxSize(80, 15);
+        airResistance.setTranslateX(40);
+        airResistance.setTranslateY(0);
+        worldPane.getChildren().add(airResistance);
+
         //#region
 
         //#endregion
 
         //#endregion
 
+        //#endregion
+        
         //#region Object Tab
 
         StackPane objTabRoot = new StackPane();
@@ -1033,7 +1204,6 @@ public class Gui extends Application {
         //#endregion
 
         //#region Button Actions
-
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -1173,17 +1343,17 @@ public class Gui extends Application {
             }
         });
 
-        addLight.setOnAction(new EventHandler<ActionEvent>() {
+        saveFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("LIGHT ADDED");
+                System.out.println("FILE SAVED");
             }
         });
 
-        importModel.setOnAction(new EventHandler<ActionEvent>() {
+        openFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("MODEL IMPORTED");
+                System.out.println("FILE OPENED");
             }
         });
 

@@ -145,6 +145,20 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         return isWire;
     }
 
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFov(float f, boolean radians) {
+        if (radians) {
+
+        }
+
+        else {
+            fov = f;
+        }
+    }
+
     public void setIsWire(boolean w) {
         isWire = w;
     }
