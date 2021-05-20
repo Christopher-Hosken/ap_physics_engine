@@ -1164,7 +1164,7 @@ public class Gui extends Application {
                     float y = selectedObj.velocity().y;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityX.setText(String.valueOf(selectedObj.velocity().x));
@@ -1184,7 +1184,7 @@ public class Gui extends Application {
                     float y = selectedObj.velocity().y;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityX.setText(String.valueOf(selectedObj.velocity().x));
@@ -1220,7 +1220,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityY.setText(String.valueOf(selectedObj.velocity().y));
@@ -1240,7 +1240,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityY.setText(String.valueOf(selectedObj.velocity().y));
@@ -1276,7 +1276,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float z = selectedObj.velocity().z;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityZ.setText(String.valueOf(selectedObj.velocity().z));
@@ -1296,7 +1296,7 @@ public class Gui extends Application {
                     float x = selectedObj.velocity().x;
                     float y = selectedObj.velocity().y;
 
-                    selectedObj.setVelocity(selectedObj.velocity(), new vec3(x, y, z));
+                    selectedObj.setVelocity(new vec3(x, y, z));
                 }
 
                 velocityZ.setText(String.valueOf(selectedObj.velocity().z));

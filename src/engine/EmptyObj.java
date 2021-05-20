@@ -19,7 +19,12 @@ public class EmptyObj {
         mass = 1;
         init();
         this.vertexCount = vertices.size();
-        center=rotation=pCenter=pRotation=velocity=angularVelocity=pVelocity=pAngularVelocity=new vec3();
+        center=rotation=new vec3();
+        pCenter=pRotation=new vec3();
+        velocity=new vec3();
+        pVelocity=new vec3();
+        angularVelocity=new vec3();
+        pAngularVelocity=new vec3();
         scale=pScale=new vec3(1, 1, 1);
         color = new float[] {0.5f, 0.5f, 0.5f};
         this.hasQuads = hasQuads;
@@ -147,8 +152,12 @@ public class EmptyObj {
         translate(c, PL);
     }
     
-    public void setVelocity(vec3 v, vec3 u) {
-        v = u;
+    public void setPVelocity(vec3 u) {
+        pVelocity = u;
+    }
+
+    public void setVelocity(vec3 u) {
+        velocity = u;
     }
     
     public void setAngularVelocity(vec3 av, vec3 u) {
@@ -242,8 +251,6 @@ public class EmptyObj {
     }
 
     public void setScale(vec3 s) {
-        vec3 l = center;
-        setLocation(center, new vec3(0, 0, 0));
         vec3 r = rotation;
         setRotation(new vec3(0, 0, 0));
         vec3 rscl = vec3.div(s, scale);
@@ -252,7 +259,6 @@ public class EmptyObj {
             vertices.set(vdx, vec3.add(vec3.mult(vec3.sub(vertices.get(vdx), center), rscl), center));
         }
         setRotation(r);
-        setLocation(center, l);
     }
 
     public void applyForce(vec3 force) {
@@ -260,7 +266,7 @@ public class EmptyObj {
         // a = F / m
         vec3 a = vec3.div(force, mass);
         pVelocity.add(a);
-        translate(pCenter, vec3.mult(pVelocity, 1f));
+        translate(pCenter, pVelocity);
     }
 
     public void applyTorque(vec3 force, float distance, vec3 theta) {
