@@ -4,7 +4,6 @@ import engine.SceneCanvas;
 import engine.EmptyObj;
 import engine.vec3;
 
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.*;
 
@@ -43,7 +42,9 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //#region Root
+
+        //#region Root Panel
+
         stage.setTitle("AP Physics Engine");
         stage.getIcons().add(new Image("assets/images/icons/atom.png"));
 
@@ -56,7 +57,8 @@ public class Gui extends Application {
 
         //#endregion
 
-        // #region Opengl
+        //#region Opengl Window
+
         GLProfile profile = GLProfile.get(GLProfile.GL2);
         GLCapabilities caps = new GLCapabilities(profile);
         caps.setDoubleBuffered(true);
@@ -84,11 +86,12 @@ public class Gui extends Application {
 
         // #endregion
 
-        // #region Header
+        // #region Header Bar
+
         StackPane header = new StackPane();
+        header.setId("HEADER");
         header.setTranslateY(-436);
         header.setMaxHeight(100);
-        header.setId("HEADER");
         root.getChildren().add(header);
 
         Line hLine = new Line();
@@ -99,7 +102,6 @@ public class Gui extends Application {
         header.getChildren().add(hLine);
 
         Button logo = new Button();
-        logo.getStyleClass().add("icon-button");
         logo.setId("LOGO");
         logo.getStyleClass().add("icon-button");
         logo.setMaxHeight(70);
@@ -134,37 +136,13 @@ public class Gui extends Application {
         vLine2.setStroke(lineColor);
         header.getChildren().add(vLine2);
 
-        Button addSphere = new Button();
-        addSphere.getStyleClass().add("icon-button");
-        addSphere.setId("ADDSPH");
-        addSphere.setMaxHeight(70);
-        addSphere.setMaxWidth(70);
-        addSphere.setTranslateX(-170);
-        header.getChildren().add(addSphere);
-
         Button addCube = new Button();
         addCube.getStyleClass().add("icon-button");
         addCube.setId("ADDCUBE");
         addCube.setMaxHeight(70);
         addCube.setMaxWidth(70);
-        addCube.setTranslateX(-40);
+        addCube.setTranslateX(-160);
         header.getChildren().add(addCube);
-
-        Button openFile = new Button();
-        openFile.getStyleClass().add("icon-button");
-        openFile.setId("OPEN");
-        openFile.setMaxHeight(70);
-        openFile.setMaxWidth(70);
-        openFile.setTranslateX(90);
-        header.getChildren().add(openFile);
-
-        Button saveFile = new Button();
-        saveFile.getStyleClass().add("icon-button");
-        saveFile.setId("SAVE");
-        saveFile.setMaxHeight(70);
-        saveFile.setMaxWidth(70);
-        saveFile.setTranslateX(210);
-        header.getChildren().add(saveFile);
 
         Line vLine3 = new Line();
         vLine3.setStartY(0);
@@ -561,7 +539,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationX.setText(String.valueOf(selectedObj.center().x));
@@ -581,7 +559,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationX.setText(String.valueOf(selectedObj.center().x));
@@ -621,7 +599,7 @@ public class Gui extends Application {
                     float y = Float.valueOf(locationY.getText());
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationY.setText(String.valueOf(selectedObj.center().y));
@@ -641,7 +619,7 @@ public class Gui extends Application {
                     float y = Float.valueOf(locationY.getText());
                     float z = selectedObj.center().z;
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationY.setText(String.valueOf(selectedObj.center().y));
@@ -681,7 +659,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = Float.valueOf(locationZ.getText());
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationZ.setText(String.valueOf(selectedObj.center().z));
@@ -701,7 +679,7 @@ public class Gui extends Application {
                     float y = selectedObj.center().y;
                     float z = Float.valueOf(locationZ.getText());
 
-                    selectedObj.setLocation(selectedObj.center(), new vec3(x, y, z));
+                    selectedObj.setLocation(new vec3(x, y, z));
                 }
 
                 locationZ.setText(String.valueOf(selectedObj.center().z));
@@ -717,7 +695,7 @@ public class Gui extends Application {
         Label rotationLabel = new Label();
         rotationLabel.getStyleClass().add("small-label");
         rotationLabel.setText("Rotation");
-        rotationLabel.setTranslateY(-60);
+        rotationLabel.setTranslateY(-50);
         rotationLabel.setTranslateX(-100);
         objTransforms.getChildren().add(rotationLabel);
 
@@ -725,7 +703,7 @@ public class Gui extends Application {
         rotationX.getStyleClass().add("x-text");
         rotationX.setMaxSize(60, 15);
         rotationX.setTranslateX(-30);
-        rotationX.setTranslateY(-60);
+        rotationX.setTranslateY(-50);
         objTransforms.getChildren().add(rotationX);
 
         // #region rotationX Events
@@ -785,7 +763,7 @@ public class Gui extends Application {
         rotationY.getStyleClass().add("y-text");
         rotationY.setMaxSize(60, 15);
         rotationY.setTranslateX(35);
-        rotationY.setTranslateY(-60);
+        rotationY.setTranslateY(-50);
         objTransforms.getChildren().add(rotationY);
 
         // #region rotationY Events
@@ -845,7 +823,7 @@ public class Gui extends Application {
         rotationZ.getStyleClass().add("z-text");
         rotationZ.setMaxSize(60, 15);
         rotationZ.setTranslateX(100);
-        rotationZ.setTranslateY(-60);
+        rotationZ.setTranslateY(-50);
         objTransforms.getChildren().add(rotationZ);
 
         // #region rotationZ Events
@@ -908,7 +886,7 @@ public class Gui extends Application {
         Label scaleLabel = new Label();
         scaleLabel.getStyleClass().add("small-label");
         scaleLabel.setText("Scale");
-        scaleLabel.setTranslateY(-30);
+        scaleLabel.setTranslateY(-10);
         scaleLabel.setTranslateX(-100);
         objTransforms.getChildren().add(scaleLabel);
 
@@ -916,7 +894,7 @@ public class Gui extends Application {
         scaleX.getStyleClass().add("x-text");
         scaleX.setMaxSize(60, 15);
         scaleX.setTranslateX(-30);
-        scaleX.setTranslateY(-30);
+        scaleX.setTranslateY(-10);
         objTransforms.getChildren().add(scaleX);
 
         // #region scaleX Events
@@ -973,7 +951,7 @@ public class Gui extends Application {
         scaleY.getStyleClass().add("y-text");
         scaleY.setMaxSize(60, 15);
         scaleY.setTranslateX(35);
-        scaleY.setTranslateY(-30);
+        scaleY.setTranslateY(-10);
         objTransforms.getChildren().add(scaleY);
 
         // #region scaleY Events
@@ -1030,7 +1008,7 @@ public class Gui extends Application {
         scaleZ.getStyleClass().add("z-text");
         scaleZ.setMaxSize(60, 15);
         scaleZ.setTranslateX(100);
-        scaleZ.setTranslateY(-30);
+        scaleZ.setTranslateY(-10);
         objTransforms.getChildren().add(scaleZ);
 
         // #region scaleZ Events
@@ -1092,7 +1070,7 @@ public class Gui extends Application {
         Label colorLabel = new Label();
         colorLabel.getStyleClass().add("small-label");
         colorLabel.setText("Color");
-        colorLabel.setTranslateY(35);
+        colorLabel.setTranslateY(40);
         colorLabel.setTranslateX(-100);
         objTransforms.getChildren().add(colorLabel);
 
@@ -1100,21 +1078,50 @@ public class Gui extends Application {
         rgbPick.setId("RGBPICK");
         rgbPick.setMaxSize(200, 35);
         rgbPick.setTranslateX(35);
-        rgbPick.setTranslateY(35);
+        rgbPick.setTranslateY(40);
         objTransforms.getChildren().add(rgbPick);
 
-        Label specLabel = new Label();
-        specLabel.getStyleClass().add("small-label");
-        specLabel.setText("Specular");
-        specLabel.setTranslateY(85);
-        specLabel.setTranslateX(-100);
-        objTransforms.getChildren().add(specLabel);
+        ToggleButton origToggle = new ToggleButton();
+        origToggle.setText("Show Origin");
+        origToggle.getStyleClass().add("push-button");
+        origToggle.setMaxSize(120, 30);
+        origToggle.setTranslateX(-70);
+        origToggle.setTranslateY(90);
+        objTransforms.getChildren().add(origToggle);
 
-        Slider specularPick = new Slider();
-        specularPick.setMaxSize(180, 35);
-        specularPick.setTranslateX(35);
-        specularPick.setTranslateY(85);
-        objTransforms.getChildren().add(specularPick);
+        origToggle.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (origToggle.isSelected()) {
+                    selectedObj.showOrigins = true;
+                }
+
+                else {
+                    selectedObj.showOrigins = false;
+                }
+            }
+        });
+
+        ToggleButton normToggle = new ToggleButton();
+        normToggle.setText("Normals");
+        normToggle.getStyleClass().add("push-button");
+        normToggle.setMaxSize(120, 30);
+        normToggle.setTranslateX(70);
+        normToggle.setTranslateY(90);
+        objTransforms.getChildren().add(normToggle);
+
+        normToggle.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (normToggle.isSelected()) {
+                    selectedObj.drawNormals = true;
+                }
+
+                else {
+                    selectedObj.drawNormals = false;
+                }
+            }
+        });
 
         // #endregion
 
@@ -1126,21 +1133,90 @@ public class Gui extends Application {
         objPhys.setTranslateY(180);
         objTabRoot.getChildren().add(objPhys);
 
+        StackPane velPane = new StackPane();
+        velPane.getStyleClass().add("second-panel");
+
+        velPane.setMaxSize(280, 250);
+        velPane.setTranslateY(-110);
+        objPhys.getChildren().add(velPane);
+
+        ToggleButton togActive = new ToggleButton();
+        togActive.setText("Active");
+        togActive.getStyleClass().add("push-button");
+        togActive.setMaxSize(260, 50);
+        togActive.setTranslateY(-85);
+
+        velPane.getChildren().add(togActive);
+
         // #region Velocity
+
+        Label massLabel = new Label();
+        massLabel.getStyleClass().add("small-label");
+        massLabel.setText("Mass");
+        massLabel.setTranslateY(-40);
+        massLabel.setTranslateX(-100);
+
+        TextField mass = new TextField();
+        mass.getStyleClass().add("s-text");
+        mass.setMaxSize(60, 15);
+        mass.setTranslateX(-30);
+        mass.setTranslateY(0);
+        
+        mass.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    mass.setText(oldValue);
+                }
+            }
+        });
+
+        mass.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (!(mass.getText().length() == 0)) {
+                    float m = selectedObj.mass();
+
+                    if (m < 0.001) {
+                        m = 0.001f;
+                    }
+
+                    selectedObj.setMass(m);
+                }
+
+                mass.setText(String.valueOf(selectedObj.mass()));
+            }
+        });
+
+        mass.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(mass.getText().length() == 0)) {
+                    float m = selectedObj.mass();
+
+                    if (m < 0.001) {
+                        m = 0.001f;
+                    }
+
+                    selectedObj.setMass(m);
+                }
+
+                mass.setText(String.valueOf(selectedObj.mass()));
+            }
+        });
 
         Label velocityLabel = new Label();
         velocityLabel.getStyleClass().add("small-label");
         velocityLabel.setText("Velocity");
-        velocityLabel.setTranslateY(-200);
+        velocityLabel.setTranslateY(0);
         velocityLabel.setTranslateX(-100);
-        objPhys.getChildren().add(velocityLabel);
 
         TextField velocityX = new TextField();
         velocityX.getStyleClass().add("x-text");
         velocityX.setMaxSize(60, 15);
         velocityX.setTranslateX(-30);
-        velocityX.setTranslateY(-200);
-        objPhys.getChildren().add(velocityX);
+        velocityX.setTranslateY(0);
         
         velocityX.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1195,8 +1271,7 @@ public class Gui extends Application {
         velocityY.getStyleClass().add("y-text");
         velocityY.setMaxSize(60, 15);
         velocityY.setTranslateX(35);
-        velocityY.setTranslateY(-200);
-        objPhys.getChildren().add(velocityY);
+        velocityY.setTranslateY(0);
         
         velocityY.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1251,8 +1326,7 @@ public class Gui extends Application {
         velocityZ.getStyleClass().add("z-text");
         velocityZ.setMaxSize(60, 15);
         velocityZ.setTranslateX(100);
-        velocityZ.setTranslateY(-200);
-        objPhys.getChildren().add(velocityZ);
+        velocityZ.setTranslateY(0);
         
         velocityZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1311,15 +1385,13 @@ public class Gui extends Application {
         angularLabel.getStyleClass().add("small-label");
         angularLabel.setText("Angular");
         angularLabel.setTranslateX(-100);
-        angularLabel.setTranslateY(-170);
-        objPhys.getChildren().add(angularLabel);
+        angularLabel.setTranslateY(40);
 
         TextField angularX = new TextField();
         angularX.getStyleClass().add("x-text");
         angularX.setMaxSize(60, 15);
         angularX.setTranslateX(-30);
-        angularX.setTranslateY(-170);
-        objPhys.getChildren().add(angularX);
+        angularX.setTranslateY(40);
         
         angularX.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1374,8 +1446,7 @@ public class Gui extends Application {
         angularY.getStyleClass().add("y-text");
         angularY.setMaxSize(60, 15);
         angularY.setTranslateX(35);
-        angularY.setTranslateY(-170);
-        objPhys.getChildren().add(angularY);
+        angularY.setTranslateY(40);
         
         angularY.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1430,8 +1501,7 @@ public class Gui extends Application {
         angularZ.getStyleClass().add("z-text");
         angularZ.setMaxSize(60, 15);
         angularZ.setTranslateX(100);
-        angularZ.setTranslateY(-170);
-        objPhys.getChildren().add(angularZ);
+        angularZ.setTranslateY(40);
         
         angularZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1482,30 +1552,303 @@ public class Gui extends Application {
             }
         });
 
-        ToggleButton staticControl = new ToggleButton();
-        staticControl.setText("Static");
-        staticControl.getStyleClass().add("push-button");
-        staticControl.setMaxSize(50, 50);
-        staticControl.setTranslateX(-90);
-        staticControl.setTranslateY(100);
-        objPhys.getChildren().add(staticControl);
+        ToggleButton velToggle = new ToggleButton();
+        velToggle.setText("Velocity");
+        velToggle.getStyleClass().add("push-button");
+        velToggle.setMaxSize(120, 30);
+        velToggle.setTranslateX(-70);
+        velToggle.setTranslateY(90);
 
-        staticControl.setOnAction(new EventHandler<ActionEvent>() {
+        ToggleButton accToggle = new ToggleButton();
+        accToggle.setText("Acceleration");
+        accToggle.getStyleClass().add("push-button");
+        accToggle.setMaxSize(120, 30);
+        accToggle.setTranslateX(70);
+        accToggle.setTranslateY(90);
+
+        velToggle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                if (selectedObj != null) {
-                    if (staticControl.isSelected()) {
-                        selectedObj.setStatic(true);
-                    }
+                if (velToggle.isSelected()) {
+                    selectedObj.drawVelocity = true;
+                }
 
-                    else {
-                        selectedObj.setStatic(false);
-                    }
+                else {
+                    selectedObj.drawVelocity = false;
                 }
             }
         });
-        
-        // #endregion
+
+        accToggle.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (accToggle.isSelected()) {
+                    selectedObj.drawAcc = true;
+                }
+
+                else {
+                    selectedObj.drawAcc = false;
+                }
+            }
+        });
+
+
+        togActive.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (togActive.isSelected()) {
+                    selectedObj.setStatic(false);
+                    velPane.getChildren().add(massLabel);
+                    velPane.getChildren().add(mass);
+                    velPane.getChildren().add(velocityLabel);
+                    velPane.getChildren().add(velocityX);
+                    velPane.getChildren().add(velocityY);
+                    velPane.getChildren().add(velocityZ);
+                    velPane.getChildren().add(angularLabel);
+                    velPane.getChildren().add(angularX);
+                    velPane.getChildren().add(angularY);
+                    velPane.getChildren().add(angularZ);
+                    velPane.getChildren().add(velToggle);
+                    velPane.getChildren().add(accToggle);
+
+                }
+
+                else {
+                    selectedObj.setStatic(true);
+                    selectedObj.drawAcc = false;
+                    selectedObj.drawVelocity = false;
+                    velPane.getChildren().remove(massLabel);
+                    velPane.getChildren().remove(mass);
+                    velPane.getChildren().remove(velocityLabel);
+                    velPane.getChildren().remove(velocityX);
+                    velPane.getChildren().remove(velocityY);
+                    velPane.getChildren().remove(velocityZ);
+                    velPane.getChildren().remove(angularLabel);
+                    velPane.getChildren().remove(angularX);
+                    velPane.getChildren().remove(angularY);
+                    velPane.getChildren().remove(angularZ);
+                    velPane.getChildren().remove(velToggle);
+                    velPane.getChildren().remove(accToggle);
+                }
+            }
+        });
+
+        StackPane pivotPane = new StackPane();
+        pivotPane.getStyleClass().add("second-panel");
+
+        pivotPane.setMaxSize(280, 180);
+        pivotPane.setTranslateY(120);
+        objPhys.getChildren().add(pivotPane);
+
+        ToggleButton togPivot = new ToggleButton();
+        togPivot.setText("Pivot");
+        togPivot.getStyleClass().add("push-button");
+        togPivot.setMaxSize(260, 50);
+        togPivot.setTranslateY(-55);
+        pivotPane.getChildren().add(togPivot);
+
+        Label pivotLabel = new Label();
+        pivotLabel.setText("Pivot");
+        pivotLabel.getStyleClass().add("small-label");
+        pivotLabel.setTranslateX(-100);
+        pivotLabel.setTranslateY(5);
+
+
+        TextField pivotX = new TextField();
+        pivotX.getStyleClass().add("x-text");
+        pivotX.setMaxSize(60, 15);
+        pivotX.setTranslateX(-30);
+        pivotX.setTranslateY(5);
+
+
+        pivotX.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    pivotX.setText(oldValue);
+                }
+            }
+        });
+
+        pivotX.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (pivotX.getText().length() == 1 && pivotX.getText().contains("-")) {
+                    pivotX.setText(String.valueOf(-selectedObj.pivot().x));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float x = Float.valueOf(pivotX.getText());
+                    float y = selectedObj.pivot().y;
+                    float z = selectedObj.pivot().z;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotX.setText(String.valueOf(selectedObj.pivot().x));
+            }
+        });
+
+        pivotX.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (pivotX.getText().length() == 1 && pivotX.getText().contains("-")) {
+                    pivotX.setText(String.valueOf(-selectedObj.pivot().x));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float x = Float.valueOf(pivotX.getText());
+                    float y = selectedObj.pivot().y;
+                    float z = selectedObj.pivot().z;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotX.setText(String.valueOf(selectedObj.pivot().x));
+            }
+        });
+
+        TextField pivotY = new TextField();
+        pivotY.getStyleClass().add("y-text");
+        pivotY.setMaxSize(60, 15);
+        pivotY.setTranslateX(35);
+        pivotY.setTranslateY(5);
+
+        pivotY.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    pivotY.setText(oldValue);
+                }
+            }
+        });
+
+        pivotY.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (pivotY.getText().length() == 1 && pivotY.getText().contains("-")) {
+                    pivotY.setText(String.valueOf(-selectedObj.pivot().y));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float y = Float.valueOf(pivotY.getText());
+                    float x = selectedObj.pivot().x;
+                    float z = selectedObj.pivot().z;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotY.setText(String.valueOf(selectedObj.pivot().y));
+            }
+        });
+
+        pivotY.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (pivotY.getText().length() == 1 && pivotY.getText().contains("-")) {
+                    pivotY.setText(String.valueOf(-selectedObj.pivot().y));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float y = Float.valueOf(pivotY.getText());
+                    float x = selectedObj.pivot().x;
+                    float z = selectedObj.pivot().z;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotY.setText(String.valueOf(selectedObj.pivot().y));
+            }
+        });
+
+        TextField pivotZ = new TextField();
+        pivotZ.getStyleClass().add("z-text");
+        pivotZ.setMaxSize(60, 15);
+        pivotZ.setTranslateX(100);
+        pivotZ.setTranslateY(5);
+
+        pivotZ.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    pivotZ.setText(oldValue);
+                }
+            }
+        });
+
+        pivotZ.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (pivotZ.getText().length() == 1 && pivotZ.getText().contains("-")) {
+                    pivotZ.setText(String.valueOf(-selectedObj.pivot().z));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float z = Float.valueOf(pivotZ.getText());
+                    float x = selectedObj.pivot().x;
+                    float y = selectedObj.pivot().y;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotZ.setText(String.valueOf(selectedObj.pivot().z));
+            }
+        });
+
+        pivotZ.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (pivotZ.getText().length() == 1 && pivotZ.getText().contains("-")) {
+                    pivotZ.setText(String.valueOf(-selectedObj.pivot().z));
+                }
+
+                if (!(pivotX.getText().length() == 0)) {
+                    float z = Float.valueOf(pivotZ.getText());
+                    float x = selectedObj.pivot().x;
+                    float y = selectedObj.pivot().y;
+
+                    selectedObj.setPivot(new vec3(x, y, z));
+                }
+
+                pivotZ.setText(String.valueOf(selectedObj.pivot().z));
+            }
+        });
+
+        ToggleButton showPivToggle = new ToggleButton();
+        showPivToggle.setText("Show Pivot");
+        showPivToggle.setMaxSize(120, 30);
+        showPivToggle.setTranslateX(-70);
+        showPivToggle.setTranslateY(60);
+        showPivToggle.getStyleClass().add("push-button");
+
+        togPivot.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (togPivot.isSelected()) {
+                    selectedObj.enablePivot(true);
+                    pivotPane.getChildren().add(pivotLabel);
+                    pivotPane.getChildren().add(pivotX);
+                    pivotPane.getChildren().add(pivotY);
+                    pivotPane.getChildren().add(pivotZ);
+                    pivotPane.getChildren().add(showPivToggle);
+                }
+
+                else {
+                    selectedObj.enablePivot(false);
+                    pivotPane.getChildren().remove(pivotLabel);
+                    pivotPane.getChildren().remove(pivotX);
+                    pivotPane.getChildren().remove(pivotY);
+                    pivotPane.getChildren().remove(pivotZ);
+                    pivotPane.getChildren().remove(showPivToggle);
+                }
+            }
+        });
 
         Tab objTab = new Tab("Object");
 
@@ -1542,6 +1885,10 @@ public class Gui extends Application {
                         vec3 loc = selectedObj.center();
                         vec3 rot = selectedObj.rotation();
                         vec3 scl = selectedObj.scale();
+                        vec3 vel = selectedObj.velocity();
+                        vec3 ang = selectedObj.angularVelocity();
+                        vec3 piv = selectedObj.pivot();
+
                         float[] col = selectedObj.color();
                         locationX.setText(String.valueOf(loc.x));
                         locationY.setText(String.valueOf(loc.y));
@@ -1554,6 +1901,28 @@ public class Gui extends Application {
                         scaleX.setText(String.valueOf(scl.x));
                         scaleY.setText(String.valueOf(scl.y));
                         scaleZ.setText(String.valueOf(scl.z));
+
+                        mass.setText(String.valueOf(selectedObj.mass()));
+                        velocityX.setText(String.valueOf(vel.x));
+                        velocityY.setText(String.valueOf(vel.x));
+                        velocityZ.setText(String.valueOf(vel.x));
+
+                        angularX.setText(String.valueOf(ang.x));
+                        angularY.setText(String.valueOf(ang.y));
+                        angularZ.setText(String.valueOf(ang.z));
+
+                        pivotX.setText(String.valueOf(piv.x));
+                        pivotY.setText(String.valueOf(piv.y));
+                        pivotZ.setText(String.valueOf(piv.z));
+
+                        togActive.setSelected(!selectedObj.isStatic());
+                        togPivot.setSelected(selectedObj.isPivot());
+
+                        normToggle.setSelected(selectedObj.drawNormals);
+                        origToggle.setSelected(selectedObj.showOrigins);
+
+                        velToggle.setSelected(selectedObj.drawVelocity);
+                        accToggle.setSelected(selectedObj.drawAcc);
 
                         rgbPick.setValue(Color.rgb((int) (col[0] * 255), (int) (col[0] * 255), (int) (col[0] * 255)));
                         lastObj = selectedObj;
@@ -1653,27 +2022,6 @@ public class Gui extends Application {
             }
         });
 
-        addSphere.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                sc.addIcoSphere();
-            }
-        });
-
-        saveFile.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                System.out.println("FILE SAVED");
-            }
-        });
-
-        openFile.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                System.out.println("FILE OPENED");
-            }
-        });
-
         toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -1698,5 +2046,4 @@ public class Gui extends Application {
         stage.getScene().getStylesheets().setAll("assets/dark.css");
         stage.show();
     }
-
 }

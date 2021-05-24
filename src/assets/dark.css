@@ -77,6 +77,8 @@
     -fx-background-color: linear-gradient(to top, rgb(90, 60, 200), rgb(85, 170, 215));
     -fx-background-radius: 0;
     -fx-text-fill: white; 
+    -fx-background-radius: 25;    
+    -fx-border-radius: 25;    
 }
 
 .push-button:hover {
