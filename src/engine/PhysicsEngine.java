@@ -22,15 +22,21 @@ public class PhysicsEngine {
         if (frame == frameStart) {
             for (EmptyObj obj : world) {
                 obj.setPVelocity(new vec3(obj.velocity().x, obj.velocity().y, obj.velocity().z));
-                obj.setPLocation(obj.center());
+                obj.setPLocation(new vec3(obj.center().x, obj.center().y, obj.center().z));
             }
         }
 
         if (isSimulating) {
             for (EmptyObj obj : world) {
                 if (!obj.isStatic()) {
-                    obj.applyForce(vec3.mult(new vec3(0f, g, 0f), timeScale));
-                    obj.collide(world);
+                    if (obj.isPivot()) {
+
+                    }
+
+                    else {
+                        obj.applyForce(vec3.mult(new vec3(0f, g, 0f), timeScale));
+                        obj.collide(world);
+                    }
                 }
             }
 
