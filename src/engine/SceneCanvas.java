@@ -21,6 +21,8 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     private int frame_current = frameStart;
     private boolean isClick, isWire, isSimulating;
 
+    public boolean showOrigins, drawNormals;
+
     @Override 
     public void init(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
@@ -60,7 +62,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glRotatef(angleZ, 0, 0, 1);
         //#endregion
 
-        System.out.println(frame_current);
         frame_current = engine.update(frame_current, isSimulating);
        
 
@@ -199,12 +200,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         //scene.get(scene.size() - 1).translate(scene.get(scene.size() - 1).center(), vec3.random(-10.0f, 10.0f));
     }
 
-    public void addIcoSphere() {
-        int id = makeID();
-        scene.add(new IcoSphere("Ico-" + scene.size(), id));
-        //scene.get(scene.size() - 1).translate(scene.get(scene.size() - 1).center(), vec3.random(-10.0f, 10.0f));
-    }
-
     public void addLine(vec3 o, vec3 d) {
         int id = makeID();
         scene.add(new Line("Line-" + scene.size(), id, o, d));
@@ -295,7 +290,8 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             else if (e.getKeyCode() == 71) { // alt-G
                 if (sel != null) {
                     frame_current = frameStart;
-                    sel.setLocation(sel.center(), new vec3(0, 0, 0));
+                    engine.update(frame_current, false);
+                    sel.setLocation(new vec3(0, 0, 0));
                     sel.setChanged(true);
                 }
             }
@@ -303,6 +299,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             else if (e.getKeyCode() == 82) { // alt-R
                 if (sel != null) {
                     frame_current = frameStart;
+                    engine.update(frame_current, false);
                     sel.setRotation(new vec3(0, 0, 0));
                     sel.setChanged(true);
                 }
@@ -311,6 +308,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             else if (e.getKeyCode() == 83) { // alt-S
                 if (sel != null) {
                     frame_current = frameStart;
+                    engine.update(frame_current, false);
                     sel.setScale(new vec3(1, 1, 1));
                     sel.setChanged(true);
                 }
@@ -320,10 +318,12 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         else if (e.isControlDown()) {
             if (e.getKeyCode() == 32) { // ctrl-Spacebar
                 frame_current = frameStart;
+                engine.update(frame_current, false);
             }
 
             else if (e.getKeyCode() == 88) { // ctrl-X
                 frame_current = frameStart;
+                engine.update(frame_current, false);
                 scene.remove(sel);
                 sel = null;
             }

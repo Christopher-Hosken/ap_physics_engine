@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Cube extends EmptyObj {
     public Cube(String name, int id) {
         super(name, id, true);
+        this.type = "cube";
     }
 
     public void init() {

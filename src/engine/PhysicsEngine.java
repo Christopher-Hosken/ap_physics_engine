@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class PhysicsEngine {
     protected int frameStart, frameEnd;
-    protected float g = -0.098f;
+    protected float g = -9.8f;
+    protected float timeScale = 0.001f;
     protected ArrayList<EmptyObj> world;
 
     public PhysicsEngine(ArrayList<EmptyObj> world, int frameStart, int frameEnd) {
@@ -21,15 +22,15 @@ public class PhysicsEngine {
         if (frame == frameStart) {
             for (EmptyObj obj : world) {
                 obj.setPVelocity(new vec3(obj.velocity().x, obj.velocity().y, obj.velocity().z));
-                obj.setLocation(obj.pCenter(), obj.center());
-                //obj.setAngularVelocity(obj.pAngularVelocity(), obj.angularVelocity());
+                obj.setPLocation(obj.center());
             }
         }
 
         if (isSimulating) {
             for (EmptyObj obj : world) {
                 if (!obj.isStatic()) {
-                    obj.applyForce(new vec3(0f, g, 0f));
+                    obj.applyForce(vec3.mult(new vec3(0f, g, 0f), timeScale));
+                    obj.collide(world);
                 }
             }
 
