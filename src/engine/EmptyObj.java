@@ -5,37 +5,31 @@ import java.util.ArrayList;
 
 public class EmptyObj {
     protected String name;
-    protected String type;
     protected int id;
     protected float mass;
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
-    protected vec3 center, rotation, scale, pCenter, pRotation, velocity, pVelocity, angularVelocity, pAngularVelocity, pAcc;
-    protected vec3 pivot, pivotRotation;
+    protected vec3 center, scale, pCenter, velocity, pVelocity, pAcc;
     protected float[] color, specular, shinyness;
-    protected boolean isLine, hasQuads, active, changed, isStatic = true, isPivot;
-    protected float radius;
+    protected boolean isLine, hasQuads, active, changed, isStatic = true;
+    protected float friction;
+
+    public int collision;
 
     public boolean drawVelocity, drawAcc, drawNormals, showOrigins;
 
     public EmptyObj(String name, int id, boolean hasQuads) {
+        this.friction = 0;
         this.name = name;
         this.id = id;
-        this.type = "empty";
         mass = 1;
         init();
         this.vertexCount = vertices.size();
         center=new vec3();
-        rotation=new vec3();
         velocity=new vec3();
-        angularVelocity=new vec3();
         pCenter=new vec3();
-        pRotation=new vec3();
         pVelocity=new vec3();
-        pAngularVelocity=new vec3();
         pAcc = new vec3();
-        pivot = new vec3();
-        pivotRotation = new vec3();
         scale=new vec3(1, 1, 1);
         color = new float[] {0.5f, 0.5f, 0.5f};
         this.hasQuads = hasQuads;
@@ -62,14 +56,6 @@ public class EmptyObj {
         return center;
     }
 
-    public boolean isPivot() {
-        return isPivot;
-    }
-
-    public vec3 rotation() {
-        return rotation;
-    }
-
     public vec3 scale() {
         return scale;
     }
@@ -78,24 +64,12 @@ public class EmptyObj {
         return pCenter;
     }
 
-    public vec3 pRotation() {
-        return pRotation;
-    }
-
     public vec3 velocity() {
         return velocity;
     }
 
     public vec3 pVelocity() {
         return pVelocity;
-    }
-
-    public vec3 angularVelocity() {
-        return angularVelocity;
-    }
-
-    public vec3 pAngularVelocity() {
-        return pAngularVelocity;
     }
 
     public float[] color() {
@@ -118,8 +92,8 @@ public class EmptyObj {
         return isLine;
     }
 
-    public vec3 pivot() {
-        return pivot;
+    public float friction() {
+        return friction;
     }
 
     public boolean changed() {
@@ -139,6 +113,10 @@ public class EmptyObj {
 
     //#region Setters
 
+    public void setFriction(float f) {
+        friction = f;
+    }
+
     public void setChanged(boolean c) {
         changed = c;
     }
@@ -155,17 +133,8 @@ public class EmptyObj {
         isStatic = s;
     }
 
-    public void setPivot(vec3 v) {
-        pivot = v;
-    }
-
-    public void enablePivot(boolean b) {
-        isPivot = b;
-    }
-
     public void translate(vec3 t) {
         center.add(t);
-        pCenter = center;
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vertices.get(vdx).add(t);
         }
@@ -199,85 +168,9 @@ public class EmptyObj {
     public void setMass(float m) {
         mass = m;
     }
-    
-    public void setAngularVelocity(vec3 av, vec3 u) {
-        av = u;
-    }
 
-    public void rotate(vec3 r) {
-        rotation.add(r);
-
-        float sinX = (float) Math.sin(Math.toRadians(r.x));
-        float cosX = (float) Math.cos(Math.toRadians(r.x));
-
-        float sinY = (float) Math.sin(Math.toRadians(r.y));
-        float cosY = (float) Math.cos(Math.toRadians(r.y));
-
-        float sinZ = (float) Math.sin(Math.toRadians(r.z));
-        float cosZ = (float) Math.cos(Math.toRadians(r.z));
-
-        for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vec3 v = vec3.sub(vertices.get(vdx), center);
-            // X Rotation
-            v.y = (v.y * cosX) - (v.z * sinX);
-            v.z = (v.z * cosX) + (v.y * sinX);
-
-            // Y Rotation
-            v.x = (v.x * cosY) + (v.z * sinY);
-            v.z = (v.z * cosY) - (v.x * sinY);
-
-            // Z Rotation
-            v.x = (v.x * cosZ) - (v.y * sinZ);
-            v.y = (v.y * cosZ) + (v.x * sinZ);
-
-            vertices.set(vdx, vec3.add(v, center));
-        }
-    }
-
-    public void setRotation(vec3 r) {
-        vec3 rrot = vec3.sub(r, rotation);
-        rotation = r;
-
-        float sinX = (float) Math.sin(Math.toRadians(rrot.x));
-        float cosX = (float) Math.cos(Math.toRadians(rrot.x));
-
-        float sinY = (float) Math.sin(Math.toRadians(rrot.y));
-        float cosY = (float) Math.cos(Math.toRadians(rrot.y));
-
-        float sinZ = (float) Math.sin(Math.toRadians(rrot.z));
-        float cosZ = (float) Math.cos(Math.toRadians(rrot.z));
-
-        for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vec3 v = vec3.sub(vertices.get(vdx), center);
-            float x, y, z;
-            x = v.x;
-            y = v.y;
-            z = v.z;
-            
-            // X Rotation
-            y = (v.y * cosX) - (v.z * sinX);
-            z = (v.z * cosX) + (v.y * sinX);
-
-            v.y = y;
-            v.z = z;
-
-            // Y Rotation
-            x = (v.x * cosY) + (v.z * sinY);
-            z = (v.z * cosY) - (v.x * sinY);
-
-            v.x = x;
-            v.z = z;
-
-            // Z Rotation
-            x = (v.x * cosZ) - (v.y * sinZ);
-            y = (v.y * cosZ) + (v.x * sinZ);
-
-            v.x = x;
-            v.y = y;
-            v.z = z;
-
-            vertices.set(vdx, vec3.add(v, center));
-        }
+    public vec3 getMomentum() {
+        return vec3.mult(pVelocity, mass);
     }
 
     public void scale(vec3 s) {
@@ -295,22 +188,43 @@ public class EmptyObj {
         }
     }
 
+    public void setAcceleration(vec3 f) {
+        pAcc = f;
+    }
+
     public void applyForce(vec3 force) {
         // F = ma
         // a = F / m
-        vec3 a = vec3.div(force, mass);
-        pAcc = a;
-        pVelocity.add(a);
-        PTranslate(pVelocity);
+        pAcc = vec3.add(pAcc, vec3.div(force, mass));
+        pVelocity.add(pAcc);
+        updateVel();
     }
 
-    public void applyTorque(vec3 force, float distance, vec3 theta) {
-        // t = r*F*sin()
-        vec3 torque = vec3.mult(force, vec3.mult(distance, vec3.sin(theta)));
+    public void updateVel() {
+        PTranslate(pVelocity);
     }
     
     public EmptyObj collide(ArrayList<EmptyObj> world) {
         return null;
+    }
+
+    public float[][] getBounds() {
+        float[] x = new float[] {vertices.get(0).x, vertices.get(0).x}; 
+        float[] y = new float[] {vertices.get(0).y, vertices.get(0).y}; ; 
+        float[] z = new float[] {vertices.get(0).z, vertices.get(0).z}; ;
+
+        for (vec3 v : vertices) {
+            if (v.x < x[0]) x[0] = v.x;
+            if (v.x > x[1]) x[1] = v.x;
+
+            if (v.y < y[0]) y[0] = v.y;
+            if (v.y > y[1]) y[1] = v.y;
+
+            if (v.z < z[0]) z[0] = v.z;
+            if (v.z > z[1]) z[1] = v.z;
+        }
+
+        return new float[][] {x, y, z};
     }
 
     //#endregion
@@ -322,7 +236,7 @@ public class EmptyObj {
         return new vec3(r, g, b);
     }
 
-    public void draw(GL2 gl, boolean drawWire) {
+    public void draw(GL2 gl, boolean drawWire, vec3 cam) {
         if (isLine) {
             drawLines(gl);
         }
@@ -342,9 +256,13 @@ public class EmptyObj {
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vertices.get(vdx);
 
+            vec3 u = new vec3(v.x - cam.x, v.y - cam.y, v.z- cam.z);
+
+            float fresnel = ((u.x / u.z) + (u.y / u.z)) / 2f;
+
             if (drawNormals) {
                 if (active) {
-                    gl.glColor3f(vec3.clamp((pCenter.x - v.x) + 0.25f, 0f, 1f), vec3.clamp((pCenter.y - v.y)  + 0.25f, 0f, 1f), vec3.clamp((pCenter.z - v.z)  + 0.25f, 0f, 1f));
+                    gl.glColor3f(vec3.clamp((pCenter.x - v.x) + 0.25f, 0f, 1f), vec3.clamp((pCenter.y - v.y) + 0.25f, 0f, 1f), vec3.clamp((pCenter.z - v.z) + 0.25f, 0f, 1f));
                 }
     
                 else {
@@ -354,11 +272,11 @@ public class EmptyObj {
 
             else {
                 if (active) {
-                    gl.glColor3f(vec3.clamp(color[0] + 0.25f, 0f, 1f), vec3.clamp(color[1] + 0.25f, 0f, 1f), vec3.clamp(color[1] + 0.25f, 0f, 1f));
+                    gl.glColor3f(vec3.clamp(color[0] + 0.25f + fresnel, 0f, 1f), vec3.clamp(color[1] + 0.25f + fresnel, 0f, 1f), vec3.clamp(color[1] + 0.25f + fresnel, 0f, 1f));
                 }
     
                 else {
-                    gl.glColor3f(vec3.clamp(color[0], 0f, 1f), vec3.clamp(color[1], 0f, 1f), vec3.clamp(color[2], 0f, 1f));
+                    gl.glColor3f(vec3.clamp(color[0] + fresnel, 0f, 1f), vec3.clamp(color[1] + fresnel, 0f, 1f), vec3.clamp(color[2] + fresnel, 0f, 1f));
                 }
             }
 
@@ -393,13 +311,6 @@ public class EmptyObj {
             vec3 t = vec3.add(pCenter, pAcc);
 
             gl.glVertex3f(t.x, t.y, t.z);
-            gl.glEnd();
-        }
-
-        if (isPivot) {
-            gl.glBegin(GL2.GL_POINTS);
-            gl.glColor3f(0, 0, 1);
-            gl.glVertex3f(pivot.x, pivot.y, pivot.z);
             gl.glEnd();
         }
 

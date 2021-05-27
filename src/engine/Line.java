@@ -7,6 +7,5 @@ public class Line extends EmptyObj {
         vertices.add(origin);
         vertices.add(direction);
         vertexCount = vertices.size();
-        this.type = "line";
     }
 }

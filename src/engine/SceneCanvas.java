@@ -39,6 +39,24 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
         gl.glLineWidth(2f);
         gl.glPointSize(10);
+        int id = makeID();
+        Cube floor = new Cube("Cube-" + scene.size(), id);
+        floor.setScale(new vec3(10, 0.5f, 10));
+        floor.setLocation(new vec3(0, -3f, 0));
+        scene.add(floor);
+    
+        id = makeID();
+        Cube a = new Cube("Cube-" + scene.size(), id);
+        a.setLocation(new vec3(-5f, 0f, 0f));
+        a.setStatic(false);
+        a.setVelocity(new vec3(0.3f, 0, 0));
+        scene.add(a);
+    
+        id = makeID();
+        Cube b = new Cube("Cube-" + scene.size(), id);
+        b.setLocation(new vec3(3f, 0f, 0f));
+        b.setStatic(false);
+        scene.add(b);
     }
 
     @Override
@@ -100,7 +118,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         //#endregion
 
         for (EmptyObj obj : scene) {
-            obj.draw(gl, isWire);
+            obj.draw(gl, isWire, new vec3(posX, posY, posZ));
             if (obj.active()) {
                 obj.drawLines(gl);
             }
@@ -197,7 +215,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     public void addCube() {
         int id = makeID();
         scene.add(new Cube("Cube-" + scene.size(), id));
-        //scene.get(scene.size() - 1).translate(scene.get(scene.size() - 1).center(), vec3.random(-10.0f, 10.0f));
     }
 
     public void addLine(vec3 o, vec3 d) {
@@ -296,15 +313,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 }
             }
 
-            else if (e.getKeyCode() == 82) { // alt-R
-                if (sel != null) {
-                    frame_current = frameStart;
-                    engine.update(frame_current, false);
-                    sel.setRotation(new vec3(0, 0, 0));
-                    sel.setChanged(true);
-                }
-            }
-
             else if (e.getKeyCode() == 83) { // alt-S
                 if (sel != null) {
                     frame_current = frameStart;
@@ -313,20 +321,21 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                     sel.setChanged(true);
                 }
             }
-        }
 
-        else if (e.isControlDown()) {
-            if (e.getKeyCode() == 32) { // ctrl-Spacebar
+            else if (e.getKeyCode() == 70) { // alt-f
                 frame_current = frameStart;
                 engine.update(frame_current, false);
             }
+        }
 
-            else if (e.getKeyCode() == 88) { // ctrl-X
+        else if (e.isControlDown()) {
+            if (e.getKeyCode() == 88) { // ctrl-X
                 frame_current = frameStart;
                 engine.update(frame_current, false);
                 scene.remove(sel);
                 sel = null;
             }
+
         }
 
         else if (e.isShiftDown()){
