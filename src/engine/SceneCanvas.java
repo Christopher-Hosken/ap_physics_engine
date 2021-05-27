@@ -4,29 +4,31 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.awt.event.*;
 import java.nio.CharBuffer;
 
 public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseWheelListener, KeyListener, MouseListener {
     private GL2 gl;
+    private GLU glu = new GLU();
     private PhysicsEngine engine;
     private ArrayList<EmptyObj> scene = new ArrayList<EmptyObj>();
-    private float zNear= 0.001f, zFar = 10000f, fov = 45;
+    private float zNear= 1f, zFar = 100f, fov = 45;
     private int frameStart = 0, frameEnd = 250;
+    private float[] background = new float[] {0f, 0f, 0f};
 
-    private int clickX, clickY, lastX, lastY, height;
-    private float startZ, posX, posY, posZ = -5, angleX, angleY, angleZ;
+    private int clickX, clickY, lastX, lastY, width, height;
+    private float startZ = -5, posX, posY, posZ = -5, angleX, angleY, angleZ;
     private EmptyObj sel = null;
     private int frame_current = frameStart;
     private boolean isClick, isWire, isSimulating;
 
-    public boolean showOrigins, drawNormals;
-
     @Override 
     public void init(GLAutoDrawable drawable) {
         gl = drawable.getGL().getGL2();
-        gl.glClearColor(0f, 0f, 0f, 0f);
+        gl.glClearColor(background[0], background[1], background[2], 1f);
         gl.glShadeModel(GL2.GL_SMOOTH);
 
         gl.glEnable(GL2.GL_DEPTH_TEST);
@@ -39,24 +41,6 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
         gl.glLineWidth(2f);
         gl.glPointSize(10);
-        int id = makeID();
-        Cube floor = new Cube("Cube-" + scene.size(), id);
-        floor.setScale(new vec3(10, 0.5f, 10));
-        floor.setLocation(new vec3(0, -3f, 0));
-        scene.add(floor);
-    
-        id = makeID();
-        Cube a = new Cube("Cube-" + scene.size(), id);
-        a.setLocation(new vec3(-5f, 0f, 0f));
-        a.setStatic(false);
-        a.setVelocity(new vec3(0.3f, 0, 0));
-        scene.add(a);
-    
-        id = makeID();
-        Cube b = new Cube("Cube-" + scene.size(), id);
-        b.setLocation(new vec3(3f, 0f, 0f));
-        b.setStatic(false);
-        scene.add(b);
     }
 
     @Override
@@ -108,6 +92,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
         //#region Viewport Drawing
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glClearColor(background[0], background[1], background[2], 1f);
         gl.glLoadIdentity();
 
         //#region Viewport Transformations
@@ -118,7 +103,8 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         //#endregion
 
         for (EmptyObj obj : scene) {
-            obj.draw(gl, isWire, new vec3(posX, posY, posZ));
+            obj.draw(gl, isWire, new vec3(posX, posY, posZ), new vec3(angleX, angleY, angleZ));
+
             if (obj.active()) {
                 obj.drawLines(gl);
             }
@@ -133,11 +119,19 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GLU glu = new GLU();
         gl = drawable.getGL().getGL2();
         this.height = height;
+        this.width = width;
+        updatePersp();
+    }
 
-        
+    public void setWorldColor(Color c) {
+        background[0] = (float) c.getRed();
+        background[1] = (float) c.getGreen();
+        background[2] = (float) c.getBlue();
+    }
+
+    public void updatePersp() {
         final float h = (float) width / (float) height;
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -170,18 +164,29 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         return fov;
     }
 
-    public void setFov(float f, boolean radians) {
-        if (radians) {
-
-        }
-
-        else {
-            fov = f;
-        }
+    public void setFov(float f) {
+        fov = f;
+        updatePersp();
     }
 
     public void setIsWire(boolean w) {
         isWire = w;
+    }
+
+    public void setFrameStart(int fs) {
+        frameStart = fs;
+    }
+
+    public void setFrameEnd(int fe) {
+        frameEnd = fe;
+    }
+    
+    public int getFrameStart() {
+        return frameStart;
+    }
+
+    public int getFrameEnd() {
+        return frameEnd;
     }
 
     public EmptyObj getSelection() {
@@ -192,6 +197,24 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         for (EmptyObj obj : scene) {
             obj.setActive(obj.id() == sel.id());
         }
+    }
+
+    public void setNearClipping(float nc) {
+        zNear = nc;
+        updatePersp();
+    }
+
+    public float getNearClipping() {
+        return zNear;
+    }
+  
+    public void setFarClipping(float fc) {
+        zFar = fc;
+        updatePersp();
+    }
+
+    public float getFarClipping() {
+        return zFar;
     }
 
     public int makeID() {
@@ -298,7 +321,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             if (e.getKeyCode() == 92) { // alt-\
                 posX = 0;
                 posY = 0;
-                posZ = -5;
+                posZ = startZ;
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
@@ -352,7 +375,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
             else if (e.getKeyCode() == 36) { // Home
                 posX = 0;
                 posY = 0;
-                posZ = -5;
+                posZ = startZ;
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;

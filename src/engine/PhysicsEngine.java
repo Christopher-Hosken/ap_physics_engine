@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class PhysicsEngine {
     protected int frameStart, frameEnd;
-    protected float g = -1.8f;
+    protected float g = -9.8f;
     protected float timeScale = 0.0001f;
     protected ArrayList<EmptyObj> world;
 
@@ -12,6 +12,14 @@ public class PhysicsEngine {
         this.world = world;
         this.frameStart = frameStart;
         this.frameEnd = frameEnd;
+    }
+
+    public void setGrav(float _g) {
+        g = _g;
+    }
+
+    public void setTimeScale(float t) {
+        timeScale = t;
     }
 
     public int update(int frame, boolean isSimulating) {

@@ -32,7 +32,6 @@ import com.jogamp.opengl.util.*;
 public class Gui extends Application {
     Color lineColor = new Color(0.4, 0.4, 0.4, 1);
     private double xOffset, yOffset;
-    private boolean _darkTheme = true;
     private EmptyObj selectedObj = null;
     private EmptyObj lastObj = null;
 
@@ -144,43 +143,27 @@ public class Gui extends Application {
         addCube.setTranslateX(-160);
         header.getChildren().add(addCube);
 
-        Line vLine3 = new Line();
-        vLine3.setStartY(0);
-        vLine3.setEndY(100);
-        vLine3.setTranslateX(270);
-        vLine3.setStroke(lineColor);
-        header.getChildren().add(vLine3);
-
         ToggleButton toggleWire = new ToggleButton();
         toggleWire.getStyleClass().add("icon-button");
         toggleWire.setId("TOGWIRE");
         toggleWire.setMaxHeight(70);
         toggleWire.setMaxWidth(70);
-        toggleWire.setTranslateX(330);
+        toggleWire.setTranslateX(-50);
         header.getChildren().add(toggleWire);
-
-        ToggleButton toggleVisibility = new ToggleButton();
-        toggleVisibility.getStyleClass().add("icon-button");
-        toggleVisibility.setId("TOGVIS");
-        toggleVisibility.setMaxHeight(70);
-        toggleVisibility.setMaxWidth(70);
-        toggleVisibility.setTranslateX(440);
-        header.getChildren().add(toggleVisibility);
+        
+        Line vLine3 = new Line();
+        vLine3.setStartY(0);
+        vLine3.setEndY(100);
+        vLine3.setTranslateX(10);
+        vLine3.setStroke(lineColor);
+        header.getChildren().add(vLine3);
 
         Line vLine4 = new Line();
         vLine4.setStartY(0);
         vLine4.setEndY(100);
-        vLine4.setTranslateX(500);
+        vLine4.setTranslateX(600);
         vLine4.setStroke(lineColor);
         header.getChildren().add(vLine4);
-
-        ToggleButton toggleTheme = new ToggleButton();
-        toggleTheme.getStyleClass().add("icon-button");
-        toggleTheme.setId("TOGTHEME");
-        toggleTheme.setMaxHeight(70);
-        toggleTheme.setMaxWidth(70);
-        toggleTheme.setTranslateX(560);
-        header.getChildren().add(toggleTheme);
 
         Button info = new Button();
         info.getStyleClass().add("icon-button");
@@ -230,15 +213,14 @@ public class Gui extends Application {
 
         // #region World Tab
 
-        Tab worldTab = new Tab("World");
+        Tab worldTab = new Tab("Scene");
 
         StackPane worldTabRoot = new StackPane();
         worldTab.setContent(worldTabRoot);
 
         Label worldTitle = new Label();
-        worldTitle.setText("World");
+        worldTitle.setText("Scene");
         worldTitle.getStyleClass().add("panel-title");
-        worldTitle.setText("World");
         worldTitle.setTranslateX(0);
         worldTitle.setTranslateY(-375);
         worldTabRoot.getChildren().add(worldTitle);
@@ -251,82 +233,213 @@ public class Gui extends Application {
         worldTabRoot.getChildren().add(vLine5);
 
         //#region Camera Settings
+
         StackPane cameraPane = new StackPane();
         cameraPane.getStyleClass().add("first-panel");
         cameraPane.setMaxSize(300, 250);
         cameraPane.setTranslateY(-200);
         worldTabRoot.getChildren().add(cameraPane);
 
-        Label cameraPaneLabel = new Label();
-        cameraPaneLabel.setTranslateX(0);
-        cameraPaneLabel.setTranslateY(-100);
-        cameraPaneLabel.setText("Camera");
-        cameraPane.getChildren().add(cameraPaneLabel);
-        
         Label focalLabel = new Label();
-        focalLabel.setText("Focal Length");
         focalLabel.getStyleClass().add("small-label");
+        focalLabel.setText("Focal Length");
         focalLabel.setTranslateX(-90);
-        focalLabel.setTranslateY(-60);
+        focalLabel.setTranslateY(-90);
         cameraPane.getChildren().add(focalLabel);
 
         TextField focalField = new TextField();
         focalField.getStyleClass().add("s-text");
-        focalField.setMaxSize(80, 15);
-        focalField.setTranslateX(10);
-        focalField.setTranslateY(-60);
+        focalField.setMaxSize(60, 15);
+        focalField.setText("45.0");
+        focalField.setTranslateX(0);
+        focalField.setTranslateY(-90);
         cameraPane.getChildren().add(focalField);
 
-        ToggleButton focalDegrees = new ToggleButton();
-        focalDegrees.setText("deg");
-        focalDegrees.getStyleClass().add("push-button");
-        focalDegrees.setMaxSize(40, 15);
-        focalDegrees.setTranslateX(80);
-        focalDegrees.setTranslateY(-60);
-        cameraPane.getChildren().add(focalDegrees);
+        // #region focal field Events
 
-        ToggleButton focalMils = new ToggleButton();
-        focalMils.setText("mm");
-        focalMils.getStyleClass().add("push-button");
-        focalMils.setMaxSize(40, 15);
-        focalMils.setTranslateX(120);
-        focalMils.setTranslateY(-60);
-        cameraPane.getChildren().add(focalMils);
+        focalField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    focalField.setText(oldValue);
+                }
+            }
+        });
+
+        focalField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(focalField.getText().length() == 0)) {
+                    float f = Float.valueOf(focalField.getText());
+
+                    sc.setFov(f);
+                }
+
+                focalField.setText(String.valueOf(sc.getFov()));
+            }
+        });
+
+        focalField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(focalField.getText().length() == 0)) {
+                    float f = Float.valueOf(focalField.getText());
+
+                    sc.setFov(f);
+                }
+
+                focalField.setText(String.valueOf(sc.getFov()));
+            }
+        });
+
+        // #endregion
 
         Label zfieldLabel = new Label();
         zfieldLabel.setText("Starting Z");
         zfieldLabel.getStyleClass().add("small-label");
-        zfieldLabel.setTranslateX(-95);
-        zfieldLabel.setTranslateY(-10);
+        zfieldLabel.setTranslateX(-90);
+        zfieldLabel.setTranslateY(-30);
         cameraPane.getChildren().add(zfieldLabel);
 
         TextField zField = new TextField();
         zField.getStyleClass().add("s-text");
-        zField.setMaxSize(80, 15);
-        zField.setTranslateX(10);
-        zField.setTranslateY(-10);
+        zField.setText("-5.0");
+        zField.setMaxSize(60, 15);
+        zField.setTranslateX(0);
+        zField.setTranslateY(-30);
         cameraPane.getChildren().add(zField);
+
+        //#region zField events
+
+        zField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    zField.setText(oldValue);
+                }
+            }
+        });
+
+        zField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(zField.getText().length() == 0)) {
+                    float z = Float.valueOf(zField.getText());
+
+                    sc.setStartZ(z);
+                }
+
+                zField.setText(String.valueOf(sc.getStartZ()));
+            }
+        });
+
+        zField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(zField.getText().length() == 0)) {
+                    float z = Float.valueOf(zField.getText());
+
+                    sc.setStartZ(z);
+                }
+
+                zField.setText(String.valueOf(sc.getStartZ()));
+            }
+        });
+
+        //#endregion
 
         Label clipLabel = new Label();
         clipLabel.setText("Clipping");
         clipLabel.getStyleClass().add("small-label");
         clipLabel.setTranslateX(-95);
-        clipLabel.setTranslateY(40);
+        clipLabel.setTranslateY(30);
         cameraPane.getChildren().add(clipLabel);
 
         TextField clipNear = new TextField();
         clipNear.getStyleClass().add("s-text");
-        clipNear.setMaxSize(80, 15);
-        clipNear.setTranslateX(-5);
-        clipNear.setTranslateY(40);
+        clipNear.setMaxSize(60, 15);
+        clipNear.setText("1.0");
+        clipNear.setTranslateX(0);
+        clipNear.setTranslateY(30);
         cameraPane.getChildren().add(clipNear);
+
+        clipNear.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    clipNear.setText(oldValue);
+                }
+            }
+        });
+
+        clipNear.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(clipNear.getText().length() == 0)) {
+                    float cn = Float.valueOf(clipNear.getText());
+
+                    sc.setNearClipping(cn);
+                }
+
+                clipNear.setText(String.valueOf(sc.getNearClipping()));
+            }
+        });
+
+        clipNear.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(clipNear.getText().length() == 0)) {
+                    float cn = Float.valueOf(clipNear.getText());
+
+                    sc.setNearClipping(cn);
+                }
+
+                clipNear.setText(String.valueOf(sc.getNearClipping()));
+            }
+        });
 
         TextField clipFar = new TextField();
         clipFar.getStyleClass().add("s-text");
-        clipFar.setMaxSize(80, 15);
-        clipFar.setTranslateX(90);
-        clipFar.setTranslateY(40);
+        clipFar.setText("100.0");
+        clipFar.setMaxSize(60, 15);
+        clipFar.setTranslateX(65);
+        clipFar.setTranslateY(30);
         cameraPane.getChildren().add(clipFar);
+
+        clipFar.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    clipFar.setText(oldValue);
+                }
+            }
+        });
+
+        clipFar.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(clipFar.getText().length() == 0)) {
+                    float cf = Float.valueOf(clipFar.getText());
+
+                    sc.setFarClipping(cf);
+                }
+
+                clipFar.setText(String.valueOf(sc.getFarClipping()));
+            }
+        });
+
+        clipFar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(clipFar.getText().length() == 0)) {
+                    float cf = Float.valueOf(clipFar.getText());
+
+                    sc.setFarClipping(cf);
+                }
+
+                clipFar.setText(String.valueOf(sc.getFarClipping()));
+            }
+        });
 
         Label backColorLabel = new Label();
         backColorLabel.setText("Background");
@@ -339,7 +452,15 @@ public class Gui extends Application {
         backColor.setMaxSize(150, 30);
         backColor.setTranslateX(50);
         backColor.setTranslateY(90);
+        backColor.setValue(Color.BLACK);
         cameraPane.getChildren().add(backColor);
+
+        backColor.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                    sc.setWorldColor(backColor.getValue());      
+            }
+        });
 
         //#endregion
 
@@ -351,32 +472,98 @@ public class Gui extends Application {
         worldPane.setTranslateY(180);
         worldTabRoot.getChildren().add(worldPane);
 
-        Label worldPaneLabel = new Label();
-        worldPaneLabel.setText("World");
-        worldPaneLabel.setTranslateX(0);
-        worldPaneLabel.setTranslateY(-210);
-        worldPane.getChildren().add(worldPaneLabel);
-
-        Label frameRangeLabel = new Label();
-        frameRangeLabel.setTranslateX(-90);
-        frameRangeLabel.setTranslateY(-160);
-        frameRangeLabel.setText("Frame Range");
-        frameRangeLabel.getStyleClass().add("small-label");
-        worldPane.getChildren().add(frameRangeLabel);
+        Label frameRange = new Label();
+        frameRange.setText("Frame Range");
+        frameRange.getStyleClass().add("small-label");
+        frameRange.setTranslateX(-90);
+        frameRange.setTranslateY(-210);
+        worldPane.getChildren().add(frameRange);
 
         TextField frameStart = new TextField();
         frameStart.getStyleClass().add("s-text");
-        frameStart.setMaxSize(80, 15);
-        frameStart.setTranslateX(100);
-        frameStart.setTranslateY(-160);
+        frameStart.setMaxSize(60, 15);
+        frameStart.setText("0");
+        frameStart.setTranslateX(0);
+        frameStart.setTranslateY(-210);
         worldPane.getChildren().add(frameStart);
+
+        frameStart.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    frameStart.setText(oldValue);
+                }
+            }
+        });
+
+        frameStart.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(frameStart.getText().length() == 0)) {
+                    int fs = Integer.valueOf(frameStart.getText());
+
+                    sc.setFrameStart(fs);
+                }
+
+                frameStart.setText(String.valueOf(sc.getFrameStart()));
+            }
+        });
+
+        frameStart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(frameStart.getText().length() == 0)) {
+                    int fs = Integer.valueOf(frameStart.getText());
+
+                    sc.setFrameStart(fs);
+                }
+
+                frameStart.setText(String.valueOf(sc.getFrameStart()));
+            }
+        });
 
         TextField frameEnd = new TextField();
         frameEnd.getStyleClass().add("s-text");
-        frameEnd.setMaxSize(80, 15);
-        frameEnd.setTranslateX(40);
-        frameEnd.setTranslateY(-160);
+        frameEnd.setText("250");
+        frameEnd.setMaxSize(60, 15);
+        frameEnd.setTranslateX(65);
+        frameEnd.setTranslateY(-210);
         worldPane.getChildren().add(frameEnd);
+
+        frameEnd.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    frameEnd.setText(oldValue);
+                }
+            }
+        });
+
+        frameEnd.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+                if (!(frameEnd.getText().length() == 0)) {
+                    int fe = Integer.valueOf(frameEnd.getText());
+
+                    sc.setFrameEnd(fe);
+                }
+
+                frameEnd.setText(String.valueOf(sc.getFrameEnd()));
+            }
+        });
+
+        frameEnd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (!(frameEnd.getText().length() == 0)) {
+                    int fe = Integer.valueOf(frameEnd.getText());
+
+                    sc.setFrameEnd(fe);
+                }
+
+                frameEnd.setText(String.valueOf(sc.getFrameEnd()));
+            }
+        });
 
         Label fpsLabel = new Label();
         fpsLabel.setText("Framerate");
@@ -695,15 +882,15 @@ public class Gui extends Application {
         Label scaleLabel = new Label();
         scaleLabel.getStyleClass().add("small-label");
         scaleLabel.setText("Scale");
-        scaleLabel.setTranslateY(-10);
         scaleLabel.setTranslateX(-100);
+        scaleLabel.setTranslateY(-50);
         objTransforms.getChildren().add(scaleLabel);
 
         TextField scaleX = new TextField();
         scaleX.getStyleClass().add("x-text");
         scaleX.setMaxSize(60, 15);
         scaleX.setTranslateX(-30);
-        scaleX.setTranslateY(-10);
+        scaleX.setTranslateY(-50);
         objTransforms.getChildren().add(scaleX);
 
         // #region scaleX Events
@@ -760,7 +947,7 @@ public class Gui extends Application {
         scaleY.getStyleClass().add("y-text");
         scaleY.setMaxSize(60, 15);
         scaleY.setTranslateX(35);
-        scaleY.setTranslateY(-10);
+        scaleY.setTranslateY(-50);
         objTransforms.getChildren().add(scaleY);
 
         // #region scaleY Events
@@ -817,7 +1004,7 @@ public class Gui extends Application {
         scaleZ.getStyleClass().add("z-text");
         scaleZ.setMaxSize(60, 15);
         scaleZ.setTranslateX(100);
-        scaleZ.setTranslateY(-10);
+        scaleZ.setTranslateY(-50);
         objTransforms.getChildren().add(scaleZ);
 
         // #region scaleZ Events
@@ -879,16 +1066,24 @@ public class Gui extends Application {
         Label colorLabel = new Label();
         colorLabel.getStyleClass().add("small-label");
         colorLabel.setText("Color");
-        colorLabel.setTranslateY(40);
         colorLabel.setTranslateX(-100);
+        colorLabel.setTranslateY(15);
         objTransforms.getChildren().add(colorLabel);
 
         ColorPicker rgbPick = new ColorPicker();
         rgbPick.setId("RGBPICK");
         rgbPick.setMaxSize(200, 35);
         rgbPick.setTranslateX(35);
-        rgbPick.setTranslateY(40);
+        rgbPick.setTranslateY(15);
+        rgbPick.setValue(Color.rgb(128, 128, 128));
         objTransforms.getChildren().add(rgbPick);
+
+        rgbPick.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                    selectedObj.setColor(rgbPick.getValue());      
+            }
+        });
 
         ToggleButton origToggle = new ToggleButton();
         origToggle.setText("Show Origin");
@@ -945,15 +1140,15 @@ public class Gui extends Application {
         StackPane velPane = new StackPane();
         velPane.getStyleClass().add("second-panel");
 
-        velPane.setMaxSize(280, 250);
-        velPane.setTranslateY(-110);
+        velPane.setMaxSize(280, 90);
+        velPane.setTranslateY(-190);
         objPhys.getChildren().add(velPane);
 
         ToggleButton togActive = new ToggleButton();
         togActive.setText("Active");
         togActive.getStyleClass().add("push-button");
         togActive.setMaxSize(260, 50);
-        togActive.setTranslateY(-85);
+        togActive.setTranslateY(-5);
 
         velPane.getChildren().add(togActive);
 
@@ -962,14 +1157,14 @@ public class Gui extends Application {
         Label massLabel = new Label();
         massLabel.getStyleClass().add("small-label");
         massLabel.setText("Mass");
-        massLabel.setTranslateY(-40);
         massLabel.setTranslateX(-100);
+        massLabel.setTranslateY(-20);
 
         TextField mass = new TextField();
         mass.getStyleClass().add("s-text");
         mass.setMaxSize(60, 15);
         mass.setTranslateX(-30);
-        mass.setTranslateY(0);
+        mass.setTranslateY(-20);
         
         mass.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -985,7 +1180,7 @@ public class Gui extends Application {
             public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
 
                 if (!(mass.getText().length() == 0)) {
-                    float m = selectedObj.mass();
+                    float m = Float.valueOf(mass.getText());
 
                     if (m < 0.001) {
                         m = 0.001f;
@@ -1002,7 +1197,7 @@ public class Gui extends Application {
             @Override
             public void handle(ActionEvent e) {
                 if (!(mass.getText().length() == 0)) {
-                    float m = selectedObj.mass();
+                    float m = Float.valueOf(mass.getText());
 
                     if (m < 0.001) {
                         m = 0.001f;
@@ -1018,14 +1213,14 @@ public class Gui extends Application {
         Label velocityLabel = new Label();
         velocityLabel.getStyleClass().add("small-label");
         velocityLabel.setText("Velocity");
-        velocityLabel.setTranslateY(0);
         velocityLabel.setTranslateX(-100);
+        velocityLabel.setTranslateY(30);
 
         TextField velocityX = new TextField();
         velocityX.getStyleClass().add("x-text");
         velocityX.setMaxSize(60, 15);
         velocityX.setTranslateX(-30);
-        velocityX.setTranslateY(0);
+        velocityX.setTranslateY(30);
         
         velocityX.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1080,7 +1275,7 @@ public class Gui extends Application {
         velocityY.getStyleClass().add("y-text");
         velocityY.setMaxSize(60, 15);
         velocityY.setTranslateX(35);
-        velocityY.setTranslateY(0);
+        velocityY.setTranslateY(30);
         
         velocityY.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1135,7 +1330,7 @@ public class Gui extends Application {
         velocityZ.getStyleClass().add("z-text");
         velocityZ.setMaxSize(60, 15);
         velocityZ.setTranslateX(100);
-        velocityZ.setTranslateY(0);
+        velocityZ.setTranslateY(30);
         
         velocityZ.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -1228,12 +1423,14 @@ public class Gui extends Application {
             }
         });
 
-
         togActive.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 if (togActive.isSelected()) {
                     selectedObj.setStatic(false);
+                    velPane.setMaxSize(280, 250);
+                    velPane.setTranslateY(-110);
+                    togActive.setTranslateY(-85);
                     velPane.getChildren().add(massLabel);
                     velPane.getChildren().add(mass);
                     velPane.getChildren().add(velocityLabel);
@@ -1247,6 +1444,9 @@ public class Gui extends Application {
 
                 else {
                     selectedObj.setStatic(true);
+                    velPane.setMaxSize(280, 90);
+                    velPane.setTranslateY(-190);
+                    togActive.setTranslateY(-5);
                     selectedObj.drawAcc = false;
                     selectedObj.drawVelocity = false;
                     velPane.getChildren().remove(massLabel);
@@ -1418,20 +1618,6 @@ public class Gui extends Application {
             }
         });
 
-        toggleTheme.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if (_darkTheme) {
-                    stage.getScene().getStylesheets().setAll("assets/light.css");
-                }
-
-                else {
-                    stage.getScene().getStylesheets().setAll("assets/dark.css");
-                }
-
-                _darkTheme = !_darkTheme;
-            }
-        });
     //#endregion
 
         Scene scene = new Scene(root, 1728, 972);

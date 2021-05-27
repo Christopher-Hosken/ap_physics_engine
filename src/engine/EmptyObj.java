@@ -1,6 +1,9 @@
 package engine;
 
 import com.jogamp.opengl.GL2;
+
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 
 public class EmptyObj {
@@ -10,7 +13,7 @@ public class EmptyObj {
     protected ArrayList<vec3> vertices;
     protected int vertexCount;
     protected vec3 center, scale, pCenter, velocity, pVelocity, pAcc;
-    protected float[] color, specular, shinyness;
+    protected float[] color;
     protected boolean isLine, hasQuads, active, changed, isStatic = true;
     protected float friction;
 
@@ -74,14 +77,6 @@ public class EmptyObj {
 
     public float[] color() {
         return color;
-    }
-
-    public float[] specular() {
-        return specular;
-    }
-
-    public float[] shinyness() {
-        return shinyness;
     }
 
     public boolean active() {
@@ -203,6 +198,12 @@ public class EmptyObj {
     public void updateVel() {
         PTranslate(pVelocity);
     }
+
+    public void setColor(Color c) {
+        color[0] = (float) c.getRed();
+        color[1] = (float) c.getGreen();
+        color[2] = (float) c.getBlue();
+    }
     
     public EmptyObj collide(ArrayList<EmptyObj> world) {
         return null;
@@ -236,7 +237,7 @@ public class EmptyObj {
         return new vec3(r, g, b);
     }
 
-    public void draw(GL2 gl, boolean drawWire, vec3 cam) {
+    public void draw(GL2 gl, boolean drawWire, vec3 camP, vec3 camA) {
         if (isLine) {
             drawLines(gl);
         }
@@ -256,10 +257,6 @@ public class EmptyObj {
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
             vec3 v = vertices.get(vdx);
 
-            vec3 u = new vec3(v.x - cam.x, v.y - cam.y, v.z- cam.z);
-
-            float fresnel = ((u.x / u.z) + (u.y / u.z)) / 2f;
-
             if (drawNormals) {
                 if (active) {
                     gl.glColor3f(vec3.clamp((pCenter.x - v.x) + 0.25f, 0f, 1f), vec3.clamp((pCenter.y - v.y) + 0.25f, 0f, 1f), vec3.clamp((pCenter.z - v.z) + 0.25f, 0f, 1f));
@@ -272,11 +269,11 @@ public class EmptyObj {
 
             else {
                 if (active) {
-                    gl.glColor3f(vec3.clamp(color[0] + 0.25f + fresnel, 0f, 1f), vec3.clamp(color[1] + 0.25f + fresnel, 0f, 1f), vec3.clamp(color[1] + 0.25f + fresnel, 0f, 1f));
+                    gl.glColor3f(vec3.clamp(color[0] + 0.25f, 0f, 1f), vec3.clamp(color[1] + 0.25f, 0f, 1f), vec3.clamp(color[2] + 0.25f, 0f, 1f));
                 }
     
                 else {
-                    gl.glColor3f(vec3.clamp(color[0] + fresnel, 0f, 1f), vec3.clamp(color[1] + fresnel, 0f, 1f), vec3.clamp(color[2] + fresnel, 0f, 1f));
+                    gl.glColor3f(vec3.clamp(color[0], 0f, 1f), vec3.clamp(color[1], 0f, 1f), vec3.clamp(color[2], 0f, 1f));
                 }
             }
 
@@ -314,6 +311,22 @@ public class EmptyObj {
             gl.glEnd();
         }
 
+        if (!active)  {
+            gl.glLineWidth(0.5f);
+            gl.glPolygonOffset(0, -1);
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+
+            gl.glBegin(GL2.GL_QUADS);
+            for (int vdx = 0; vdx < vertices.size(); vdx++) {
+                vec3 v = vertices.get(vdx);
+    
+                gl.glColor3f(0.3f, 0.3f, 0.3f);
+                gl.glVertex3f(v.x, v.y, v.z);
+            }
+            gl.glEnd();
+        }
+
+        gl.glLineWidth(2f);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL); 
     }
 
@@ -358,7 +371,7 @@ public class EmptyObj {
         }
 
         else {
-            gl.glPolygonMode(GL2.GL_FRONT, GL2.GL_LINE);
+            gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 
             if (hasQuads) {
                 gl.glBegin(GL2.GL_QUADS);
