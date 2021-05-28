@@ -22,7 +22,7 @@ public class PhysicsEngine {
         timeScale = t;
     }
 
-    public int update(int frame, boolean isSimulating) {
+    public int update(int frame, boolean isSimulating, String[] debugData) {
         if (frame < frameStart || frame > frameEnd) {
             frame = frameStart;
         }
@@ -46,6 +46,7 @@ public class PhysicsEngine {
                     EmptyObj i = obj.collide(world);
 
                     if (i != null) {
+                        addToDebug(debugData, "Collision");
                         if (i.isStatic()) {
                             force.sub(force);
                             obj.setAcceleration(new vec3(0f, 0f, 0f));
@@ -77,5 +78,22 @@ public class PhysicsEngine {
 
         return frame;
 
+    }
+
+    public String getDebug(String[] debugData) {
+        String out = "";
+        for (int sdx = debugData.length; sdx >= 0; sdx--) {
+            out += debugData[sdx] + "\n";
+        }
+
+        return out;
+    }
+
+    public void addToDebug(String[] debugData, String s) {
+        for (int sdx = debugData.length - 1; sdx > 0; sdx--) {
+            debugData[sdx] = debugData[sdx - 1];
+        }
+
+        debugData[0] = s;
     }
 }

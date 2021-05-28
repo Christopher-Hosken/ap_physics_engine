@@ -565,62 +565,56 @@ public class Gui extends Application {
             }
         });
 
-        Label fpsLabel = new Label();
-        fpsLabel.setText("Framerate");
-        fpsLabel.getStyleClass().add("small-label");
-        fpsLabel.setTranslateX(-105);
-        fpsLabel.setTranslateY(-120);
-        worldPane.getChildren().add(fpsLabel);
-
-        TextField fps = new TextField();
-        fps.getStyleClass().add("s-text");
-        fps.setMaxSize(80, 15);
-        fps.setTranslateX(40);
-        fps.setTranslateY(-120);
-        worldPane.getChildren().add(fps);
-
         Label timeScaleLabel = new Label();
-        timeScaleLabel.setText("Time scale");
         timeScaleLabel.getStyleClass().add("small-label");
-        timeScaleLabel.setTranslateX(-110);
-        timeScaleLabel.setTranslateY(-80);
+        timeScaleLabel.setText("Time Scale");
+        timeScaleLabel.setTranslateX(-100);
+        timeScaleLabel.setTranslateY(-160);
         worldPane.getChildren().add(timeScaleLabel);
 
         TextField timeScale = new TextField();
         timeScale.getStyleClass().add("s-text");
-        timeScale.setMaxSize(80, 15);
-        timeScale.setTranslateX(40);
-        timeScale.setTranslateY(-80);
+        timeScale.setMaxSize(60, 15);
+        timeScale.setTranslateX(0);
+        timeScale.setTranslateY(-160);
         worldPane.getChildren().add(timeScale);
 
         Label gravityLabel = new Label();
         gravityLabel.setText("Gravity");
         gravityLabel.getStyleClass().add("small-label");
         gravityLabel.setTranslateX(-110);
-        gravityLabel.setTranslateY(-40);
+        gravityLabel.setTranslateY(-110);
         worldPane.getChildren().add(gravityLabel);
 
         TextField gravity = new TextField();
         gravity.getStyleClass().add("s-text");
-        gravity.setMaxSize(80, 15);
-        gravity.setTranslateX(40);
-        gravity.setTranslateY(-40);
+        gravity.setMaxSize(60, 15);
+        gravity.setTranslateX(0);
+        gravity.setTranslateY(-110);
         worldPane.getChildren().add(gravity);
 
-        ToggleButton airToggleButton = new ToggleButton();
-        airToggleButton.setText("Air Resistance");
-        airToggleButton.getStyleClass().add("push-button");
-        airToggleButton.setMaxSize(100, 15);
-        airToggleButton.setTranslateX(-90);
-        airToggleButton.setTranslateY(0);
-        worldPane.getChildren().add(airToggleButton);
+        ToggleButton airToggle = new ToggleButton();
+        airToggle.setText("Air Resistance");
+        airToggle.getStyleClass().add("push-button");
+        airToggle.setMaxSize(120, 30);
+        airToggle.setTranslateX(-80);
+        airToggle.setTranslateY(-50);
+        worldPane.getChildren().add(airToggle);
 
         TextField airResistance = new TextField();
         airResistance.getStyleClass().add("s-text");
-        airResistance.setMaxSize(80, 15);
+        airResistance.setMaxSize(60, 15);
         airResistance.setTranslateX(40);
-        airResistance.setTranslateY(0);
+        airResistance.setTranslateY(-50);
         worldPane.getChildren().add(airResistance);
+
+        TextArea debugger = new TextArea();
+        debugger.setId("DEBUG");
+        debugger.setEditable(false);
+        debugger.setMaxSize(260, 240);
+        debugger.setTranslateX(0);
+        debugger.setTranslateY(110);
+        worldPane.getChildren().add(debugger);
 
         //#region
 
@@ -1460,6 +1454,14 @@ public class Gui extends Application {
                 }
             }
         });
+
+        TextArea log = new TextArea();
+        log.setId("DEBUG");
+        log.setEditable(false);
+        log.setMaxSize(260, 200);
+        log.setTranslateX(0);
+        log.setTranslateY(130);
+        objPhys.getChildren().add(log);
  
 
         Tab objTab = new Tab("Object");
@@ -1479,6 +1481,7 @@ public class Gui extends Application {
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+                debugger.setText(sc.getDebug());
                 selectedObj = sc.getSelection();
 
                 if (selectedObj == null) {
@@ -1488,6 +1491,8 @@ public class Gui extends Application {
                 }
 
                 else {
+                    log.setText(selectedObj.getDebug());
+                    
                     if (!settings.getTabs().contains(objTab)) {
                         settings.getTabs().add(objTab);
                     }
@@ -1521,6 +1526,7 @@ public class Gui extends Application {
                         accToggle.setSelected(selectedObj.drawAcc);
 
                         rgbPick.setValue(Color.rgb((int) (col[0] * 255), (int) (col[0] * 255), (int) (col[0] * 255)));
+                        
                         lastObj = selectedObj;
                         selectedObj.setChanged(false);
                     }

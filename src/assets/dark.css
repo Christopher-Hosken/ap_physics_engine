@@ -95,6 +95,18 @@
     -fx-background-color: rgba(255, 255, 255, 0.1);
 }
 
+.text-area .content {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-background-border: 10;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+}
+
+.text-area:focus input:focus {
+    -fx-focus-color: transparent;
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
 .s-text {
     -fx-border-style: hidden none solid none;
     -fx-border-width: 2;

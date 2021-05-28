@@ -16,10 +16,15 @@ public class EmptyObj {
     protected float[] color;
     protected boolean isLine, hasQuads, active, changed, isStatic = true;
     protected float friction;
+    protected String[] debugData = new String[10];
 
     public int collision;
 
     public boolean drawVelocity, drawAcc, drawNormals, showOrigins;
+
+    public String getDebug() {
+        return "Object";
+    }
 
     public EmptyObj(String name, int id, boolean hasQuads) {
         this.friction = 0;

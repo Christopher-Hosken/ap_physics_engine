@@ -24,6 +24,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     private EmptyObj sel = null;
     private int frame_current = frameStart;
     private boolean isClick, isWire, isSimulating;
+    private String[] debugData = new String[10];
 
     @Override 
     public void init(GLAutoDrawable drawable) {
@@ -41,6 +42,27 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
         gl.glLineWidth(2f);
         gl.glPointSize(10);
+        addToDebug("OpenGL Initialized.");
+    }
+
+    public String getDebug() {
+        String out = "";
+        for (int sdx = debugData.length - 1; sdx >= 0; sdx--) {
+            if (debugData[sdx] == null) {
+                debugData[sdx] = " ";
+            }
+            out += debugData[sdx] + "\n";
+        }
+
+        return out;
+    }
+
+    public void addToDebug(String s) {
+        for (int sdx = debugData.length - 1; sdx > 0; sdx--) {
+            debugData[sdx] = debugData[sdx - 1];
+        }
+
+        debugData[0] = s;
     }
 
     @Override
@@ -64,7 +86,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         gl.glRotatef(angleZ, 0, 0, 1);
         //#endregion
 
-        frame_current = engine.update(frame_current, isSimulating);
+        frame_current = engine.update(frame_current, isSimulating, debugData);
        
 
         for (EmptyObj obj : scene) {
@@ -238,11 +260,13 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
     public void addCube() {
         int id = makeID();
         scene.add(new Cube("Cube-" + scene.size(), id));
+        addToDebug("Cube created.");
     }
 
     public void addLine(vec3 o, vec3 d) {
         int id = makeID();
         scene.add(new Line("Line-" + scene.size(), id, o, d));
+        addToDebug("Line created.");
     }
 
     //#region Controls
@@ -325,38 +349,43 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
+                addToDebug("World view reset.");
             }
 
             else if (e.getKeyCode() == 71) { // alt-G
                 if (sel != null) {
                     frame_current = frameStart;
-                    engine.update(frame_current, false);
+                    engine.update(frame_current, false, debugData);
                     sel.setLocation(new vec3(0, 0, 0));
                     sel.setChanged(true);
+                    addToDebug("Object location reset.");
                 }
             }
 
             else if (e.getKeyCode() == 83) { // alt-S
                 if (sel != null) {
                     frame_current = frameStart;
-                    engine.update(frame_current, false);
+                    engine.update(frame_current, false, debugData);
                     sel.setScale(new vec3(1, 1, 1));
                     sel.setChanged(true);
+                    addToDebug("Object scale reset.");
                 }
             }
 
             else if (e.getKeyCode() == 70) { // alt-f
                 frame_current = frameStart;
-                engine.update(frame_current, false);
+                engine.update(frame_current, false, debugData);
+                addToDebug("Simulation reset.");
             }
         }
 
         else if (e.isControlDown()) {
             if (e.getKeyCode() == 88) { // ctrl-X
                 frame_current = frameStart;
-                engine.update(frame_current, false);
+                engine.update(frame_current, false, debugData);
                 scene.remove(sel);
                 sel = null;
+                addToDebug("Object deleted.");
             }
 
         }
@@ -370,6 +399,7 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 frame_current = frameStart;
                 scene.remove(sel);
                 sel = null;
+                addToDebug("Object deleted.");
             }
 
             else if (e.getKeyCode() == 36) { // Home
@@ -379,10 +409,12 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
                 angleX = 0;
                 angleY = 0;
                 angleZ = 0;
+                addToDebug("World view reset.");
             }
     
             else if (e.getKeyCode() == 32) { // Spacebar
                 isSimulating = !isSimulating;
+                addToDebug("Simulation Toggled.");
             }
         }
     }
