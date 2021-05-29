@@ -577,7 +577,45 @@ public class Gui extends Application {
         timeScale.setMaxSize(60, 15);
         timeScale.setTranslateX(0);
         timeScale.setTranslateY(-160);
+        timeScale.setText("1.0");
         worldPane.getChildren().add(timeScale);
+
+        timeScale.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
+                    timeScale.setText(oldValue);
+                }
+            }
+        });
+
+        timeScale.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
+
+                if (!(timeScale.getText().length() == 0)) {
+                    float t = Float.valueOf(timeScale.getText());
+
+                    sc.engine().setTimeScale(t);;
+                }
+
+                timeScale.setText(String.valueOf(sc.engine().getTimeScale()));
+            }
+        });
+
+        timeScale.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (!(timeScale.getText().length() == 0)) {
+                    float t = Float.valueOf(timeScale.getText());
+
+                    sc.engine().setTimeScale(t);
+                }
+
+                timeScale.setText(String.valueOf(sc.engine().getTimeScale()));
+            }
+        });
 
         Label gravityLabel = new Label();
         gravityLabel.setText("Gravity");
@@ -590,31 +628,54 @@ public class Gui extends Application {
         gravity.getStyleClass().add("s-text");
         gravity.setMaxSize(60, 15);
         gravity.setTranslateX(0);
+        gravity.setText("-9.8");
         gravity.setTranslateY(-110);
         worldPane.getChildren().add(gravity);
 
-        ToggleButton airToggle = new ToggleButton();
-        airToggle.setText("Air Resistance");
-        airToggle.getStyleClass().add("push-button");
-        airToggle.setMaxSize(120, 30);
-        airToggle.setTranslateX(-80);
-        airToggle.setTranslateY(-50);
-        worldPane.getChildren().add(airToggle);
+        gravity.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("(-)?\\d*([\\.]\\d*)?")) {
+                    gravity.setText(oldValue);
+                }
+            }
+        });
 
-        TextField airResistance = new TextField();
-        airResistance.getStyleClass().add("s-text");
-        airResistance.setMaxSize(60, 15);
-        airResistance.setTranslateX(40);
-        airResistance.setTranslateY(-50);
-        worldPane.getChildren().add(airResistance);
+        gravity.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
 
-        TextArea debugger = new TextArea();
-        debugger.setId("DEBUG");
-        debugger.setEditable(false);
-        debugger.setMaxSize(260, 240);
-        debugger.setTranslateX(0);
-        debugger.setTranslateY(110);
-        worldPane.getChildren().add(debugger);
+                if (gravity.getText().length() == 1 && gravity.getText().contains("-")) {
+                    gravity.setText(String.valueOf(-sc.engine().gravity()));
+                }
+
+                if (!(gravity.getText().length() == 0)) {
+                    float g = Float.valueOf(gravity.getText());
+
+                    sc.engine().setGravity(g);
+                }
+
+                gravity.setText(String.valueOf(sc.engine().gravity()));
+            }
+        });
+
+        gravity.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                if (gravity.getText().length() == 1 && gravity.getText().contains("-")) {
+                    gravity.setText(String.valueOf(-sc.engine().gravity()));
+                }
+
+                if (!(gravity.getText().length() == 0)) {
+                    float g = Float.valueOf(gravity.getText());
+
+                    sc.engine().setGravity(g);
+                }
+
+                gravity.setText(String.valueOf(sc.engine().gravity()));
+            }
+        });
 
         //#region
 
@@ -1455,15 +1516,6 @@ public class Gui extends Application {
             }
         });
 
-        TextArea log = new TextArea();
-        log.setId("DEBUG");
-        log.setEditable(false);
-        log.setMaxSize(260, 200);
-        log.setTranslateX(0);
-        log.setTranslateY(130);
-        objPhys.getChildren().add(log);
- 
-
         Tab objTab = new Tab("Object");
 
         objTab.setContent(objTabRoot);
@@ -1481,7 +1533,6 @@ public class Gui extends Application {
         root.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                debugger.setText(sc.getDebug());
                 selectedObj = sc.getSelection();
 
                 if (selectedObj == null) {
@@ -1491,7 +1542,6 @@ public class Gui extends Application {
                 }
 
                 else {
-                    log.setText(selectedObj.getDebug());
                     
                     if (!settings.getTabs().contains(objTab)) {
                         settings.getTabs().add(objTab);

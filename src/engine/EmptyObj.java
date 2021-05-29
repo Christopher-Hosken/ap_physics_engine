@@ -16,15 +16,22 @@ public class EmptyObj {
     protected float[] color;
     protected boolean isLine, hasQuads, active, changed, isStatic = true;
     protected float friction;
-    protected String[] debugData = new String[10];
 
     public int collision;
 
     public boolean drawVelocity, drawAcc, drawNormals, showOrigins;
 
     public String getDebug() {
-        return "Object";
+        return (
+            "Mass: " + mass + "\n" +
+            "Velocity: " + pVelocity.toString() + "\n" +
+            "Acceleration: " + pAcc.toString() + "\n" + 
+            "Momentum: " + vec3.mult(pVelocity, mass).toString() + "\n" +
+            "Energy: " + vec3.mult(0.5f, vec3.mult(mass, pVelocity.squared())).toString()
+        );
     }
+
+
 
     public EmptyObj(String name, int id, boolean hasQuads) {
         this.friction = 0;

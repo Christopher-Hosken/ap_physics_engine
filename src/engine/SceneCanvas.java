@@ -45,6 +45,10 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         addToDebug("OpenGL Initialized.");
     }
 
+    public PhysicsEngine engine() {
+        return engine;
+    }
+
     public String getDebug() {
         String out = "";
         for (int sdx = debugData.length - 1; sdx >= 0; sdx--) {

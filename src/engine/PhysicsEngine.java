@@ -14,12 +14,20 @@ public class PhysicsEngine {
         this.frameEnd = frameEnd;
     }
 
-    public void setGrav(float _g) {
+    public void setGravity(float _g) {
         g = _g;
     }
 
+    public float gravity() {
+        return g;
+    }
+
     public void setTimeScale(float t) {
-        timeScale = t;
+        timeScale = t / 10000f;
+    }
+
+    public float getTimeScale() {
+        return timeScale * 10000f;
     }
 
     public int update(int frame, boolean isSimulating, String[] debugData) {
@@ -73,6 +81,7 @@ public class PhysicsEngine {
                 }
             }
 
+            addToDebug(debugData, "Frame: " + frame);
             frame++;
         }
 

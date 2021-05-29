@@ -19,6 +19,14 @@ public class vec3 {
         return "(" + x + "," + y + "," + z + ")";
     }
 
+    public vec3 squared() {
+        x = x*x;
+        y = y*y;
+        z = z*z;
+
+        return this;
+    }
+
     //#endregion
 
     //#region Assignment Operators
