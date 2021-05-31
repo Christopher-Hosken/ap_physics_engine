@@ -14,8 +14,9 @@ Requirements: <br>
 ## Installing Dependencies
 The needed dependencies should be built into the program. However if not,
 
-1. Download the 
-3. Create a folder in `C://src//`
+1. Install JavaFX for your preferred IDE
+2. Follow the [JOGL installation guide](https://www.tutorialspoint.com/jogl/jogl_installation.htm)
+3. Create the folder `C://src//jogl`, and paste the copied files obtained from the installation guide. (If you are in linux, you will need to change the source paths)
 
 ## User Interface
 There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), and [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
