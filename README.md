@@ -110,3 +110,74 @@ If you start zooming in or out, you may reach a point where your objects start t
 
 ### Properties
 The properties panel is where users will spend most of their time. Here they can customize the scene and prepare the objects for simulations.
+
+#### Scene Properties
+The scene properties
+
+### Object Properties
+The object properties panel will appear when an object is a selected. Most of the controls are pretty self explanatory.
+
+location
+: set the (x, y, z) location of the object.
+
+scale
+: set the (x, y, z) scale of the object.
+
+color
+: set the display color of the object.
+
+show origin
+: show the origin point of the object.
+
+show normals
+: override the display color of the object with the object normals.
+
+active
+: toggle whether the object is passive or active (can be affected by forces).
+
+velocity
+: set the initial (x, y, z) velocity of the object.
+
+velocity
+: toggle the velocity vector visibilty.
+
+acceleration
+: toggle the acceleration vector visibility.
+
+## Demo Scene
+The demo scene is a premade physics simulation that is computed entirely by the physics engine. This scene is used to demo the capabilities of the Physics engine.
+
+## The Physics
+Although the Physics engine was planned to contain more concepts from AP Physics 1, many features had to be removed due to time concerns. This means that only Forces and Momentum were able to be implemented, and the only objects in the scenes were cubes.
+
+### Gravity
+Applying gravity was very simple. Every time the viewport updated I would apply a gravitational force on the object. From there, the object would then apply that force to change its velocity and position.
+
+1. Apply force to object.
+2. The Object divides the applied force by it's mass to obtain the acceleration. `*(F = ma, a = F/m)*`
+3. The acceleration is then added to the velocity vector. `*(vf = vi + at) t is always 1 in this case, so (vf = vi + a)*`
+4. The position of the object is updated based on the velocity. `*(d = vt) t is always 1 in this case, so (d = v)*`
+5. Repeat every viewport update.
+
+This technique of using forces was written in mind to make room for other applied forces, but due to time limitations I was unable to add more.
+
+### Collisions
+To detect where the cubes were colliding, I implemented a basic overlap test. The main idea for this came from an MDN article about [3D collision detection](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection). I iterated through every vertex in the cube (only 4), and checked if they were inside the bounds of another object.
+
+```java
+for (vec3 point : object.verts) {
+  if ((point.x >= cube.minX && point.x <= cube.maxX) &&(point.y >= cube.minY && point.y <= cube.maxY) && (point.z >= cube.minZ && point.z <= cube.maxZ)) {
+    return true;
+  }
+}
+
+return false;
+```
+
+This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it cancels out a degative force.
+
+### Transferring Momentum
+Once the engine detects a collision, it transfers the momentum from one object to the other.
+
+if the target object is not active, the momentum being transferred will esentiallly dissapear. *(This is not possible in the real world, but can be done digitally)*
+## Lessons Learnt
