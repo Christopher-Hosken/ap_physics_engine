@@ -20,6 +20,7 @@ The needed dependencies should be built into the program. However if not,
 
 ## User Interface
 There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), and [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
+
 ![Panels](https://i.imgur.com/SvlJYUp.png)
 
 ### Header
