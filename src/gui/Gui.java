@@ -158,6 +158,14 @@ public class Gui extends Application {
         vLine3.setStroke(lineColor);
         header.getChildren().add(vLine3);
 
+        Button makeScene = new Button();
+        makeScene.getStyleClass().add("icon-button");
+        makeScene.setId("MKSC");
+        makeScene.setMaxHeight(70);
+        makeScene.setMaxWidth(70);
+        makeScene.setTranslateX(70);
+        header.getChildren().add(makeScene);
+
         Line vLine4 = new Line();
         vLine4.setStartY(0);
         vLine4.setEndY(100);
@@ -1671,6 +1679,13 @@ public class Gui extends Application {
             @Override
             public void handle(ActionEvent e) {
                 sc.addCube();
+            }
+        });
+
+        makeScene.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                sc.setDemo();
             }
         });
 

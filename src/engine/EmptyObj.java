@@ -21,18 +21,6 @@ public class EmptyObj {
 
     public boolean drawVelocity, drawAcc, drawNormals, showOrigins;
 
-    public String getDebug() {
-        return (
-            "Mass: " + mass + "\n" +
-            "Velocity: " + pVelocity.toString() + "\n" +
-            "Acceleration: " + pAcc.toString() + "\n" + 
-            "Momentum: " + vec3.mult(pVelocity, mass).toString() + "\n" +
-            "Energy: " + vec3.mult(0.5f, vec3.mult(mass, pVelocity.squared())).toString()
-        );
-    }
-
-
-
     public EmptyObj(String name, int id, boolean hasQuads) {
         this.friction = 0;
         this.name = name;
@@ -143,14 +131,14 @@ public class EmptyObj {
     public void translate(vec3 t) {
         center.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vertices.get(vdx).add(t);
+            vertices.get(vdx).add(vec3.div(t, 2f));
         }
     }
 
     public void PTranslate(vec3 t) {
         pCenter.add(t);
         for (int vdx = 0; vdx < vertices.size(); vdx++) {
-            vertices.get(vdx).add(t);
+            vertices.get(vdx).add(vec3.div(t, 2));
         }
     }
 

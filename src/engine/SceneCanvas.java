@@ -156,6 +156,36 @@ public class SceneCanvas implements GLEventListener, MouseMotionListener, MouseW
         background[1] = (float) c.getGreen();
         background[2] = (float) c.getBlue();
     }
+    
+    public void setDemo() {
+        clear();
+        int id = makeID();
+        Cube ground = new Cube("Cube-" + scene.size(), id);
+        ground.setScale(new vec3(10f, 0.5f, 10f));
+        ground.setLocation(new vec3(0f, -1f, 0f));
+        scene.add(ground);
+        addToDebug("Cube created.");
+
+        id = makeID();
+        Cube cubeA = new Cube("Cube-" + scene.size(), id);
+        cubeA.setScale(new vec3(1.5f, 1.5f, 1.5f));
+        cubeA.setLocation(new vec3(3f, 1f, 0f));
+        cubeA.setColor(new Color(1f, 0, 0, 1));
+        cubeA.setStatic(false);
+        cubeA.setVelocity(new vec3(0, 0, 0));
+        scene.add(cubeA);
+        addToDebug("Cube created.");
+
+        id = makeID();
+        Cube cubeB = new Cube("Cube-" + scene.size(), id);
+        cubeB.setScale(new vec3(1f, 1f, 1f));
+        cubeB.setLocation(new vec3(-3f, 2f, 0f));
+        cubeB.setColor(new Color(0, 0, 1f, 1));
+        cubeB.setStatic(false);
+        cubeB.setVelocity(new vec3(0.4f, 0, 0));
+        scene.add(cubeB);
+        addToDebug("Cube created.");
+    }
 
     public void updatePersp() {
         final float h = (float) width / (float) height;
