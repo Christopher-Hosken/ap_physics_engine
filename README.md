@@ -2,114 +2,153 @@
 
 AP Physics Engine is a 3D Java based program that allows you to simulate concepts that are learnt in AP Physics 1.
 
-## Requirements
-Requirements: <br>
-
-[Java SE 11 (LTS)](https://www.oracle.com/java/technologies/javase-downloads.html) <br>
-
-[JavaFX 11](https://gluonhq.com/products/javafx/) <br>
-
-[Jogl](https://jogamp.org/deployment/jogamp-current/archive/)
+***
 
 ## Installing Dependencies
-The needed dependencies should be built into the program. However if not,
 
-1. Install JavaFX for your preferred IDE
+The following dependencies should already be built into the program.
+
+- [Java SE 11 (LTS)](https://www.oracle.com/java/technologies/javase-downloads.html)
+
+- [JavaFX 11](https://gluonhq.com/products/javafx/)
+
+- [Jogl](https://jogamp.org/deployment/jogamp-current/archive/)
+
+However if they are not..
+
+1. Install the [JavaFX SDX](https://gluonhq.com/products/javafx/)
+
 2. Follow the [JOGL installation guide](https://www.tutorialspoint.com/jogl/jogl_installation.htm)
-3. Create the folder `C://src//jogl`, and paste the copied files obtained from the installation guide. (If you are in linux, you will need to change the source paths)
 
-## User Interface
-There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), and [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
+3. Create the folder `C://src`, and create subdirectories for `jogl` and `javafx`.
 
-![Panels](./assets/images/viewport.png)
+4. Copy all `jogl` files into the `jogl` folder.
 
-### Header
+5. Copy all `javafx` files in the `javafx` folder.
+
+6. The app should then be able to access the needed depencies for the project.
+
+# User Interface
+
+There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
+
+![Panels](/assets/images/viewport.png)
+***
+## Header
+
 The header panel is located at the top of the Physics Engine application. There are 7 buttons that do basic functions in the app.
 
-Logo
+<br>
+
+*Logo*
 : Reset the app. This will destroy all objects in the scene.
 
-Menu
+*Menu*
 : Toggle the visibility of the properties panel *(toggleable)*.
 
-cube
+*Cube*
 : Generate a default cube at the world center.
 
-Wire
+*Wire*
 : Toggle wireframe view of all the objects *(toggleable)*.
 
-Info
+*Demo*
+: Generate the demo scene.
+
+*Info*
 : Open README file.
 
-Bug
+*Bug*
 : Open Github issues page.
 
-Quit
+*Quit*
 : Exit the application.
+
+<br>
 
 Any active or pressed buttons will have a highlighted glow around them. As well as this, grabbing and dragging the header will move the entire application.
 
-### Viewport
+***
+## Viewport
+
 The viewport has been designed for easy control. Users are able to zoom, pan, and rotate around the scene.
 
-#### Navigation
+<br>
 
-**Mouse and Keyboard**
-zoom
-: scroll wheel.
+#### **Mouse and Keyboard**
 
-pan
-: shift-rightmouse
+*Zoom*
+: Scroll-wheel
 
-rotate
-: alt-rightmouse
+*Pan*
+: Middle-mouse
 
-reset
-: home
+*Rotate*
+: Left-mouse
 
-**Trackpad and Laptop Keyboard**
-zoom
-: something
+*Reset*
+: Home
 
-pan
-: something
+<br>
 
-rotate
-: something
+#### **Trackpad and Laptop Keyboard**
 
-reset
-: something
+*Zoom*
+: Right-mouse
 
-#### Shortcuts
+*Pan*
+: Shift-left-mouse
 
-pause/play
-: spacebar
+*Rotate*
+: Left-mouse
 
-reset simulation
-: alt-f
+*Reset*
+: Alt-/
 
-reset object location
-: alt-g
+<br>
 
-reset object scale
-: alt-s
+#### **Shortcuts**
 
-delete
-: x *(or del)*
+*Pause / play*
+: Spacebar
 
-#### Selection
+*Reset simulation*
+: Alt-spacebar
+
+*Reset object location*
+: Alt-g
+
+*Reset object scale*
+: Alt-s
+
+*Delete*
+: X
+
+<br>
+
+***
+
+## Selection
+
 To select and object, simply hover over it with your mouse and left click. Selected objects should have a yellow highlight, and its color should brighten. There is no way to deselect an object, and you cannot select more than one object.
 
-#### Clipping
+***
+## Clipping
+
 If you start zooming in or out, you may reach a point where your objects start to dissapear *(or appear to be cut off)*. This has to do with limtations with the 3d rendering engine, and can be fixed in the properies panel. 
 
-### Properties
+***
+
+# Properties
+
 The properties panel is where users will spend most of their time. Here they can customize the scene and prepare the objects for simulations.
 
-#### Scene Properties
+## Scene Properties
+
 The scene properties
 
-### Object Properties
+## Object Properties
+
 The object properties panel will appear when an object is a selected. Most of the controls are pretty self explanatory.
 
 location
@@ -139,21 +178,24 @@ velocity
 acceleration
 : toggle the acceleration vector visibility.
 
-## Demo Scene
+# Demo Scene
+
 The demo scene is a premade physics simulation that is computed entirely by the physics engine. This scene is used to demo the capabilities of the Physics engine.
 ![Demo](./assets/images/demoscene.png)
 
-## The Physics
+# The Physics
+
 Although the Physics engine was planned to contain more concepts from AP Physics 1, many features had to be removed due to time concerns. This means that only Forces and Momentum were able to be implemented, and the only objects in the scenes were cubes.
 
-### Gravity
+## Gravity
+
 Applying gravity was very simple. Every time the viewport updated I would apply a gravitational force on the object. From there, the object would then apply that force to change its velocity and position.
 
 1. Apply force to object.
 2. The Object divides the applied force by it's mass to obtain the acceleration.
-4. The acceleration is then added to the velocity vector.
-5. The position of the object is updated based on the velocity.
-7. Repeat every viewport update.
+3. The acceleration is then added to the velocity vector.
+4. The position of the object is updated based on the velocity.
+5. Repeat every viewport update.
 
 ```java
 // example code
@@ -169,7 +211,8 @@ public static applyForce(Object obj, vec3 force)
 
 This technique of using forces was written in mind of other applied forces, but due to time limitations I was unable to add more.
 
-### Collisions
+## Collisions
+
 To detect where the cubes were colliding, I implemented a basic overlap test. The main idea for this came from an MDN article about [3D collision detection](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection). I iterated through every vertex in the cube (only 4), and checked if they were inside the bounds of another object.
 
 ```java
@@ -185,9 +228,10 @@ for (vec3 point : object.verts) {
 return false;
 ```
 
-This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it sets all forces to 0 as the object can not be accelerating *(otherwise it would go through the colliding object)*. 
+This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it sets all forces to 0 as the object can not be accelerating *(otherwise it would go through the colliding object)*.
 
 ### Transferring Momentum
+
 Once the engine detects a collision, it transfers the momentum from one object to the other.
 
 If the target object is not active, the momentum being transferred will esentiallly dissapear. *(This is not possible in the real world, but can be done digitally!)*
@@ -208,18 +252,31 @@ onCollision(Object object, Object collider) {
 }
 ```
 
-## Lessons Learnt
+# Lessons Learnt
+
 I learnt alot from creating the AP Physics Engine. I learnt how to design and program an entire GUI.
 
-### Useful articles
+# Useful articles
 
-## Present Bugs
+- [Object Selection in OpenGL](http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-an-opengl-hack/)
+
+- [Detecting Cube Collisions](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection)
+
+- [Basic Syntax | Markdown Language](https://www.markdownguide.org/basic-syntax/)
+
+
+# Present Bugs
+
 The AP Physics engine has quite a few of bugs. Nothing that will cause the program to crash, but the code is definitely not up to proffessional standards.
-```
-1. JavaFX error on color changes: When the color picker popup appears, an error message is displayed on about styling.
+
+> **JavaFX error on color changes:** When the color picker popup appears, an error message is displayed on about styling.
    I was unable to find any solutions to this error online as the JavaFX css documentation is very limited, but the error message does not hinder the program in any way.
 
-2. Simulation issues: collisions sometimes do not happen between objects, and restarting the simulation sometimes causes glitches.
+***
+
+> **Simulation issues:** Collisions sometimes do not happen between objects, and restarting the simulation sometimes causes glitches.
   Currently I am not aware of what is causing the glitches with collisions, but if I am planning to fix this bug sometime in the future.
 
-```
+***
+
+> **Origin Offsetting:** When the simulation runs, the origin point of the cube will start to offset. I haven't been able to find the solution to this yet, but it should be fixable.
