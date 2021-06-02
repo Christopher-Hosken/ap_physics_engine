@@ -156,19 +156,34 @@ Although the Physics engine was planned to contain more concepts from AP Physics
 Applying gravity was very simple. Every time the viewport updated I would apply a gravitational force on the object. From there, the object would then apply that force to change its velocity and position.
 
 1. Apply force to object.
-2. The Object divides the applied force by it's mass to obtain the acceleration. `*(F = ma, a = F/m)*`
-3. The acceleration is then added to the velocity vector. `*(vf = vi + at) t is always 1 in this case, so (vf = vi + a)*`
-4. The position of the object is updated based on the velocity. `*(d = vt) t is always 1 in this case, so (d = v)*`
-5. Repeat every viewport update.
+2. The Object divides the applied force by it's mass to obtain the acceleration.
+4. The acceleration is then added to the velocity vector.
+5. The position of the object is updated based on the velocity.
+7. Repeat every viewport update.
 
-This technique of using forces was written in mind to make room for other applied forces, but due to time limitations I was unable to add more.
+```java
+// example code
+public static applyForce(Object obj, vec3 force)
+  // F = ma
+  // x = vt
+  // v = vi + at
+  
+  vec3 acceleration = force / mass; // a = F / m
+  obj.velocity += acceleration; // v = vi + a(t): t = 1
+  obj.position += obj.velocity; // x = v(t): t = 1
+```
+
+This technique of using forces was written in mind of other applied forces, but due to time limitations I was unable to add more.
 
 ### Collisions
 To detect where the cubes were colliding, I implemented a basic overlap test. The main idea for this came from an MDN article about [3D collision detection](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection). I iterated through every vertex in the cube (only 4), and checked if they were inside the bounds of another object.
 
 ```java
+// example code
 for (vec3 point : object.verts) {
-  if ((point.x >= cube.minX && point.x <= cube.maxX) &&(point.y >= cube.minY && point.y <= cube.maxY) && (point.z >= cube.minZ && point.z <= cube.maxZ)) {
+  if ((point.x >= cube.minX && point.x <= cube.maxX) && 
+      (point.y >= cube.minY && point.y <= cube.maxY) && 
+      (point.z >= cube.minZ && point.z <= cube.maxZ)) {
     return true;
   }
 }
@@ -176,10 +191,41 @@ for (vec3 point : object.verts) {
 return false;
 ```
 
-This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it cancels out a degative force.
+This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it sets all forces to 0 as the object can not be accelerating *(otherwise it would go through the colliding object)*. 
 
 ### Transferring Momentum
 Once the engine detects a collision, it transfers the momentum from one object to the other.
 
-if the target object is not active, the momentum being transferred will esentiallly dissapear. *(This is not possible in the real world, but can be done digitally)*
+If the target object is not active, the momentum being transferred will esentiallly dissapear. *(This is not possible in the real world, but can be done digitally!)*
+However, if the object is active, the momemtum of the original object will all be transferred to the momentum of the second object *(this is due to the law of conservation of momentum)*.
+
+```java
+// example code
+onCollision(Object object, Object collider) {
+  if (collider.active) {
+    vec3 tmp = collider;
+    collider.momentum = object.momentum;
+    object.momentum = collider.momentum;
+  }
+  
+  else {
+    object.momentum = vec3(0, 0, 0);
+  }
+}
+```
+
 ## Lessons Learnt
+I learnt alot from creating the AP Physics Engine. I learnt how to design and program an entire GUI.
+
+### Useful articles
+
+## Present Bugs
+The AP Physics engine has quite a few of bugs. Nothing that will cause the program to crash, but the code is definitely not up to proffessional standards.
+```
+1. JavaFX error on color changes: When the color picker popup appears, an error message is displayed on about styling.
+   I was unable to find any solutions to this error online as the JavaFX css documentation is very limited, but the error message does not hinder the program in any way.
+
+2. Simulation issues: collisions sometimes do not happen between objects, and restarting the simulation sometimes causes glitches.
+  Currently I am not aware of what is causing the glitches with collisions, but if I am planning to fix this bug sometime in the future.
+
+```
