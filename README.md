@@ -21,36 +21,29 @@ The needed dependencies should be built into the program. However if not,
 ## User Interface
 There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), and [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
 
-![Panels](https://i.imgur.com/SvlJYUp.png)
+![Panels](./assets/images/viewport.png)
 
 ### Header
 The header panel is located at the top of the Physics Engine application. There are 7 buttons that do basic functions in the app.
 
-![logo]()
 Logo
 : Reset the app. This will destroy all objects in the scene.
 
-![menu]()
 Menu
 : Toggle the visibility of the properties panel *(toggleable)*.
 
-![cube]()
 cube
 : Generate a default cube at the world center.
 
-![wire]()
 Wire
 : Toggle wireframe view of all the objects *(toggleable)*.
 
-![info]()
 Info
 : Open README file.
 
-![bug]()
 Bug
 : Open Github issues page.
 
-![quit]()
 Quit
 : Exit the application.
 
@@ -148,6 +141,7 @@ acceleration
 
 ## Demo Scene
 The demo scene is a premade physics simulation that is computed entirely by the physics engine. This scene is used to demo the capabilities of the Physics engine.
+![Demo](./assets/images/demoscene.png)
 
 ## The Physics
 Although the Physics engine was planned to contain more concepts from AP Physics 1, many features had to be removed due to time concerns. This means that only Forces and Momentum were able to be implemented, and the only objects in the scenes were cubes.
