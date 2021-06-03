@@ -28,13 +28,14 @@ However if they are not..
 
 6. The app should then be able to access the needed depencies for the project.
 
-# User Interface
+## User Interface
 
 There are 3 panels in the app: [Header](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#header), [Viewport](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#viewport), [Properties](https://github.com/Christopher-Hosken/ap_physics_engine/blob/main/README.md#properties).
 
-![Panels](/assets/images/viewport.png)
+![Panels](src/assets/images/viewport.png)
 ***
-## Header
+
+### Header
 
 The header panel is located at the top of the Physics Engine application. There are 7 buttons that do basic functions in the app.
 
@@ -69,7 +70,8 @@ The header panel is located at the top of the Physics Engine application. There 
 Any active or pressed buttons will have a highlighted glow around them. As well as this, grabbing and dragging the header will move the entire application.
 
 ***
-## Viewport
+
+### Viewport
 
 The viewport has been designed for easy control. Users are able to zoom, pan, and rotate around the scene.
 
@@ -128,66 +130,89 @@ The viewport has been designed for easy control. Users are able to zoom, pan, an
 
 ***
 
-## Selection
+### Selection
 
 To select and object, simply hover over it with your mouse and left click. Selected objects should have a yellow highlight, and its color should brighten. There is no way to deselect an object, and you cannot select more than one object.
 
 ***
-## Clipping
 
-If you start zooming in or out, you may reach a point where your objects start to dissapear *(or appear to be cut off)*. This has to do with limtations with the 3d rendering engine, and can be fixed in the properies panel. 
+### Clipping
+
+If you start zooming in or out, you may reach a point where your objects start to dissapear *(or appear to be cut off)*. This has to do with limtations with the 3d rendering engine, and can be fixed in the properies panel.
 
 ***
 
-# Properties
+## Properties
 
 The properties panel is where users will spend most of their time. Here they can customize the scene and prepare the objects for simulations.
 
-## Scene Properties
+### Scene Properties
 
-The scene properties
+The scene properties can be used to control the world in the which the simulations take place.
 
-## Object Properties
+*Starting Z*
+: The starting distance from the center of the world.
+
+*Clipping*
+: Near and far clipping values.
+
+*Background*
+: Set the color of the world background.
+
+*Frame Range*
+: Set the starting and ending values of the simulation.
+
+*Force Scale*
+: Set the strength at which forces are applied.
+
+*Gravity*
+: Set the force of gravity acting on the world.
+
+<br>
+
+### Object Properties
 
 The object properties panel will appear when an object is a selected. Most of the controls are pretty self explanatory.
 
-location
+*Location*
 : set the (x, y, z) location of the object.
 
-scale
+*Scale*
 : set the (x, y, z) scale of the object.
 
-color
+*Color*
 : set the display color of the object.
 
-show origin
-: show the origin point of the object.
+*Show origin*
+: show the origin point of the object *(toggleable)*.
 
-show normals
-: override the display color of the object with the object normals.
+*Show normals*
+: override the display color of the object with the object normals *(toggleable)*.
 
-active
-: toggle whether the object is passive or active (can be affected by forces).
+*Active*
+: toggle whether the object is passive or active (can be affected by forces) *(toggleable)*.
 
-velocity
+*Velocity*
 : set the initial (x, y, z) velocity of the object.
 
-velocity
-: toggle the velocity vector visibilty.
+*Velocity*
+: toggle the velocity vector visibilty *(toggleable)*.
 
-acceleration
-: toggle the acceleration vector visibility.
+*Acceleration*
+: toggle the acceleration vector visibility *(toggleable)*.
 
-# Demo Scene
+<br>
+
+## Demo Scene
 
 The demo scene is a premade physics simulation that is computed entirely by the physics engine. This scene is used to demo the capabilities of the Physics engine.
-![Demo](./assets/images/demoscene.png)
+![Demo](src/assets/images/demoscene.png)
 
-# The Physics
+## The Physics
 
 Although the Physics engine was planned to contain more concepts from AP Physics 1, many features had to be removed due to time concerns. This means that only Forces and Momentum were able to be implemented, and the only objects in the scenes were cubes.
 
-## Gravity
+### Gravity
 
 Applying gravity was very simple. Every time the viewport updated I would apply a gravitational force on the object. From there, the object would then apply that force to change its velocity and position.
 
@@ -211,7 +236,7 @@ public static applyForce(Object obj, vec3 force)
 
 This technique of using forces was written in mind of other applied forces, but due to time limitations I was unable to add more.
 
-## Collisions
+### Collisions
 
 To detect where the cubes were colliding, I implemented a basic overlap test. The main idea for this came from an MDN article about [3D collision detection](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection). I iterated through every vertex in the cube (only 4), and checked if they were inside the bounds of another object.
 
@@ -228,7 +253,7 @@ for (vec3 point : object.verts) {
 return false;
 ```
 
-This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position. Once the program detects a collision, it sets all forces to 0 as the object can not be accelerating *(otherwise it would go through the colliding object)*.
+This simple collision detection allowed me to see when two cubes were intersecting, regardless of their scale or position.
 
 ### Transferring Momentum
 
@@ -252,11 +277,13 @@ onCollision(Object object, Object collider) {
 }
 ```
 
-# Lessons Learnt
+## Lessons Learnt
 
 I learnt alot from creating the AP Physics Engine. I learnt how to design and program an entire GUI.
 
-# Useful articles
+## Useful articles
+
+- [JOGL Tutorial](https://www.tutorialspoint.com/jogl/index.htm)
 
 - [Object Selection in OpenGL](http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-an-opengl-hack/)
 
@@ -265,7 +292,7 @@ I learnt alot from creating the AP Physics Engine. I learnt how to design and pr
 - [Basic Syntax | Markdown Language](https://www.markdownguide.org/basic-syntax/)
 
 
-# Present Bugs
+## Present Bugs
 
 The AP Physics engine has quite a few of bugs. Nothing that will cause the program to crash, but the code is definitely not up to proffessional standards.
 
@@ -279,4 +306,20 @@ The AP Physics engine has quite a few of bugs. Nothing that will cause the progr
 
 ***
 
-> **Origin Offsetting:** When the simulation runs, the origin point of the cube will start to offset. I haven't been able to find the solution to this yet, but it should be fixable.
+> **Origin Offsetting:** When the simulation runs, the origin point of the cube will start to offset. I haven't been able to find the solution to this yet, but it should be an easy fix.
+
+***
+
+## Author
+
+Released under the [GPL License](http://www.gnu.org/licenses/gpl-3.0.html).
+
+Authored and mainatined by [Christopher Hosken](https://github.com/Christopher-Hosken)
+
+- Email [hoskenchristopher@gmail.com](hoskenchristopher@gmail.com)
+
+- Artstation [Christopher Hosken](https://www.artstation.com/christopherhosken)
+
+- Linkedin [Christopher Hosken](https://www.linkedin.com/in/christopher-hosken-637a53186/)
+
+- Discord [@cjhosken#7147]()
