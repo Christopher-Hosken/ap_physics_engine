@@ -28,7 +28,7 @@
             "type": "java",
             "name": "Launch Gui",
             "request": "launch",
-            "vmArgs": "--module-path c:/src/javafx/lib --add-modules javafx.controls",
+            "vmArgs": "--module-path lib/javafx/lib --add-modules javafx.controls",
             "mainClass": "Gui",
             "projectName": "ap_physics_engine_890baedd"
         }
