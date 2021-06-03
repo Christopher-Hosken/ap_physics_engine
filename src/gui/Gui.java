@@ -248,58 +248,6 @@ public class Gui extends Application {
         cameraPane.setTranslateY(-200);
         worldTabRoot.getChildren().add(cameraPane);
 
-        Label focalLabel = new Label();
-        focalLabel.getStyleClass().add("small-label");
-        focalLabel.setText("Focal Length");
-        focalLabel.setTranslateX(-90);
-        focalLabel.setTranslateY(-90);
-        cameraPane.getChildren().add(focalLabel);
-
-        TextField focalField = new TextField();
-        focalField.getStyleClass().add("s-text");
-        focalField.setMaxSize(60, 15);
-        focalField.setText("45.0");
-        focalField.setTranslateX(0);
-        focalField.setTranslateY(-90);
-        cameraPane.getChildren().add(focalField);
-
-        // #region focal field Events
-
-        focalField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d*([\\.]\\d*)?")) {
-                    focalField.setText(oldValue);
-                }
-            }
-        });
-
-        focalField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ar0, Boolean oldValue, Boolean newValue) {
-                if (!(focalField.getText().length() == 0)) {
-                    float f = Float.valueOf(focalField.getText());
-
-                    sc.setFov(f);
-                }
-
-                focalField.setText(String.valueOf(sc.getFov()));
-            }
-        });
-
-        focalField.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                if (!(focalField.getText().length() == 0)) {
-                    float f = Float.valueOf(focalField.getText());
-
-                    sc.setFov(f);
-                }
-
-                focalField.setText(String.valueOf(sc.getFov()));
-            }
-        });
-
         // #endregion
 
         Label zfieldLabel = new Label();
